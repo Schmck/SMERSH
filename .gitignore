@@ -106,9 +106,10 @@ dist
 #typescript mapping files
 *.js
 *.js.map
+*.d.ts
 
 .idea/
 .vs/
 obj/
 */obj
-*/obj
+
