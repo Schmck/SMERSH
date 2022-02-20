@@ -1,0 +1,3 @@
+C:\Users\Alpine\source\repos\SMERSH\EventHandlers\obj\Debug\EventHandlers.njsproj.AssemblyReference.cache
+C:\Users\Alpine\source\repos\SMERSH\EventHandlers\obj\Debug\EventHandlers.njsproj.CoreCompileInputs.cache
+C:\Users\Alpine\source\repos\SMERSH\EventHandlers\bin\Microsoft.NodejsTools.WebRole.dll

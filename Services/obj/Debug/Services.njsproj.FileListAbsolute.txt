@@ -1,0 +1,2 @@
+C:\Users\Alpine\source\repos\SMERSH\Services\obj\Debug\Services.njsproj.CoreCompileInputs.cache
+C:\Users\Alpine\source\repos\SMERSH\Services\bin\Microsoft.NodejsTools.WebRole.dll

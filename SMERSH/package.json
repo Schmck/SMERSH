@@ -1,0 +1,21 @@
+{
+  "name": "smersh",
+  "version": "0.0.0",
+  "description": "SMERSH",
+  "main": "server.js",
+  "author": {
+    "name": ""
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.7",
+    "tslint": "^6.1.3",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "guid-typescript": "^1.0.9"
+  }
+}
