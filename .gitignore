@@ -114,3 +114,4 @@ obj/
 */obj
 
 *.d.ts
+*/bin

@@ -41,11 +41,14 @@
     <Folder Include="Controllers\Admin\" />
     <Folder Include="Controllers\Current\" />
     <Folder Include="Controllers\Layout\" />
+    <Folder Include="Framework\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Controllers\Current\CurrentChatController.ts" />
     <TypeScriptCompile Include="Controllers\Current\CurrentStatusController.ts" />
     <TypeScriptCompile Include="Controllers\Current\index.ts" />
+    <TypeScriptCompile Include="Framework\Config.ts" />
+    <TypeScriptCompile Include="Framework\index.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>
