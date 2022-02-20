@@ -1,6 +1,6 @@
 ﻿import { Guid } from "guid-typescript";
 import { Report } from '../'
-import { Tickets, Team, Layout } from '../../../SMERSH/ValueObjects'
+import { Tickets, Team, Layout } from '../../SMERSH/ValueObjects'
 
 class MapIndiceReport extends Report{
     constructor(id: Guid) {

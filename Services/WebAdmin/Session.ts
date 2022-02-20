@@ -47,6 +47,21 @@ export class WebAdminSession {
         return this.DOMs[url];
     }
 
+    public async close(url: string) {
+        this.log.info(`closing: `, url)
+
+        if (this.DOMs) {
+            const DOM = this.DOMs[url]
+
+            if (DOM.window) {
+                DOM.window.close()
+            }
+        } else {
+            this.log.error('DOMs were not initialized properly')
+        }
+
+        return this.DOMs[url];
+    }
 
 
 

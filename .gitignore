@@ -109,3 +109,6 @@ dist
 
 .idea/
 .vs/
+obj/
+*/obj
+*/obj

@@ -1,3 +1,0 @@
-C:\Users\Alpine\source\repos\SMERSH\SMERSH\obj\Debug\SMERSH.njsproj.AssemblyReference.cache
-C:\Users\Alpine\source\repos\SMERSH\SMERSH\obj\Debug\SMERSH.njsproj.CoreCompileInputs.cache
-C:\Users\Alpine\source\repos\SMERSH\SMERSH\bin\Microsoft.NodejsTools.WebRole.dll
