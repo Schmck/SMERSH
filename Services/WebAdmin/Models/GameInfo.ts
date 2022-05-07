@@ -1,4 +1,4 @@
-﻿import { Team } from '../../../../SMERSH/ValueObjects'
+﻿import { Team } from '../../../SMERSH/ValueObjects'
 
 export class GameInfo {
     constructor(name: string, ranked: boolean, cheatProtection: string, type: string, map: string, mutators: string, realismMode: string, mpCampaignActive: boolean) {

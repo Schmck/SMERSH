@@ -1,8 +1,8 @@
 ﻿import { Guid } from "guid-typescript";
-import { Report } from '../'
-import { Tickets, Team, Layout } from '../../SMERSH/ValueObjects'
+import { SearchReport } from '../../Framework'
+import { Tickets, Team, Layout } from '../../../SMERSH/ValueObjects'
 
-class MapIndiceReport extends Report{
+class MapSearchReport extends SearchReport {
     constructor(id: Guid) {
         super(id)
     }
@@ -14,4 +14,6 @@ class MapIndiceReport extends Report{
     public Tickets: Record<number, Tickets>;
 
     public Layouts: Array<Layout>;
+
+    public UpdateCalculatedProperties(): void { }
 }

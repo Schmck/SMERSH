@@ -1,4 +1,4 @@
-﻿import { Team } from '../../../../SMERSH/ValueObjects'
+﻿import { Team } from '../../../SMERSH/ValueObjects'
 
 export class ChatMessage {
     constructor(team: number, teamMessage: boolean, name: string, message: string) {
