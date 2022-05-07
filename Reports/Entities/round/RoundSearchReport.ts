@@ -1,7 +1,7 @@
-﻿import { Report } from '../'
+﻿import { SearchReport } from '../../Framework'
 import { Guid } from "guid-typescript";
 
-class RoundIndiceReport extends Report {
+export class RoundSearchReport extends SearchReport {
     constructor(id: Guid, mapId: Guid, date: Date) {
         super(id)
 
@@ -11,5 +11,7 @@ class RoundIndiceReport extends Report {
 
     public MapId : Guid;
 
-    public Date : Date;
+    public Date: Date;
+
+    public UpdateCalculatedProperties(): void { }
 }

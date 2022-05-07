@@ -1,4 +1,4 @@
-﻿import { Team } from '../../../../SMERSH/ValueObjects'
+﻿import { Team } from '../../../SMERSH/ValueObjects'
 
 export class RulesInfo {
     constructor(timeLimit: number, timeLeft: number, roundLimit: string, playersCurrent: number, playersMax: number, spectatorsCurrent: number, spectatorsMax: number) {

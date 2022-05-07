@@ -1,4 +1,4 @@
-﻿import { Team } from '../../../../SMERSH/ValueObjects'
+﻿import { Team } from '../../../SMERSH/ValueObjects'
 
 export class Player {
     constructor(team: number, name: string, ping: number, ip: string, uniqueId: string, admin: boolean, spectator: boolean, bot: boolean) {
