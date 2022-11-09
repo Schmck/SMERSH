@@ -7,7 +7,7 @@ export class WebAdminSession {
     private static _instance: WebAdminSession = null;
     private readonly log: Logger = dummyLogger;
 
-    private constructor(url: string, authcred: string, encoding: string = 'windows-1252', cookieJar: CookieJar = new CookieJar()) {
+    constructor(url: string, authcred: string, encoding: string = 'windows-1252', cookieJar: CookieJar = new CookieJar()) {
 
         const parsed = parse(url)
         const cookieParts: string[] = [

@@ -1,11 +1,13 @@
 import { createExpressServer } from 'routing-controllers';
 import { CurrentStatusController } from './Controllers/Current';
+import { CurrentChatController } from './Controllers/Current';
 import { Config } from './Framework';
 import * as dotenv from 'dotenv';
 
 const app = createExpressServer({
     controllers: [
-        CurrentStatusController
+        CurrentStatusController,
+        CurrentChatController
         ], 
 });
 
