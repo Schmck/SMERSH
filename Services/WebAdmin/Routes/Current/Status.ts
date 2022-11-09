@@ -1,6 +1,6 @@
 ﻿import { Route } from '../'
 
-class StatusRoute extends Route {
+export class StatusRoute extends Route {
     private constructor(method: string, action: string, section: string = '') {
         super(method, action, section)
     }

@@ -43,6 +43,9 @@
     <Folder Include="WebAdmin\Routes\Layout\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="WebAdmin\index.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="WebAdmin\Models\ChatMessage.ts" />
     <TypeScriptCompile Include="WebAdmin\Models\GameInfo.ts" />
     <TypeScriptCompile Include="WebAdmin\Models\index.ts" />
@@ -51,6 +54,7 @@
     <TypeScriptCompile Include="WebAdmin\Models\RulesInfo.ts" />
     <TypeScriptCompile Include="WebAdmin\Models\TeamInfo.ts" />
     <TypeScriptCompile Include="WebAdmin\Routes\Current\Chat.ts" />
+    <TypeScriptCompile Include="WebAdmin\Routes\Current\index.ts" />
     <TypeScriptCompile Include="WebAdmin\Routes\Current\Status.ts" />
     <TypeScriptCompile Include="WebAdmin\Routes\index.ts" />
     <TypeScriptCompile Include="WebAdmin\Routes\Route.ts" />
