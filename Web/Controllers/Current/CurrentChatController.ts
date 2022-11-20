@@ -6,7 +6,7 @@ import * as Main from "dotenv/lib/main";
 
 @Controller()
 export class CurrentChatController {
-    @Get('/current/chat')
+    @Get(ChatRoute.GetChat.Action)
     public getCurrentChat() {
         //Main.config()
         const config = process.env;
@@ -15,6 +15,22 @@ export class CurrentChatController {
         let session = WebAdminSession.get();
 
         const result = session.navigate(ChatRoute.GetChat.Action)
-        result.then(page => console.log(page))
+        return result.then(page => {
+            const messages = []
+            if (page) {
+                page.window.document.querySelectorAll(".chatmessage").forEach(msg => {
+                    let username = msg.querySelector('.username').innerHTML
+                    let message = msg.querySelector('.message').innerHTML
+                    let visibility = msg.querySelector('.teamnotice').innerHTML
+                    messages.push({
+                        username,
+                        message,
+                        visibility
+                    })
+                })
+            }
+
+            return messages
+        })
     }
 }

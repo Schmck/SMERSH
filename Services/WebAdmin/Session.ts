@@ -36,7 +36,11 @@ export class WebAdminSession {
     }
 
     public async navigate(url: string) {
-        const navUrl = process.env["BASE_URL"] + url
+        let navUrl = url;
+
+        if (navUrl !== process.env["BASE_URL"]) {
+            navUrl = process.env["BASE_URL"] + url
+        }
         this.log.info(`navigating to: `, url)
 
         if (this.DOMs) {
