@@ -5,7 +5,7 @@ export class ChatRoute extends Route {
         super(method, action)
     }
 
-    public static GetChat: ChatRoute = new ChatRoute('GET', "/current/chat")
+    public static GetChat: ChatRoute = new ChatRoute('GET', "/current/chat/data")
 
-    public static PostChat: ChatRoute = new ChatRoute('POST', "/current/chat/data")
+    public static PostChat: ChatRoute = new ChatRoute('POST', "/current/chat")
 }
