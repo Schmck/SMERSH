@@ -44,22 +44,18 @@ export class WebAdminSession {
         this.log.info(`navigating to: `, url)
 
         if (this.DOMs) {
-            let DOM = this.DOMs[url]
+            let DOM = this.DOMs[navUrl]
 
             if (!DOM) {
                 this.DOMs[navUrl] = new JSDOM(navUrl)
-                DOM = this.DOMs[navUrl]
             }
 
-            if (DOM.window) {
-                DOM.window.close()
-            }
             this.DOMs[navUrl] = await JSDOM.fromURL(navUrl)
         } else {
             this.log.error('DOMs were not initialized properly')
         }
-
-        return this.DOMs[url];
+        
+        return this.DOMs[navUrl];
     }
 
     public async close(url: string) {
