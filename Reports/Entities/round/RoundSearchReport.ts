@@ -13,5 +13,7 @@ export class RoundSearchReport extends SearchReport {
 
     public Date: Date;
 
+    public
+
     public UpdateCalculatedProperties(): void { }
 }

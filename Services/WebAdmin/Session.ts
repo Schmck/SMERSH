@@ -3,20 +3,16 @@ import { Cookie } from "tough-cookie";
 import { Logger, dummyLogger } from "ts-log";
 
 export class WebAdminSession {
-    private static _instance: WebAdminSession = null;
-    private readonly log: Logger = dummyLogger;
+    private static _instance: WebAdminSession;
+    
 
-    constructor(url: string, authcred: string, encoding: string = 'windows-1252', cookieJar: CookieJar = new CookieJar()) {
+    constructor(url: string, authcred: string, encoding: string = 'windows-1252', cookieJar: CookieJar = new CookieJar(), private readonly log: Logger = dummyLogger) {
         if (!this.DOMs) {
             this.DOMs = {};
         }
         const parsed = WebAdminSession.parse(url)
-        const cookieParts: string[] = [
-            `authcred=${authcred}`,
-            `Domain=${parsed.hostname}`,
-            `Path=${parsed.pathName}`
-        ];
-        const cookie = Cookie.parse(cookieParts[0]);
+        const authCookiePart = `authcred=${authcred}`
+        const cookie = Cookie.parse(authCookiePart);
         cookie.path = parsed.pathName;
         cookie.domain = parsed.hostname;
        
@@ -30,6 +26,7 @@ export class WebAdminSession {
     public DOMs: Record<string, Awaited<JSDOM>> = {};
 
     private CookieJar: CookieJar;
+
 
     public static get Instance() {
         return this._instance
