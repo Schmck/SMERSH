@@ -53,6 +53,8 @@
     <TypeScriptCompile Include="WebAdmin\Models\PlayerInfo.ts" />
     <TypeScriptCompile Include="WebAdmin\Models\RulesInfo.ts" />
     <TypeScriptCompile Include="WebAdmin\Models\TeamInfo.ts" />
+    <TypeScriptCompile Include="WebAdmin\Routes\Admin\index.ts" />
+    <TypeScriptCompile Include="WebAdmin\Routes\Admin\Players.ts" />
     <TypeScriptCompile Include="WebAdmin\Routes\Current\Chat.ts" />
     <TypeScriptCompile Include="WebAdmin\Routes\Current\index.ts" />
     <TypeScriptCompile Include="WebAdmin\Routes\Current\Status.ts" />

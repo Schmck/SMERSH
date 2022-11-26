@@ -37,6 +37,7 @@
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Utilities\" />
     <Folder Include="ValueObjects\" />
     <Folder Include="ValueObjects\map\" />
     <Folder Include="ValueObjects\campaign\" />
@@ -45,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="index.ts" />
+    <TypeScriptCompile Include="Utilities\FileLogger.ts" />
+    <TypeScriptCompile Include="Utilities\index.ts" />
     <TypeScriptCompile Include="ValueObjects\campaign\index.ts" />
     <TypeScriptCompile Include="ValueObjects\campaign\Layout.ts" />
     <TypeScriptCompile Include="ValueObjects\Enumeration.ts" />
