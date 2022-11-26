@@ -1,14 +1,26 @@
 import { createExpressServer } from 'routing-controllers';
-import { CurrentStatusController } from './Controllers/Current';
-import { CurrentChatController } from './Controllers/Current';
 import { WebAdminSession } from '../Services/WebAdmin';
 import { Config } from './Framework';
 import * as dotenv from 'dotenv';
 
+import {
+    CurrentStatusController,
+    CurrentChatController
+} from './Controllers/Current';
+
+import {
+    PlayersController,
+    LandingPageController
+} from './Controllers/Admin';
+
 const app = createExpressServer({
     controllers: [
+        LandingPageController,
+
         CurrentStatusController,
-        CurrentChatController
+        CurrentChatController,
+
+        PlayersController
         ], 
 });
 

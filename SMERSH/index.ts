@@ -5,3 +5,7 @@
     Layout,
     Roles,
     } from './ValueObjects/';
+
+export {
+    FileLogger
+    } from './Utilities'

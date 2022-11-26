@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@elastic/elasticsearch": "^8.2.0",
-    "@types/elasticsearch": "^5.0.40"
+    "@types/elasticsearch": "^5.0.40",
+    "html-table-to-json": "^1.0.0"
   }
 }

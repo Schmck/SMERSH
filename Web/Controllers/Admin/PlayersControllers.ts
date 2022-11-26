@@ -1,30 +1,17 @@
 ﻿import { Controller, Param, Body, Get, Post, Put, Delete } from 'routing-controllers';
-import { WebAdminSession } from '../../../Services/WebAdmin';
 import { ChatRoute } from '../../../Services/WebAdmin/Routes';
-import { Logger, dummyLogger, Logger as ILogger } from "ts-log";
-import { SmershController } from '../../Framework'
-import * as Main from "dotenv/lib/main";
-
+import { WebAdminSession } from '../../../Services/WebAdmin';
 
 @Controller()
-export class CurrentChatController extends SmershController {
-
-    @Get(ChatRoute.GetChat.Action)
-    public getCurrentChat() {
+export class PlayersController {
+    @Get('/admin/players')
+    public GetPlayers() {
         const session = WebAdminSession.get();
-        const messages = []
-
 
         const result = session.navigate(ChatRoute.GetChat.Action)
         return result.then(dom => {
-            //this.log.info(dom)
-            //this.log.info(dom.window)
-            //this.log.info(dom.window.document)
+            const messages = []
             if (dom) {
-               // this.log.info(dom)
-                //this.log.info(dom.window)
-               // this.log.info(dom.window.document)
-                this.log.info(dom.window.document.querySelectorAll(".chatmessage").length)
                 dom.window.document.querySelectorAll(".chatmessage").forEach(msg => {
                     let username
                     let message
@@ -41,22 +28,15 @@ export class CurrentChatController extends SmershController {
                     if (msg.querySelector('.teamnotice')) {
                         visibility = msg.querySelector('.teamnotice').innerHTML
                     }
-                    const usermsg = {
+                    messages.push({
                         username,
                         message,
                         visibility
-                    }
-                    console.log(usermsg)
-                    this.log.info(usermsg)
-                    messages.push(usermsg)
+                    })
                 })
             }
 
             return messages
         })
-    }
-
-    public returnChat(messages: any) {
-
     }
 }
