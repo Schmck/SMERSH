@@ -3,7 +3,7 @@
     "module": "commonjs",
     "experimentalDecorators": true,
     "target": "es6",
-    "lib": ["es6"],
+    "lib": ["es2019"],
     "sourceMap": true
   },
   "exclude": [
