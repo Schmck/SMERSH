@@ -9,7 +9,7 @@ import * as Main from "dotenv/lib/main";
 @Controller()
 export class CurrentChatController extends SmershController {
 
-    @Get(ChatRoute.GetChat.Action)
+    @Get('/current/chat')
     public getCurrentChat() {
         const session = WebAdminSession.get();
         const messages = []
@@ -17,14 +17,7 @@ export class CurrentChatController extends SmershController {
 
         const result = session.navigate(ChatRoute.GetChat.Action)
         return result.then(dom => {
-            //this.log.info(dom)
-            //this.log.info(dom.window)
-            //this.log.info(dom.window.document)
             if (dom) {
-               // this.log.info(dom)
-                //this.log.info(dom.window)
-               // this.log.info(dom.window.document)
-                this.log.info(dom.window.document.querySelectorAll(".chatmessage").length)
                 dom.window.document.querySelectorAll(".chatmessage").forEach(msg => {
                     let username
                     let message
@@ -44,19 +37,15 @@ export class CurrentChatController extends SmershController {
                     const usermsg = {
                         username,
                         message,
-                        visibility
+                        visibility,
+                        timeStamp: new Date().toISOString()
                     }
-                    console.log(usermsg)
-                    this.log.info(usermsg)
+                    
                     messages.push(usermsg)
                 })
             }
 
             return messages
         })
-    }
-
-    public returnChat(messages: any) {
-
     }
 }

@@ -11,14 +11,14 @@ export class PlayersController extends SmershController {
         const session = WebAdminSession.get();
 
         const result = session.navigate(PlayersRoute.GetPlayers.Action)
-        return result.then(async dom => {
+        return result.then(dom => {
             if (dom) {
-                //this.log.info('playerController', dom.window.document.documentElement.innerHTML)
-                this.log.info('playerController', dom.window.document.querySelector("#players"))
-                const table = await dom.window.document.querySelector("#players");
+                const table = dom.window.document.querySelector("#players");
+                this.log.info('playerController', table)
+
                 //const json = this.parseTable(table);
                 if(table)
-                    return this.parseTable(table as HTMLTableElement)
+                    return { 'players': this.parseTable(table as HTMLTableElement) }
                 else return 'bad luck'
             }
         })
@@ -26,14 +26,26 @@ export class PlayersController extends SmershController {
 
     public parseTable(table: HTMLTableElement) {
         console.log(table)
-        const headers = Object.values((table as HTMLTableElement).tHead.children).map(row => {
-            Object.values(row.children).map(item =>
-                item.innerHTML.replace(/(<([^>]+)>)/ig, ''))
-        })
-        const values = Object.values((table as HTMLTableElement).tBodies[0].children).map(item => {
-            Object.values(item.children).map(row => item.innerHTML.replace(/(<([^>]+)>)/ig, ''))
-        })
+        const headers = Object.values((table).tHead.children).map(row => {
+           return Object.values(row.children).map(item => {
+                //this.log.info(item.innerHTML.replace(/(<([^>]+)>)/ig, ''))
+               return item.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')
+            })
 
-        return {headers, values}
+              
+        })
+        const values = Object.values((table).tBodies[0].children).map(item => {
+           return Object.values(item.children).map(row => {
+                this.log.info(row.innerHTML.replace(/(<([^>]+)>)/ig, ''))
+               return row.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')
+           })
+        }).map((val: any) => { val.pop(); return val })
+        const result: any = { headers, values }
+
+        return result.values.map(value => {
+            return Object.fromEntries(value.map((val, index) => {
+                return [[result.headers[0][index].replace(' ', '')], val ]
+            }))
+        })
     }
 }
