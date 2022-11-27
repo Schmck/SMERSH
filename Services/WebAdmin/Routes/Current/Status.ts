@@ -5,11 +5,11 @@ export class StatusRoute extends Route {
         super(method, action, section)
     }
 
-    public GetStatus: StatusRoute = new StatusRoute('GET', "/current",)
+    public static GetStatus: StatusRoute = new StatusRoute('GET', "/current",)
 
-    public GetGameSection: StatusRoute = new StatusRoute('GET', "/current", "game")
-    public GetRulesSection: StatusRoute = new StatusRoute('GET', "/current", "rules")
-    public GetTeamsSection: StatusRoute = new StatusRoute('GET', "/current", "teams")
-    public GetPlayersSection: StatusRoute = new StatusRoute('GET', "/current", "players")
+    public static GetGameSection: StatusRoute = new StatusRoute('GET', "/current", "game")
+    public static GetRulesSection: StatusRoute = new StatusRoute('GET', "/current", "rules")
+    public static GetTeamsSection: StatusRoute = new StatusRoute('GET', "/current", "teams")
+    public static GetPlayersSection: StatusRoute = new StatusRoute('GET', "/current", "players")
 
 }

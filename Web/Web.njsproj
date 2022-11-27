@@ -57,6 +57,7 @@
     <TypeScriptCompile Include="Controllers\Players\PlayersControllers.ts" />
     <TypeScriptCompile Include="Framework\Config.ts" />
     <TypeScriptCompile Include="Framework\index.ts" />
+    <TypeScriptCompile Include="Utils\Arrays.ts" />
     <TypeScriptCompile Include="Utils\index.ts" />
     <TypeScriptCompile Include="Utils\Parsers.ts" />
   </ItemGroup>

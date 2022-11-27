@@ -15,11 +15,9 @@ export class PlayersController extends SmershController {
         return result.then(dom => {
             if (dom) {
                 const table = dom.window.document.querySelector("#players");
-                this.log.info('playerController', table)
 
-                //const json = this.parseTable(table);
                 if(table)
-                    return { 'players': Parsers.parseTable(table as HTMLTableElement) }
+                    return { 'players': Parsers.playerTable(table as HTMLTableElement) }
                 else return 'bad luck'
             }
         })
