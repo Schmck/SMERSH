@@ -43,10 +43,12 @@
     <Folder Include="Controllers\Layout\" />
     <Folder Include="Controllers\Players\" />
     <Folder Include="Framework\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Controllers\Admin\index.ts" />
     <TypeScriptCompile Include="Controllers\Admin\LandingPageController.ts" />
+    <TypeScriptCompile Include="Controllers\Admin\PlayerController.ts" />
     <TypeScriptCompile Include="Controllers\Admin\PlayersController.ts" />
     <TypeScriptCompile Include="Framework\SmershController.ts" />
     <TypeScriptCompile Include="Controllers\Current\CurrentChatController.ts" />
@@ -55,6 +57,8 @@
     <TypeScriptCompile Include="Controllers\Players\PlayersControllers.ts" />
     <TypeScriptCompile Include="Framework\Config.ts" />
     <TypeScriptCompile Include="Framework\index.ts" />
+    <TypeScriptCompile Include="Utils\index.ts" />
+    <TypeScriptCompile Include="Utils\Parsers.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

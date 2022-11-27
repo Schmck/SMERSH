@@ -1,5 +1,6 @@
 import { createExpressServer } from 'routing-controllers';
 import { WebAdminSession } from '../Services/WebAdmin';
+import "reflect-metadata";
 import { Config } from './Framework';
 import * as dotenv from 'dotenv';
 
@@ -10,6 +11,7 @@ import {
 
 import {
     PlayersController,
+    PlayerController,
     LandingPageController
 } from './Controllers/Admin';
 
@@ -20,7 +22,8 @@ const app = createExpressServer({
         CurrentStatusController,
         CurrentChatController,
 
-        PlayersController
+        PlayersController,
+        PlayerController
         ], 
 });
 
