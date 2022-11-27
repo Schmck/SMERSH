@@ -17,7 +17,7 @@ export class PlayerController extends SmershController {
                 const table = dom.window.document.querySelector("#players");
 
                 if (table) {
-                    const parsed = Parsers.parseTable(table as HTMLTableElement);
+                    const parsed = Parsers.playerTable(table as HTMLTableElement);
                     const player = parsed.find(player => player && player.Playername && player.Playername.includes(playerName));
                     if (player) {
                         this.log.info(player.Playername)

@@ -1,6 +1,7 @@
 ﻿import { Controller, Param, Body, Get, Post, Put, Delete } from 'routing-controllers';
-import { ChatRoute } from '../../../Services/WebAdmin/Routes';
+import { StatusRoute } from '../../../Services/WebAdmin/Routes';
 import { WebAdminSession } from '../../../Services/WebAdmin';
+import { Parsers } from "../../Utils/Parsers";
 
 @Controller()
 export class CurrentStatusController {
@@ -8,35 +9,43 @@ export class CurrentStatusController {
     public getCurrentStatus() {
         const session = WebAdminSession.get();
 
-        const result = session.navigate(ChatRoute.GetChat.Action)
+        const result = session.navigate(StatusRoute.GetStatus.Action)
         return result.then(dom => {
-            const messages = []
+            let current = {}
+            let rules = {}
+            let players
+            let teams
+
             if (dom) {
-                dom.window.document.querySelectorAll(".chatmessage").forEach(msg => {
-                    let username
-                    let message 
-                    let visibility
+                const playerTable = dom.window.document.querySelector("#players");
+                const teamTable = dom.window.document.querySelector("#teams");
+                const currentDl = dom.window.document.querySelector("#currentGame");
+                const rulesDl = dom.window.document.querySelector("#currentRules");
 
-                    if (msg.querySelector('.username')) {
-                        username = msg.querySelector('.username').innerHTML
-                    }
+                if (playerTable) {
+                    players = Parsers.playerTable(playerTable as HTMLTableElement);
+                }
 
-                    if (msg.querySelector('.message')) {
-                        message = msg.querySelector('.message').innerHTML
-                    }
+                if (teamTable) {
+                    teams = Parsers.parseTable(teamTable as HTMLTableElement);
+                }
 
-                    if (msg.querySelector('.teamnotice')) {
-                        visibility = msg.querySelector('.teamnotice').innerHTML
-                    }
-                    messages.push({
-                        username,
-                        message,
-                        visibility
-                    })
-                })
-            }
+                if (currentDl) {
+                    current = Parsers.dlElement(currentDl)
+                }
 
-            return messages
+                if (rulesDl) {
+                    rules = Parsers.dlElement(rulesDl)
+                }
+
+
+                return {
+                    players,
+                    teams,
+                    current,
+                    rules,
+                };
+            } else return 'bad luck';
         })
     }
 }
