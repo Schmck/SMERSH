@@ -2,7 +2,8 @@
 import { PlayersRoute } from '../../../Services/WebAdmin/Routes';
 import { WebAdminSession } from '../../../Services/WebAdmin';
 import { SmershController } from '../../Framework';
-const HtmlTableToJson = require('html-table-to-json');
+import { Parsers } from '../../Utils';
+
 
 @Controller()
 export class PlayersController extends SmershController {
@@ -18,34 +19,10 @@ export class PlayersController extends SmershController {
 
                 //const json = this.parseTable(table);
                 if(table)
-                    return { 'players': this.parseTable(table as HTMLTableElement) }
+                    return { 'players': Parsers.parseTable(table as HTMLTableElement) }
                 else return 'bad luck'
             }
         })
     }
 
-    public parseTable(table: HTMLTableElement) {
-        console.log(table)
-        const headers = Object.values((table).tHead.children).map(row => {
-           return Object.values(row.children).map(item => {
-                //this.log.info(item.innerHTML.replace(/(<([^>]+)>)/ig, ''))
-               return item.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')
-            })
-
-              
-        })
-        const values = Object.values((table).tBodies[0].children).map(item => {
-           return Object.values(item.children).map(row => {
-                this.log.info(row.innerHTML.replace(/(<([^>]+)>)/ig, ''))
-               return row.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')
-           })
-        }).map((val: any) => { val.pop(); return val })
-        const result: any = { headers, values }
-
-        return result.values.map(value => {
-            return Object.fromEntries(value.map((val, index) => {
-                return [[result.headers[0][index].replace(' ', '')], val ]
-            }))
-        })
-    }
 }
