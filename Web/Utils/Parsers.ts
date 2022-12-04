@@ -47,7 +47,10 @@ export class Parsers {
 
     public static dlElement(dl: Element) {
         const items = Array.prototype.slice.call(dl.children).map(item => item.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', ''))
-        const paired = Arrays.chunk(items, 2);
+        const paired = Arrays.chunk(items, 2).map(([key, value]) => ([
+            key.replace(/\s+/g, ""),
+            value
+        ]));
         return Object.fromEntries(paired);
     }
 }

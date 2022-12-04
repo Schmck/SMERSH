@@ -10,6 +10,9 @@ EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Commands", "Commands\Commands.njsproj", "{016EB6A9-A0BA-41EA-A24E-93AD8266345B}"
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Domain", "Domain\Domain.njsproj", "{847D21CF-0CD5-44DE-B3ED-56D7EFC582B7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F1B3D094-9557-4180-8342-943E3A920C61} = {F1B3D094-9557-4180-8342-943E3A920C61}
+	EndProjectSection
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Services", "Services\Services.njsproj", "{24F436DD-90DB-418E-836D-E82A2C9D044C}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -17,6 +20,9 @@ Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Services", "Services\Servic
 	EndProjectSection
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Web", "Web\Web.njsproj", "{4BD1AF42-FBD2-4F88-8374-AA78F5E8657B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5A92CFCA-581F-43B9-8946-04AD9E3B2B61} = {5A92CFCA-581F-43B9-8946-04AD9E3B2B61}
+	EndProjectSection
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Reports", "Reports\Reports.njsproj", "{CA598AB7-5657-4618-8646-1545B4DA3802}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -26,6 +32,8 @@ EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "SMERSH", "SMERSH\SMERSH.njsproj", "{74227197-51F9-4362-86B9-6B07C2028D4B}"
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Elastic", "Elastic\Elastic.njsproj", "{5A92CFCA-581F-43B9-8946-04AD9E3B2B61}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "CommandHandlers", "CommandHandlers\CommandHandlers.njsproj", "{B6C14E37-8754-413E-9A56-6218432D4C87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +77,10 @@ Global
 		{5A92CFCA-581F-43B9-8946-04AD9E3B2B61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A92CFCA-581F-43B9-8946-04AD9E3B2B61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A92CFCA-581F-43B9-8946-04AD9E3B2B61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6C14E37-8754-413E-9A56-6218432D4C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C14E37-8754-413E-9A56-6218432D4C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6C14E37-8754-413E-9A56-6218432D4C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6C14E37-8754-413E-9A56-6218432D4C87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

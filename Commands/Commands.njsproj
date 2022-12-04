@@ -35,9 +35,12 @@
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="ChatLineReceivedCommand.ts" />
     <TypeScriptCompile Include="Command.ts" />
     <TypeScriptCompile Include="ICommand.ts" />
+    <TypeScriptCompile Include="Current\ReceiveChatLineCommand.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Current\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

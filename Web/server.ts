@@ -1,9 +1,11 @@
 import { createExpressServer } from 'routing-controllers';
 import { WebAdminSession } from '../Services/WebAdmin';
+//import { ClientBuilder } from '../Elastic'
 import "reflect-metadata";
-import { Config } from './Framework';
+import { Config, ClientBuilder } from './Framework';
 import * as dotenv from 'dotenv';
 
+import 'reflect-metadata';
 import {
     CurrentStatusController,
     CurrentChatController
@@ -29,6 +31,8 @@ const app = createExpressServer({
 
 dotenv.config()
 const config = process.env;
+console.log(config["ELASTIC_URL"])
+ClientBuilder.BuildClient(config["ELASTIC_URL"])
 
 WebAdminSession.set(config["BASE_URL"], config["AUTHCRED"])
 app.listen(1337);
