@@ -34,6 +34,10 @@
     <Content Include="README.md" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Round.ts" />
+    <TypeScriptCompile Include="Domain.ts" />
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>
     <VisualStudio>

@@ -50,6 +50,7 @@
     <TypeScriptCompile Include="Controllers\Admin\LandingPageController.ts" />
     <TypeScriptCompile Include="Controllers\Admin\PlayerController.ts" />
     <TypeScriptCompile Include="Controllers\Admin\PlayersController.ts" />
+    <TypeScriptCompile Include="Framework\ClientBuilder.ts" />
     <TypeScriptCompile Include="Framework\SmershController.ts" />
     <TypeScriptCompile Include="Controllers\Current\CurrentChatController.ts" />
     <TypeScriptCompile Include="Controllers\Current\CurrentStatusController.ts" />

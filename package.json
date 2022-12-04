@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "@elastic/elasticsearch": "^8.2.0",
+    "@nestjs/cqrs": "^9.0.1",
     "@types/elasticsearch": "^5.0.40",
+    "guid-typescript": "^1.0.9",
     "html-table-to-json": "^1.0.0"
   }
 }
