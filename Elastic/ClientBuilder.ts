@@ -1,45 +1,50 @@
 ﻿//import { Client } from '@elastic/elasticsearch';
-//import { IndicesCreateRequest, IndexName, IndicesCreateResponse } from '@elastic/elasticsearch/lib/api/types';
-//import { IndicesCreateParams, ConfigOptions } from 'elasticsearch';
+const elastic = require('@elastic/elasticsearch')
+const { Client } = elastic;
+import { IndicesCreateRequest, IndexName, IndicesCreateResponse } from '@elastic/elasticsearch/lib/api/types';
+import { IndicesCreateParams, ConfigOptions } from 'elasticsearch';
 import * as reports from "../Reports/Entities"
 import { SearchReport } from "../Reports/Framework"
+import { Logger, dummyLogger } from "ts-log/build/src/index";
+import { FileLogger } from "../SMERSH/Utilities/FileLogger";
 
 export class ClientBuilder {
-    private static INDEX_ALREADY_EXISTS : string = "index_already_exists_exception";
+    private static INDEX_ALREADY_EXISTS: string = "index_already_exists_exception";
     private static RESOURCE_ALREADY_EXISTS: string = "resource_already_exists_exception";
+    public log: FileLogger;
+    public constructor(log: Logger = dummyLogger) {
+      //  this.log = new FileLogger(`./logs/info-${new Date().toISOString().split('.')[0]}-elastic-client-builder.log`);
+        this.log = new FileLogger(`./logs/info.log`);
+    };
 
-    public static BuildClient(url: string) {
-    //public static BuildClient<Client>(url: string) {
-        /*const reports = this.getIndices();
+    public static async BuildClient<Client>(url: string) {
+        const reports = this.getIndices();
         const client = new Client({
             node: url,
         } as ConfigOptions)
 
-        for (let report in reports) {
-            let exists = client.indices.exists({ index: report }) || true
+        for (let report of reports) {
+            let exists = await client.indices.exists({ index: report })
             if (!exists) {
                 this.BuildIndex(client, report)
             }
         }
 
-        return client;*/
+        return client;
     }
 
-    /*private static async BuildIndex(client: Client, name: IndexName) {
-        const options : IndicesCreateParams = {
-            index: name,
-            includeTypeName: true,
+    private static async BuildIndex(client: typeof Client, name: IndexName) {
+        const options: IndicesCreateParams = {
+            index: name.toLowerCase(),
         }
-        const response : IndicesCreateResponse = await client.indices.create(options)
+        const response: IndicesCreateResponse = await client.indices.create(options)
         if (!response.acknowledged) {
             console.log(`request to create index: ${name} failed, see: ${JSON.stringify(response, null, 4)}`)
         }
-    }*/
+    }
 
 
     public static getIndices(): Array<any> {
-        let reporting = Object.keys(reports);
-        console.log(reporting, reports);
         let indices = Object.keys(reports).map(report => {
             try {
                 return reports[report]
@@ -47,10 +52,57 @@ export class ClientBuilder {
                     Object.keys(reports[report])
                     .find(key => reports[report][key].prototype instanceof SearchReport)
                 ].name
-            } catch (e) {return false}
+            } catch (e) { return false }
+        }).filter(r => r)
+        let searchReports = Object.keys(reports).map(report => {
+            try {
+                return reports[report]
+                [
+                    Object.keys(reports[report])
+                    .find(key => reports[report][key].prototype instanceof SearchReport)
+                ]
+            } catch (e) { return false }
         }).filter(r => r)
 
+        let mappings = searchReports.map(searchReport => this.autoPropertyWalker(searchReport));
         return indices
     }
-}
 
+    public getMappings(): Array<any> {
+        let mappings = Object.keys(reports).map(report => {
+            let obj = reports[report][
+                Object.keys(reports[report])
+                .find(key => reports[report][key].prototype instanceof SearchReport)
+            ];
+            return Object.keys(new obj).map(field => {
+                if (typeof (new obj)[field] === 'object') {
+                    return { [field]: ClientBuilder.autoPropertyWalker((new obj)[field]) }
+                }
+
+                return { [field]: typeof (new obj)[field] }
+            })
+        }).filter(r => r)
+
+        console.log(mappings)
+        this.log.info(JSON.stringify(mappings))
+        return mappings
+    }
+
+
+    public static autoPropertyWalker(obj: any) {
+        let mappings = Object.keys(obj).map(key => {
+            let instance = obj[key]
+
+            if (typeof instance == "object") {
+                if (Array.isArray(instance)) {
+                    return obj[key].map(sub => this.autoPropertyWalker(sub))
+                }
+                return this.autoPropertyWalker(instance)
+            }
+
+            return { [key]: typeof obj[key] }
+
+        })
+        return mappings
+    }
+}

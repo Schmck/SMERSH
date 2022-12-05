@@ -5,10 +5,17 @@ import { IndicesCreateRequest, IndexName, IndicesCreateResponse } from '@elastic
 import { IndicesCreateParams, ConfigOptions } from 'elasticsearch';
 import * as reports from "../../Reports/Entities"
 import { SearchReport } from "../../Reports/Framework"
+import { Logger, dummyLogger } from "ts-log/build/src/index";
+import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
 
 export class ClientBuilder {
     private static INDEX_ALREADY_EXISTS: string = "index_already_exists_exception";
     private static RESOURCE_ALREADY_EXISTS: string = "resource_already_exists_exception";
+
+    public log: FileLogger;
+    public constructor(log: Logger = dummyLogger) {
+        this.log = new FileLogger(`./info-${this.constructor.name}.log`)
+    }
 
     public static async BuildClient<Client>(url: string) {
         const reports = this.getIndices();
