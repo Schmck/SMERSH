@@ -64,7 +64,9 @@ export class ClientBuilder {
             } catch (e) { return false }
         }).filter(r => r)
 
-        let mappings = searchReports.map(searchReport => this.autoPropertyWalker(searchReport));
+        let mappings = searchReports.map(searchReport => {
+            return { [searchReport.constructor.name]: this.autoPropertyWalker(searchReport) }
+        });
         return indices
     }
 
@@ -74,13 +76,14 @@ export class ClientBuilder {
                 Object.keys(reports[report])
                 .find(key => reports[report][key].prototype instanceof SearchReport)
             ];
-            return Object.keys(new obj).map(field => {
+            return ClientBuilder.autoPropertyWalker(new obj)
+            /*return Object.keys(new obj).map(field => {
                 if (typeof (new obj)[field] === 'object') {
                     return { [field]: ClientBuilder.autoPropertyWalker((new obj)[field]) }
                 }
 
                 return { [field]: typeof (new obj)[field] }
-            })
+            })*/
         }).filter(r => r)
 
         console.log(mappings)
@@ -94,9 +97,6 @@ export class ClientBuilder {
             let instance = obj[key]
 
             if (typeof instance == "object") {
-                if (Array.isArray(instance)) {
-                    return obj[key].map(sub => this.autoPropertyWalker(sub))
-                }
                 return this.autoPropertyWalker(instance)
             }
 
