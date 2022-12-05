@@ -6,7 +6,7 @@ export class Team extends Enumeration {
         super(value, displayName)
     }
 
-    public Axis: Team = new Team(0, "Axis")
+    public static Axis: Team = new Team(0, "Axis")
 
-    public Allies : Team = new Team(1, "Allies")
+    public static Allies : Team = new Team(1, "Allies")
 }

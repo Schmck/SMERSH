@@ -2,9 +2,14 @@
 import { SearchReport } from '../../Framework'
 import { Tickets, Team, Layout } from '../../../SMERSH/ValueObjects'
 
-class MapSearchReport extends SearchReport {
-    constructor(id: Guid) {
+export class MapSearchReport extends SearchReport {
+    constructor(id: Guid, name : string, timeLimit: number, tickets: Record<number, Tickets>, layouts) {
         super(id)
+
+        this.Name = name || "";
+        this.TimeLimit = timeLimit || 0;
+        this.Tickets = tickets || { [Team.Axis.Value]: new Tickets(Team.Axis.Value, 0, 0), [Team.Allies.Value]: new Tickets(Team.Allies.Value, 0, 0) }
+        this.Layouts = layouts || [ Layout.Regular ]
     }
 
     public Name: string;

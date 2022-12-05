@@ -3,8 +3,9 @@ import { SearchReport } from '../../Framework'
 import { Tickets, Team, Layout, Roles } from '../../../SMERSH/ValueObjects'
 
 export class PlayerSearchReport extends SearchReport {
-    constructor(id: Guid) {
+    constructor(id: Guid, name : string) {
         super(id)
+        this.Name = name || ""
     }
 
     public Name: string;
