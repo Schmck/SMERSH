@@ -86,6 +86,30 @@ export class ClientBuilder {
             })*/
         }).filter(r => r)
 
+        mappings = mappings.map(report => {
+            let copy = {}
+            for (let key in report) {
+                console.log(report[key])
+                copy = { ...copy, ...report[key] }
+
+                if (Array.isArray(copy[key])) {
+                    copy[key] = copy[key][0]
+                }
+            }
+            return copy
+        })
+
+        mappings = mappings.map(report => {
+            let copy = report
+            for (let key in report) {
+                console.log(report[key])
+                if (Array.isArray(copy[key] || typeof copy[key] === "object" && copy[key][0])) {
+                    copy[key] = copy[key][0]
+                }
+            }
+            return copy
+        })
+
         console.log(mappings)
         this.log.info(JSON.stringify(mappings))
         return mappings
@@ -97,12 +121,15 @@ export class ClientBuilder {
             let instance = obj[key]
 
             if (typeof instance == "object") {
-                return this.autoPropertyWalker(instance)
+                return { [key]: this.autoPropertyWalker(instance) }
             }
 
             return { [key]: typeof obj[key] }
 
         })
+        
         return mappings
     }
+
+
 }
