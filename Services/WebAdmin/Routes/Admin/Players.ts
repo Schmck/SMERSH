@@ -7,4 +7,7 @@ export class PlayersRoute extends Route {
 
     public static GetPlayers: PlayersRoute = new PlayersRoute('GET', "/current/players")
 
+    #ACTIONS
+    public static PersecutePlayer: PlayersRoute = new PlayersRoute('POST', "/current/players/data")
+
 }

@@ -14,6 +14,7 @@ import {
 import {
     PlayersController,
     PlayerController,
+    CondemnPlayerController,
     LandingPageController
 } from './Controllers/Admin';
 
@@ -25,14 +26,15 @@ const app = createExpressServer({
         CurrentChatController,
 
         PlayersController,
-        PlayerController
+        PlayerController,
+        CondemnPlayerController,
         ], 
 });
 
 dotenv.config()
 const config = process.env;
 console.log(config["ELASTIC_URL"])
-ClientBuilder.BuildClient(config["ELASTIC_URL"])
+//ClientBuilder.BuildClient(config["ELASTIC_URL"])
 
 WebAdminSession.set(config["BASE_URL"], config["AUTHCRED"])
 app.listen(1337);

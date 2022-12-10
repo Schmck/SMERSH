@@ -103,7 +103,11 @@ export class ClientBuilder {
             let copy = report
             for (let key in report) {
                 console.log(report[key])
-                if (Array.isArray(copy[key] || typeof copy[key] === "object" && copy[key][0])) {
+                if (Array.isArray(copy[key])) {
+                    copy[key] = copy[key][0]
+                }
+
+                if (typeof copy[key] === "object" && copy[key][0]) {
                     copy[key] = copy[key][0]
                 }
             }
