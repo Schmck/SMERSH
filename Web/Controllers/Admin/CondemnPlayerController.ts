@@ -4,12 +4,15 @@ import { WebAdminSession } from '../../../Services/WebAdmin';
 import { SmershController } from '../../Framework';
 import { Parsers } from '../../Utils';
 import axios, { isCancel, AxiosError } from 'axios';
+import { wrapper } from 'axios-cookiejar-support';
+import { CookieJar, Cookie } from 'tough-cookie';
 import * as dotenv from 'dotenv';
 
+
 @Controller()
-export class PlayerController extends SmershController {
-    @Get('/admin/players/:playerName')
-    public getPlayer(@Param("playerName") playerName: string) {
+export class CondemnPlayerController extends SmershController {
+    @Post('/admin/players/:playerName/:action')
+    public postCondemnPlayer(@Param('playerName') playerName: string, @Param('action') action: string) {
         const session = WebAdminSession.get();
 
         this.log.info(playerName)
@@ -33,6 +36,24 @@ export class PlayerController extends SmershController {
                     });
                     if (player) {
                         this.log.info(player.Playername)
+                        const config = process.env;
+                        const authcred = config['AUTHCRED'];
+                        const url = config["BASE_URL"];
+
+                        const authCookiePart = `authcred=${authcred}`
+                        const cookie = Cookie.parse(authCookiePart);
+                        cookie.path = parsed.pathName;
+                        cookie.domain = parsed.hostname;
+
+                        const jar = new CookieJar();
+                        jar.setCookie(cookie, url)
+                        const client = wrapper(axios.create({ jar }));
+                        const data = {
+                            action,
+                            playerkey: player.PlayerKey
+                        }
+
+                        client.post(url + PlayersRoute.PersecutePlayer.Action, data).then(result => this.log.info(result))
 
                         return player
                     } else return 'worse luck';
@@ -40,6 +61,4 @@ export class PlayerController extends SmershController {
             }
         })
     }
-
-    
 }

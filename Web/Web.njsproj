@@ -46,6 +46,7 @@
     <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Controllers\Admin\CondemnPlayerController.ts" />
     <TypeScriptCompile Include="Controllers\Admin\index.ts" />
     <TypeScriptCompile Include="Controllers\Admin\LandingPageController.ts" />
     <TypeScriptCompile Include="Controllers\Admin\PlayerController.ts" />
