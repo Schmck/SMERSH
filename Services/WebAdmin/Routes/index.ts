@@ -7,4 +7,8 @@ export {
 
 export {
     PlayersRoute
-    } from './Admin'
+} from './Admin'
+
+export {
+    LayoutRoute
+} from './Layout'
