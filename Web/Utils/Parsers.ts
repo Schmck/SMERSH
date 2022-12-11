@@ -13,7 +13,7 @@ export class Parsers {
             return Object.values(item.children).map(row => {
                 return row.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')
             })
-        }).map((val: any) => { val.pop(); return val })
+        })
         const result: any = { headers, values }
 
         return result.values.map(value => {
