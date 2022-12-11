@@ -1,9 +1,9 @@
 ﻿import { Controller, Param, Body, Get, Post, Put, Delete } from 'routing-controllers';
 import { PlayersRoute } from '../../../Services/WebAdmin/Routes';
 import { WebAdminSession } from '../../../Services/WebAdmin';
-import { SmershController } from '../../Framework';
+import { SmershController, Api } from '../../Framework';
 import { Parsers } from '../../Utils';
-import axios, { isCancel, AxiosError } from 'axios';
+import axios, { isCancel, AxiosError, AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
 import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar, Cookie } from 'tough-cookie';
 import * as dotenv from 'dotenv';
@@ -17,7 +17,7 @@ export class CondemnPlayerController extends SmershController {
 
         this.log.info(playerName)
         const result = session.navigate(PlayersRoute.GetPlayers.Action)
-        return result.then(dom => {
+        return result.then(async dom => {
             if (dom) {
                 const table = dom.window.document.querySelector("#players");
 
@@ -36,24 +36,31 @@ export class CondemnPlayerController extends SmershController {
                     });
                     if (player) {
                         this.log.info(player.Playername)
-                        const config = process.env;
-                        const authcred = config['AUTHCRED'];
-                        const url = config["BASE_URL"];
-
-                        const authCookiePart = `authcred=${authcred}`
-                        const cookie = Cookie.parse(authCookiePart);
-                        cookie.path = parsed.pathName;
-                        cookie.domain = parsed.hostname;
-
-                        const jar = new CookieJar();
-                        jar.setCookie(cookie, url)
-                        const client = wrapper(axios.create({ jar }));
+                        const client = Api.axios();
+                        const env = process.env;
+                        const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action;
                         const data = {
+                            ajax: 1,
                             action,
                             playerkey: player.PlayerKey
                         }
 
-                        client.post(url + PlayersRoute.PersecutePlayer.Action, data).then(result => this.log.info(result))
+                        const myHeaders : RawAxiosRequestHeaders = {
+                            "Content-type": "application/x-www-form-urlencoded"
+                        }
+                        const config: AxiosRequestConfig = 
+                        {
+                            headers : myHeaders,
+                        }
+
+                        const urlencoded = new URLSearchParams();
+                        urlencoded.append("playerkey", player.PlayerKey);
+                        urlencoded.append("ajax", '1');
+                        urlencoded.append("action", action);
+
+                        await client.post(url, urlencoded, config).then(result => {
+                            this.log.info(result)
+                        });
 
                         return player
                     } else return 'worse luck';
