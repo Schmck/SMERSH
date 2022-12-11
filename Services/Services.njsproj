@@ -59,6 +59,8 @@
     <TypeScriptCompile Include="WebAdmin\Routes\Current\index.ts" />
     <TypeScriptCompile Include="WebAdmin\Routes\Current\Status.ts" />
     <TypeScriptCompile Include="WebAdmin\Routes\index.ts" />
+    <TypeScriptCompile Include="WebAdmin\Routes\Layout\index.ts" />
+    <TypeScriptCompile Include="WebAdmin\Routes\Layout\Layout.ts" />
     <TypeScriptCompile Include="WebAdmin\Routes\Route.ts" />
     <TypeScriptCompile Include="WebAdmin\Session.ts" />
   </ItemGroup>

@@ -4,9 +4,6 @@ import { WebAdminSession } from '../../../Services/WebAdmin';
 import { SmershController, Api } from '../../Framework';
 import { Parsers } from '../../Utils';
 import axios, { isCancel, AxiosError, AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
-import { wrapper } from 'axios-cookiejar-support';
-import { CookieJar, Cookie } from 'tough-cookie';
-import * as dotenv from 'dotenv';
 
 
 @Controller()
@@ -38,19 +35,12 @@ export class CondemnPlayerController extends SmershController {
                         this.log.info(player.Playername)
                         const client = Api.axios();
                         const env = process.env;
-                        const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action;
-                        const data = {
-                            ajax: 1,
-                            action,
-                            playerkey: player.PlayerKey
-                        }
-
-                        const myHeaders : RawAxiosRequestHeaders = {
-                            "Content-type": "application/x-www-form-urlencoded"
-                        }
+                        const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
                         const config: AxiosRequestConfig = 
                         {
-                            headers : myHeaders,
+                            headers: {
+                                "Content-type": "application/x-www-form-urlencoded"
+                            },
                         }
 
                         const urlencoded = new URLSearchParams();
@@ -59,7 +49,7 @@ export class CondemnPlayerController extends SmershController {
                         urlencoded.append("action", action);
 
                         await client.post(url, urlencoded, config).then(result => {
-                            this.log.info(result)
+                            this.log.info(JSON.stringify(result))
                         });
 
                         return player

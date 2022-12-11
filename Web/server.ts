@@ -18,6 +18,10 @@ import {
     LandingPageController
 } from './Controllers/Admin';
 
+import {
+        GetLayoutController
+    } from './Controllers/Layout'
+
 const app = createExpressServer({
     controllers: [
         LandingPageController,
@@ -28,6 +32,8 @@ const app = createExpressServer({
         PlayersController,
         PlayerController,
         CondemnPlayerController,
+
+        GetLayoutController,
         ], 
 });
 

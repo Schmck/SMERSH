@@ -51,6 +51,8 @@
     <TypeScriptCompile Include="Controllers\Admin\LandingPageController.ts" />
     <TypeScriptCompile Include="Controllers\Admin\PlayerController.ts" />
     <TypeScriptCompile Include="Controllers\Admin\PlayersController.ts" />
+    <TypeScriptCompile Include="Controllers\Layout\GetLayoutController.ts" />
+    <TypeScriptCompile Include="Controllers\Layout\index.ts" />
     <TypeScriptCompile Include="Framework\Api.ts" />
     <TypeScriptCompile Include="Framework\ClientBuilder.ts" />
     <TypeScriptCompile Include="Framework\SmershController.ts" />
