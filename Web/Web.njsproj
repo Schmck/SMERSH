@@ -41,7 +41,6 @@
     <Folder Include="Controllers\Admin\" />
     <Folder Include="Controllers\Current\" />
     <Folder Include="Controllers\Layout\" />
-    <Folder Include="Controllers\Players\" />
     <Folder Include="Framework\" />
     <Folder Include="Utils\" />
   </ItemGroup>
@@ -53,13 +52,16 @@
     <TypeScriptCompile Include="Controllers\Admin\PlayersController.ts" />
     <TypeScriptCompile Include="Controllers\Layout\GetLayoutController.ts" />
     <TypeScriptCompile Include="Controllers\Layout\index.ts" />
+    <TypeScriptCompile Include="Controllers\Layout\PostLayoutController.ts" />
+    <TypeScriptCompile Include="Controllers\Layout\PostLayoutModel.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Framework\Api.ts" />
     <TypeScriptCompile Include="Framework\ClientBuilder.ts" />
     <TypeScriptCompile Include="Framework\SmershController.ts" />
     <TypeScriptCompile Include="Controllers\Current\CurrentChatController.ts" />
     <TypeScriptCompile Include="Controllers\Current\CurrentStatusController.ts" />
     <TypeScriptCompile Include="Controllers\Current\index.ts" />
-    <TypeScriptCompile Include="Controllers\Players\PlayersControllers.ts" />
     <TypeScriptCompile Include="Framework\Config.ts" />
     <TypeScriptCompile Include="Framework\index.ts" />
     <TypeScriptCompile Include="Utils\Arrays.ts" />
