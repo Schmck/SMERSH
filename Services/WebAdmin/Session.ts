@@ -24,7 +24,7 @@ export class WebAdminSession {
         this.CookieJar = cookieJar;
         this.CookieJar.setCookie(cookie, url)
 
-        this.log = new FileLogger('info.log')
+        this.log = new FileLogger('./info.log')
         this.DOMs[url] = new JSDOM(url)
         this.DOMs[url].window.document.cookie += authCookiePart
     }
@@ -40,9 +40,10 @@ export class WebAdminSession {
 
     public async navigate(url: string) {
         let navUrl = url;
+        let baseUrl = process.env["BASE_URL"];
 
-        if (navUrl !== process.env["BASE_URL"]) {
-            navUrl = process.env["BASE_URL"] + url
+        if (navUrl !== baseUrl) {
+            navUrl = baseUrl + url
             this.log.info(url, navUrl)
         }
         this.log.info(`navigating to: `, navUrl)
@@ -56,6 +57,7 @@ export class WebAdminSession {
             }
             this.log.info(this.CookieJar)
             //this.log.info('before fromurl', new Date().toISOString(), Object.entries(this.DOMs));
+            this.close(navUrl)
             this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, {cookieJar: this.CookieJar})
 
             //this.log.info('after fromurl', new Date().toISOString(), Object.entries(this.DOMs));
@@ -106,6 +108,10 @@ export class WebAdminSession {
             head: '',
             hostname: '',
             pathName: ''
+        }
+
+        if (!url) {
+            return;
         }
 
         if (url.includes('//')) {

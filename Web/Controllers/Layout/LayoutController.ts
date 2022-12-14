@@ -1,17 +1,37 @@
-﻿import { JsonController, Param, Body, BodyParam, Post, Put, Delete, UseBefore } from 'routing-controllers';
+import { Controller, Param, Body, Get, Post, Put, Delete, UseBefore } from 'routing-controllers';
 import { LayoutRoute } from '../../../Services/WebAdmin/Routes';
 import { WebAdminSession } from '../../../Services/WebAdmin';
 import { SmershController, Api } from '../../Framework';
-import { Parsers } from '../../Utils';
 import { AxiosRequestConfig } from 'axios';
 import { PostLayoutModel } from './PostLayoutModel';
 import { json } from 'body-parser'
 
-@JsonController()
-export class PostLayoutController extends SmershController {
+@Controller()
+export class LayoutController extends SmershController {
 
-    @Post('/layout')
-    public PostLayout(@Body() model: any) {
+    @Get('/layout')
+    public getLayout() {
+        const session = WebAdminSession.get();
+
+
+        const result = session.navigate(LayoutRoute.GetLayout.Action)
+        return result.then(async dom => {
+            if (dom) {
+                const campaign = Object.values(dom.window.document.querySelectorAll(`[id^='sgterritory_']`))
+                const layout = Object.fromEntries(campaign.map((item, index) => {
+                    let territoryArray = item['value'].split('\n')
+
+                    return [item.parentElement.children[0]['innerHTML'], territoryArray]
+                }).filter(i => i))
+
+                return layout
+            }
+        })
+    }
+
+    @Post('/layout/post')
+    @UseBefore(json())
+    public PostLayout(@Body() model: PostLayoutModel) {
 
         if (model && model.layout) {
             return this.callApi(model.layout)
@@ -58,7 +78,7 @@ export class PostLayoutController extends SmershController {
         }))
         urlencoded.append('save', 'save')
         await client.post(url, urlencoded, config).then(result => {
-            this.log.info(result)
+            //this.log.info(JSON.stringify(result))
         });
         return layout
     }
