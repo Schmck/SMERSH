@@ -20,7 +20,8 @@ import {
 
 import {
     GetLayoutController,
-    PostLayoutController
+    PostLayoutController,
+    LayoutController
     } from './Controllers/Layout'
 
 const app = createExpressServer({
@@ -34,8 +35,9 @@ const app = createExpressServer({
         PlayerController,
         CondemnPlayerController,
 
-        GetLayoutController,
-        PostLayoutController
+        //GetLayoutController,
+        //PostLayoutController
+        LayoutController
         ], 
 });
 
