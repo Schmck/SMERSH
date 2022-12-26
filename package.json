@@ -1,5 +1,6 @@
 {
     "dependencies": {
+        "discord.js": "^14.7.1",
         "guid-typescript": "^1.0.9",
         "html-table-to-json": "^1.0.0",
         "ts-log": "^2.2.5"

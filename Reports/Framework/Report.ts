@@ -3,8 +3,12 @@ import { IReport } from './IReport'
 
 export abstract class Report implements IReport {
     constructor(id: Guid) {
-        this.Id = id || Guid.create();
+        if (id) {
+            this.Id = id.toString();
+        } else {
+            this.Id = Guid.create().toString();
+        }
     }
 
-    public Id: Guid
+    public Id: string
 }

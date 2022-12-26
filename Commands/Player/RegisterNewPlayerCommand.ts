@@ -1,5 +1,5 @@
 import { Guid } from "guid-typescript"
-import { Command } from "../"
+import { Command } from "../Command"
 
 export class RegisterNewPlayerCommand extends Command {
 	constructor(playerId: Guid, name: string) {
