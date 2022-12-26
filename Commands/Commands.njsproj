@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Command.ts" />
+    <TypeScriptCompile Include="Current\index.ts" />
     <TypeScriptCompile Include="ICommand.ts" />
     <TypeScriptCompile Include="Current\ReceiveChatLineCommand.ts" />
   </ItemGroup>

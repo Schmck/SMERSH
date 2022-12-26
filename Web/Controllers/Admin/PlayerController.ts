@@ -13,6 +13,7 @@ export class PlayerController extends SmershController {
         const session = WebAdminSession.get();
 
         this.log.info(playerName)
+
         const result = session.navigate(PlayersRoute.GetPlayers.Action)
         return result.then(dom => {
             if (dom) {

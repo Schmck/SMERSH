@@ -1,7 +1,7 @@
 ﻿//import { Client } from '@elastic/elasticsearch';
 const elastic = require('@elastic/elasticsearch')
 const { Client } = elastic;
-import { IndicesCreateRequest, IndexName, IndicesCreateResponse } from '@elastic/elasticsearch/lib/api/types';
+import { IndicesCreateRequest, IndexName, IndicesCreateResponse, NodesClient } from '@elastic/elasticsearch/lib/api/types';
 import { IndicesCreateParams, ConfigOptions } from 'elasticsearch';
 import * as reports from "../../Reports/Entities"
 import { SearchReport } from "../../Reports/Framework"
@@ -17,25 +17,44 @@ export class ClientBuilder {
         this.log = new FileLogger(`./info-${this.constructor.name}.log`)
     }
 
+    public static logger = new FileLogger(`./info-${this.constructor.name}.log`)
+
     public static async BuildClient<Client>(url: string) {
         const reports = this.getIndices();
+        const mappings = this.getMappings();
         const client = new Client({
             node: url,
         } as ConfigOptions)
 
         for (let report of reports) {
+            let index = reports.indexOf(report)
             let exists = await client.indices.exists({ index: report })
             if (!exists) {
-                this.BuildIndex(client, report)
+                this.BuildIndex(client, report, mappings[index])
             }
         }
 
         return client;
     }
 
-    private static async BuildIndex(client: typeof Client, name: IndexName) {
+    public static async GetClient<NodesClient>(url: string) {
+        const client : NodesClient = new Client({
+            node: url,
+        } as ConfigOptions)
+
+        return client;
+    }
+
+
+
+    private static async BuildIndex(client: typeof Client, name: IndexName, mappings: any) {
         const options: IndicesCreateParams = {
             index: name.toLowerCase(),
+            body: {
+                mappings: {
+                    properties: mappings
+                }
+            }
         }
         const response: IndicesCreateResponse = await client.indices.create(options)
         if (!response.acknowledged) {
@@ -56,5 +75,136 @@ export class ClientBuilder {
         }).filter(r => r)
 
         return indices
+    }
+
+    public static getMappings(): Array<any> {
+        let mappings = Object.keys(reports).map(report => {
+            let searchReport = Object.keys(reports[report]).find(key => reports[report][key].prototype instanceof SearchReport)
+            let obj = reports[report][searchReport];
+
+            return ClientBuilder.autoPropertyWalker(new obj)
+        }).filter(r => r).map(report => {
+            let copy = {}
+            for (let key in report) {
+                console.log(report[key])
+                copy = { ...copy, ...report[key] }
+
+                if (Array.isArray(copy[key])) {
+                    copy[key] = copy[key][0]
+                }
+            }
+            return copy
+        })
+
+        mappings = mappings.map(report => {
+            let copy = report;
+            for (let key in report) {
+                console.log(report[key])
+                if (Array.isArray(report[key])) {
+                    copy[key] = report[key][0]
+                }
+
+                if (copy[key]["fields"] && Array.isArray(copy["fields"])) {
+                    copy[key]["fields"] = report[key]["fields"][0]
+                }
+
+                if (typeof copy[key] === "object" && copy[key][0]) {
+                    copy[key] = report[key][0]
+                }
+            }
+            return copy
+        })
+
+        mappings.map(report => {
+            let copy = report;
+            for (let key in report) {
+                if (copy[key]["fields"] && Array.isArray(copy[key]["fields"])) {
+                    copy[key]["fields"] = copy[key]["fields"].reduce((prev, current) => {
+                        const key = Object.keys(current)[0]
+
+                        if (Array.isArray(current[key])) {
+                            return {
+                                ...prev,
+                                [key]: current[key].reduce((old, newer) => {
+                                    const keys = Object.keys(newer)[0] 
+                                    return { ...old, [keys]: newer[keys]}
+                                })
+                            }
+                        }
+
+                        //console.log(key, current[key])
+                        return { ...prev, [key]: current[key] }
+                    }, {})
+                }
+            }
+            return copy
+        })
+
+        mappings = mappings.map(report => {
+            let copy = report
+            for (let key in report) {
+                console.log(report[key])
+               
+
+                if (copy[key]["fields"] && copy[key]["fields"]["0"]) {
+                    copy[key]["fields"] = copy[key]["fields"]["0"]
+                }
+
+            }
+            return copy
+        })
+
+        console.log(mappings)
+        this.logger.info(JSON.stringify(mappings))
+        return mappings
+    }
+
+
+    public static autoPropertyWalker(obj: any, level : number = 0) {
+        let mappings = Object.keys(obj).map(key => {
+            let instance = obj[key]
+
+            if (typeof instance == "object") {
+                if (level === 0) {
+                    return {
+                        [key]: {
+                            type: this.getElasticType(typeof obj[key]),
+                            fields: this.autoPropertyWalker(instance, level + 1)
+                        }
+                    }
+                } else return {
+                    [key]: this.autoPropertyWalker(instance, level + 1)
+                }
+
+                
+            }
+
+            return {
+                [key]:
+                {
+                    type: this.getElasticType(typeof instance)
+                }
+                }
+            /*return {
+                [key]: {
+                    type: typeof obj[key]
+                }
+            }*/
+
+        })
+
+        return mappings
+    }
+
+    public static getElasticType(type: string) {
+        switch (type) {
+            case "string":
+                return "text";
+                break
+            case "number":
+                return "integer";
+            default :
+                return type 
+        }
     }
 }

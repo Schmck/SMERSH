@@ -19,23 +19,26 @@ export class ClientBuilder {
 
     public static async BuildClient<Client>(url: string) {
         const reports = this.getIndices();
+        const mappings = this.getMappings();
         const client = new Client({
             node: url,
         } as ConfigOptions)
 
         for (let report of reports) {
+            let index = reports.indexOf(report)
             let exists = await client.indices.exists({ index: report })
             if (!exists) {
-                this.BuildIndex(client, report)
+                this.BuildIndex(client, report, mappings[index])
             }
         }
 
         return client;
     }
 
-    private static async BuildIndex(client: typeof Client, name: IndexName) {
+    private static async BuildIndex(client: typeof Client, name: IndexName, mappings : any) {
         const options: IndicesCreateParams = {
             index: name.toLowerCase(),
+            body: mappings 
         }
         const response: IndicesCreateResponse = await client.indices.create(options)
         if (!response.acknowledged) {
@@ -70,7 +73,7 @@ export class ClientBuilder {
         return indices
     }
 
-    public getMappings(): Array<any> {
+    public static getMappings(): Array<any> {
         let mappings = Object.keys(reports).map(report => {
             let obj = reports[report][
                 Object.keys(reports[report])
@@ -115,7 +118,7 @@ export class ClientBuilder {
         })
 
         console.log(mappings)
-        this.log.info(JSON.stringify(mappings))
+        //this.log.info(JSON.stringify(mappings))
         return mappings
     }
 

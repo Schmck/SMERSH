@@ -1,5 +1,5 @@
 import { Guid } from "guid-typescript"
-import { Command } from "../"
+import { Command } from "../Command"
 
 export class ReceivePlayerChatLineCommand extends Command {
 	constructor(playerId: Guid, name: string, line: string) {

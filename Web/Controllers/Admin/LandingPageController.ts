@@ -2,6 +2,7 @@
 import { WebAdminSession } from '../../../Services/WebAdmin';
 import { Logger, dummyLogger } from "ts-log";
 import { FileLogger } from '../../../SMERSH/Utilities'
+import { Config, ClientBuilder } from '../../Framework';
 
 @Controller()
 export class LandingPageController {
@@ -14,5 +15,12 @@ export class LandingPageController {
     @Get('/')
     public GreetVisitor() {
         return 'great success!'
+    }
+
+    @Get('/elastic')
+    public BuildIndices() {
+        const config = process.env;
+        console.log(config["ELASTIC_URL"])
+        return ClientBuilder.BuildClient(config["ELASTIC_URL"])
     }
 }
