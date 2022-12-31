@@ -6,7 +6,17 @@
     "moduleResolution": "node",
     "target": "es6",
     "lib": [ "es2019" ],
-    "sourceMap": true
+    "sourceMap": true,
+    "declaration": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "skipLibCheck": true,
+    "removeComments": true,
+    "noLib": false,
+    "emitDecoratorMetadata": true,
+    "allowJs": false
   },
   "exclude": [
     "node_modules"

@@ -1,8 +1,13 @@
-import { CommandBus } from '../SMERSH/command-bus'
+import { CommandBus } from '@nestjs/cqrs'
+import { Inject } from '@nestjs/common'
 
 export abstract class Watcher {
-    constructor(protected commandBus: CommandBus) {}
+
+    @Inject(CommandBus)
+    protected readonly commandBus: CommandBus
+
+    constructor() {}
    
 
-    public abstract Watch()
+    public abstract Watch(timeout : number, ...args)
 }

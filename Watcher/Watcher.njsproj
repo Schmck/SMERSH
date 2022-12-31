@@ -33,6 +33,7 @@
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="Round\ChatWatcher.ts" />
+    <Content Include="Round\RoundWatcher.ts" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>

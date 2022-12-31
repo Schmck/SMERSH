@@ -1,7 +1,7 @@
 ﻿import { Enumeration } from '../'
 
 export class Layout extends Enumeration {
-    private constructor(value: number, displayName: string) {
+    public constructor(value: number, displayName: string) {
         super(value, displayName)
     }
 

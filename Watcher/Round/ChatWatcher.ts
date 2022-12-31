@@ -9,11 +9,11 @@ export class ChatWatcher extends Watcher {
 
     public override Watch() {
         const session = WebAdminSession.get();
-        const messages = []
 
 
         const result = session.navigate(ChatRoute.GetChat.Action)
         return result.then(dom => {
+            const messages = []
             if (dom) {
                 dom.window.document.querySelectorAll(".chatmessage").forEach(msg => {
                     let username

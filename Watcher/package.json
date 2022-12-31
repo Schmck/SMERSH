@@ -15,6 +15,8 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
+    "@nestjs/common": "^9.2.1",
+    "@nestjs/cqrs": "^9.0.1",
     "guid-typescript": "^1.0.9",
     "typescript-guid": "^1.0.3"
   }

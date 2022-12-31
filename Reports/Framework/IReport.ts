@@ -2,5 +2,5 @@
 
 export declare interface IReport {
 
-    Id: string
+    Id: Guid
 }

@@ -21,6 +21,6 @@ export class LandingPageController {
     public BuildIndices() {
         const config = process.env;
         console.log(config["ELASTIC_URL"])
-        return ClientBuilder.BuildClient(config["ELASTIC_URL"])
+        return ClientBuilder.Build(config["ELASTIC_URL"])
     }
 }

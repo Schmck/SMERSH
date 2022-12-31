@@ -7,6 +7,9 @@ import * as reports from "../../Reports/Entities"
 import { SearchReport } from "../../Reports/Framework"
 import { Logger, dummyLogger } from "ts-log/build/src/index";
 import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
+import { Index, Field, Elasticsearch, Primary } from '../../SMERSH/Utilities';
+import { Guid } from "guid-typescript";
+
 
 export class ClientBuilder {
     private static INDEX_ALREADY_EXISTS: string = "index_already_exists_exception";
@@ -19,23 +22,27 @@ export class ClientBuilder {
 
     public static logger = new FileLogger(`./info-${this.constructor.name}.log`)
 
-    public static async BuildClient<Client>(url: string) {
-        const reports = this.getIndices();
-        const mappings = this.getMappings();
-        const client = new Client({
-            node: url,
-        } as ConfigOptions)
-
+    public static async Build<ElasticSearch>(url: string) {
+        //const indices = this.getIndices();
+        const reports = this.getReports();
+        const client = new Elasticsearch({
+            host: url,
+        })
+  
         for (let report of reports) {
-            let index = reports.indexOf(report)
-            let exists = await client.indices.exists({ index: report })
+    
+            let exists = await client.indices.exists(report)
             if (!exists) {
-                this.BuildIndex(client, report, mappings[index])
+               let create =  await client.indices.create(report)
+               let mappings = await client.indices.putMapping(report)
             }
         }
 
         return client;
     }
+
+
+    
 
     public static async GetClient<NodesClient>(url: string) {
         const client : NodesClient = new Client({
@@ -45,23 +52,19 @@ export class ClientBuilder {
         return client;
     }
 
+    public static getReports(): Array<any> {
+        let reportz = Object.keys(reports).map(report => {
+            let obj = reports[report][
+                Object.keys(reports[report])
+                    .find(key => reports[report][key].prototype instanceof SearchReport)
+            ];
 
+            return obj
 
-    private static async BuildIndex(client: typeof Client, name: IndexName, mappings: any) {
-        const options: IndicesCreateParams = {
-            index: name.toLowerCase(),
-            body: {
-                mappings: {
-                    properties: mappings
-                }
-            }
-        }
-        const response: IndicesCreateResponse = await client.indices.create(options)
-        if (!response.acknowledged) {
-            console.log(`request to create index: ${name} failed, see: ${JSON.stringify(response, null, 4)}`)
-        }
+        })
+
+        return reportz;
     }
-
 
     public static getIndices(): Array<any> {
         let indices = Object.keys(reports).map(report => {
