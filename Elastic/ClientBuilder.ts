@@ -7,6 +7,7 @@ import * as reports from "../Reports/Entities"
 import { SearchReport } from "../Reports/Framework"
 import { Logger, dummyLogger } from "ts-log/build/src/index";
 import { FileLogger } from "../SMERSH/Utilities/FileLogger";
+import { Field, Elasticsearch, Primary } from '@gojob/ts-elasticsearch';
 
 export class ClientBuilder {
     private static INDEX_ALREADY_EXISTS: string = "index_already_exists_exception";
@@ -16,6 +17,25 @@ export class ClientBuilder {
       //  this.log = new FileLogger(`./logs/info-${new Date().toISOString().split('.')[0]}-elastic-client-builder.log`);
         this.log = new FileLogger(`./logs/info.log`);
     };
+
+
+    public static async Build<ElasticSearch>(url: string) {
+        //const indices = this.getIndices();
+        const reports = this.getReports();
+        const client = new Elasticsearch({
+            host: url,
+        })
+
+        for (let report of reports) {
+            let exists = client.indices.exists(report)
+            if (!exists) {
+                client.indices.create(report)
+                client.indices.putMapping(report)
+            }
+        }
+        
+    }
+
 
     public static async BuildClient<Client>(url: string) {
         const reports = this.getIndices();
@@ -47,6 +67,19 @@ export class ClientBuilder {
     }
 
 
+    public static getReports(): Array<any> {
+        let report = Object.keys(reports).map(report => {
+            let obj = reports[report][
+                Object.keys(reports[report])
+                    .find(key => reports[report][key].prototype instanceof SearchReport)
+            ];
+
+            return report
+
+        })
+
+        return report;
+    }
     public static getIndices(): Array<any> {
         let indices = Object.keys(reports).map(report => {
             try {
@@ -79,6 +112,8 @@ export class ClientBuilder {
                 Object.keys(reports[report])
                 .find(key => reports[report][key].prototype instanceof SearchReport)
             ];
+
+            return mappings
             return ClientBuilder.autoPropertyWalker(new obj)
             /*return Object.keys(new obj).map(field => {
                 if (typeof (new obj)[field] === 'object') {

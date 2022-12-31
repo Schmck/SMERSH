@@ -44,9 +44,9 @@ const app = createExpressServer({
 dotenv.config()
 const config = process.env;
 console.log(config["ELASTIC_URL"])
-ClientBuilder.BuildClient(config["ELASTIC_URL"])
-var mappings = ClientBuilder.getMappings()
-console.log(mappings)
+ClientBuilder.Build(config["ELASTIC_URL"])
+//var mappings = ClientBuilder.getMappings()
+//console.log(mappings)
 
 WebAdminSession.set(config["BASE_URL"], config["AUTHCRED"])
 app.listen(1337);

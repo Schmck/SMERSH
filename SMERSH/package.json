@@ -11,6 +11,7 @@
     "clean": "tsc --build --clean"
   },
   "devDependencies": {
+    "@types/elasticsearch": "^5.0.40",
     "@types/node": "^14.14.7",
     "fs": "^0.0.1-security",
     "ts-log": "^2.2.5",
@@ -20,6 +21,7 @@
   "dependencies": {
     "@nestjs/common": "^9.2.1",
     "@nestjs/core": "^9.2.1",
+    "elasticsearch": "^16.7.3",
     "guid-typescript": "^1.0.9",
     "rxjs": "^7.6.0"
   }
