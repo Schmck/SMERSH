@@ -31,6 +31,7 @@
   <ItemGroup>
     <Content Include="package.json" />
     <Content Include="README.md" />
+    <Content Include="SearchClient.ts" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>

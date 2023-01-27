@@ -1,4 +1,4 @@
-﻿import { Controller, Param, Body, Get, Post, Put, Delete } from 'routing-controllers';
+﻿import { Controller, Param, Body, Get, Post, Put, Delete } from '@nestjs/common';
 import { PlayersRoute } from '../../../Services/WebAdmin/Routes';
 import { WebAdminSession } from '../../../Services/WebAdmin';
 import { SmershController } from '../../Framework';

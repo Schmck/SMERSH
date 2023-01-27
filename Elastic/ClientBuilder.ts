@@ -1,23 +1,27 @@
 ﻿//import { Client } from '@elastic/elasticsearch';
 const elastic = require('@elastic/elasticsearch')
 const { Client } = elastic;
-import { IndicesCreateRequest, IndexName, IndicesCreateResponse } from '@elastic/elasticsearch/lib/api/types';
+import { IndicesCreateRequest, IndexName, IndicesCreateResponse, NodesClient } from '@elastic/elasticsearch/lib/api/types';
 import { IndicesCreateParams, ConfigOptions } from 'elasticsearch';
 import * as reports from "../Reports/Entities"
 import { SearchReport } from "../Reports/Framework"
 import { Logger, dummyLogger } from "ts-log/build/src/index";
 import { FileLogger } from "../SMERSH/Utilities/FileLogger";
-import { Field, Elasticsearch, Primary } from '@gojob/ts-elasticsearch';
+import { Index, Field, Elasticsearch, Primary } from '../SMERSH/Utilities';
+import * as es from 'elasticsearch';
+import { Guid } from "guid-typescript";
+
 
 export class ClientBuilder {
     private static INDEX_ALREADY_EXISTS: string = "index_already_exists_exception";
     private static RESOURCE_ALREADY_EXISTS: string = "resource_already_exists_exception";
+
     public log: FileLogger;
     public constructor(log: Logger = dummyLogger) {
-      //  this.log = new FileLogger(`./logs/info-${new Date().toISOString().split('.')[0]}-elastic-client-builder.log`);
-        this.log = new FileLogger(`./logs/info.log`);
-    };
+        this.log = new FileLogger(`./info-${this.constructor.name}.log`)
+    }
 
+    public static logger = new FileLogger(`./info-${this.constructor.name}.log`)
 
     public static async Build<ElasticSearch>(url: string) {
         //const indices = this.getIndices();
@@ -27,104 +31,71 @@ export class ClientBuilder {
         })
 
         for (let report of reports) {
-            let exists = client.indices.exists(report)
+
+            let exists = await client.indices.exists(report)
             if (!exists) {
-                client.indices.create(report)
-                client.indices.putMapping(report)
-            }
-        }
-        
-    }
+                let create = await client.indices.create(report);
+                let mappings = await client.indices.putMapping(report);
 
+                let instantiated = new report();
+                let put = await client.index(instantiated)
 
-    public static async BuildClient<Client>(url: string) {
-        const reports = this.getIndices();
-        const mappings = this.getMappings();
-        const client = new Client({
-            node: url,
-        } as ConfigOptions)
+                let refresh = await client.indices.refresh(report);
 
-        for (let report of reports) {
-            let index = reports.indexOf(report)
-            let exists = await client.indices.exists({ index: report })
-            if (!exists) {
-                this.BuildIndex(client, report, mappings[index])
+                const { documents } = await client.search(report, { body: { query: { match_all: {} } } });
+                console.log(documents)
             }
         }
 
         return client;
     }
 
-    private static async BuildIndex(client: typeof Client, name: IndexName, mappings : any) {
-        const options: IndicesCreateParams = {
-            index: name.toLowerCase(),
-            body: mappings 
-        }
-        const response: IndicesCreateResponse = await client.indices.create(options)
-        if (!response.acknowledged) {
-            console.log(`request to create index: ${name} failed, see: ${JSON.stringify(response, null, 4)}`)
-        }
+
+
+
+    public static async GetClient(url: string) : Promise<Elasticsearch> {
+        const client = new Elasticsearch({
+            host: url,
+        })
+
+        return client;
     }
 
-
     public static getReports(): Array<any> {
-        let report = Object.keys(reports).map(report => {
+        let reportz = Object.keys(reports).map(report => {
             let obj = reports[report][
                 Object.keys(reports[report])
                     .find(key => reports[report][key].prototype instanceof SearchReport)
             ];
 
-            return report
+            return obj
 
         })
 
-        return report;
+        return reportz;
     }
+
     public static getIndices(): Array<any> {
         let indices = Object.keys(reports).map(report => {
             try {
                 return reports[report]
                 [
                     Object.keys(reports[report])
-                    .find(key => reports[report][key].prototype instanceof SearchReport)
+                        .find(key => reports[report][key].prototype instanceof SearchReport)
                 ].name
             } catch (e) { return false }
         }).filter(r => r)
-        let searchReports = Object.keys(reports).map(report => {
-            try {
-                return reports[report]
-                [
-                    Object.keys(reports[report])
-                    .find(key => reports[report][key].prototype instanceof SearchReport)
-                ]
-            } catch (e) { return false }
-        }).filter(r => r)
 
-        let mappings = searchReports.map(searchReport => {
-            return { [searchReport.constructor.name]: this.autoPropertyWalker(searchReport) }
-        });
         return indices
     }
 
     public static getMappings(): Array<any> {
         let mappings = Object.keys(reports).map(report => {
-            let obj = reports[report][
-                Object.keys(reports[report])
-                .find(key => reports[report][key].prototype instanceof SearchReport)
-            ];
+            let searchReport = Object.keys(reports[report]).find(key => reports[report][key].prototype instanceof SearchReport)
+            let obj = reports[report][searchReport];
 
-            return mappings
             return ClientBuilder.autoPropertyWalker(new obj)
-            /*return Object.keys(new obj).map(field => {
-                if (typeof (new obj)[field] === 'object') {
-                    return { [field]: ClientBuilder.autoPropertyWalker((new obj)[field]) }
-                }
-
-                return { [field]: typeof (new obj)[field] }
-            })*/
-        }).filter(r => r)
-
-        mappings = mappings.map(report => {
+        }).filter(r => r).map(report => {
             let copy = {}
             for (let key in report) {
                 console.log(report[key])
@@ -138,40 +109,114 @@ export class ClientBuilder {
         })
 
         mappings = mappings.map(report => {
-            let copy = report
+            let copy = report;
             for (let key in report) {
                 console.log(report[key])
-                if (Array.isArray(copy[key])) {
-                    copy[key] = copy[key][0]
+                if (Array.isArray(report[key])) {
+                    copy[key] = report[key][0]
+                }
+
+                if (copy[key]["fields"] && Array.isArray(copy["fields"])) {
+                    copy[key]["fields"] = report[key]["fields"][0]
                 }
 
                 if (typeof copy[key] === "object" && copy[key][0]) {
-                    copy[key] = copy[key][0]
+                    copy[key] = report[key][0]
                 }
             }
             return copy
         })
 
+        mappings.map(report => {
+            let copy = report;
+            for (let key in report) {
+                if (copy[key]["fields"] && Array.isArray(copy[key]["fields"])) {
+                    copy[key]["fields"] = copy[key]["fields"].reduce((prev, current) => {
+                        const key = Object.keys(current)[0]
+
+                        if (Array.isArray(current[key])) {
+                            return {
+                                ...prev,
+                                [key]: current[key].reduce((old, newer) => {
+                                    const keys = Object.keys(newer)[0]
+                                    return { ...old, [keys]: newer[keys] }
+                                })
+                            }
+                        }
+
+                        //console.log(key, current[key])
+                        return { ...prev, [key]: current[key] }
+                    }, {})
+                }
+            }
+            return copy
+        })
+
+        mappings = mappings.map(report => {
+            let copy = report
+            for (let key in report) {
+                console.log(report[key])
+
+
+                if (copy[key]["fields"] && copy[key]["fields"]["0"]) {
+                    copy[key]["fields"] = copy[key]["fields"]["0"]
+                }
+
+            }
+            return copy
+        })
+
         console.log(mappings)
-        //this.log.info(JSON.stringify(mappings))
+        this.logger.info(JSON.stringify(mappings))
         return mappings
     }
 
 
-    public static autoPropertyWalker(obj: any) {
+    public static autoPropertyWalker(obj: any, level: number = 0) {
         let mappings = Object.keys(obj).map(key => {
             let instance = obj[key]
 
             if (typeof instance == "object") {
-                return { [key]: this.autoPropertyWalker(instance) }
+                if (level === 0) {
+                    return {
+                        [key]: {
+                            type: this.getElasticType(typeof obj[key]),
+                            fields: this.autoPropertyWalker(instance, level + 1)
+                        }
+                    }
+                } else return {
+                    [key]: this.autoPropertyWalker(instance, level + 1)
+                }
+
+
             }
 
-            return { [key]: typeof obj[key] }
+            return {
+                [key]:
+                {
+                    type: this.getElasticType(typeof instance)
+                }
+            }
+            /*return {
+                [key]: {
+                    type: typeof obj[key]
+                }
+            }*/
 
         })
-        
+
         return mappings
     }
 
-
+    public static getElasticType(type: string) {
+        switch (type) {
+            case "string":
+                return "text";
+                break
+            case "number":
+                return "integer";
+            default:
+                return type
+        }
+    }
 }

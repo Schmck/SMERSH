@@ -1,4 +1,5 @@
-import { Controller, Param, Body, Get, Post, Put, Delete, UseBefore } from 'routing-controllers';
+import { Controller, Param, Body, Get, Post, Put, Delete } from '@nestjs/common';
+import { UseBefore } from 'routing-controllers'
 import { LayoutRoute } from '../../../Services/WebAdmin/Routes';
 import { WebAdminSession } from '../../../Services/WebAdmin';
 import { SmershController, Api } from '../../Framework';
@@ -6,7 +7,7 @@ import { AxiosRequestConfig } from 'axios';
 import { PostLayoutModel } from './PostLayoutModel';
 import { json } from 'body-parser'
 
-@Controller()
+@Controller('layout')
 export class LayoutController extends SmershController {
 
     @Get('/layout')

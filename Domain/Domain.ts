@@ -7,5 +7,7 @@ export class Domain extends AggregateRoot {
         this.Id = id
     }
 
-   public Id : Guid;
+
+
+   public readonly Id : Guid;
 }

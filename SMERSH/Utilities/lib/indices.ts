@@ -53,7 +53,6 @@ export class Indices {
       type: metadata.type,
       includeTypeName: true,
       body: {
-        dynamic: 'strict',
         properties: getPureMapping(fieldsMetadata),
       },
     });

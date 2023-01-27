@@ -1,6 +1,6 @@
 ﻿import { Guid } from "guid-typescript";
 import { Domain } from './Domain'
-import { ChatLinesReceivedEvent } from '../Events/Round'
+import { ChatLineReceivedEvent } from '../Events/Round'
 
 export class Round extends Domain {
 
@@ -8,16 +8,18 @@ export class Round extends Domain {
 
     public Date: Date;
 
-    public ChatLines: string[];
+    public Chat: string[];
 
+    constructor(id: Guid) {
+        super(id);
+    }
 
-
-    public receiveChatLines(chatLines: string[]) {
-        const exists = this.ChatLines.some(r => chatLines.includes(r))
+    public receiveChatLine(line: string, date : Date) {
+        const exists = this.Chat.some(r => r === line)
         if (exists) {
             return;
         }
-        this.apply(new ChatLinesReceivedEvent(this.Id, this.MapId, this.Date, chatLines));
+        this.apply(new ChatLineReceivedEvent(this.Id, this.MapId, this.Date, line));
 
     }
 

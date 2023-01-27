@@ -47,6 +47,7 @@
     <TypeScriptCompile Include="Entities\index.ts" />
     <TypeScriptCompile Include="Entities\map\index.ts" />
     <TypeScriptCompile Include="Entities\player\index.ts" />
+    <TypeScriptCompile Include="Entities\round\index.ts" />
     <TypeScriptCompile Include="Entities\round\playerInfo\index.ts" />
     <TypeScriptCompile Include="Entities\round\RoundSearchReport.ts" />
     <TypeScriptCompile Include="Framework\index.ts" />

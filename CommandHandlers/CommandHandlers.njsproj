@@ -35,14 +35,15 @@
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Current\" />
+    <Folder Include="Round\" />
     <Folder Include="Framework\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="CommandHandler.ts" />
-    <TypeScriptCompile Include="Current\ReceiveChatLineCommandHandler.ts" />
+    <TypeScriptCompile Include="Round\index.ts" />
+    <TypeScriptCompile Include="Round\ReceiveChatLineCommandHandler.ts" />
     <TypeScriptCompile Include="Framework\index.ts" />
     <TypeScriptCompile Include="Framework\Repository.ts" />
+    <TypeScriptCompile Include="index.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

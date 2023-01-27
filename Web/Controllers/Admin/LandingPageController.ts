@@ -1,4 +1,4 @@
-﻿import { Controller, Param, Body, Get, Post, Put, Delete } from 'routing-controllers';
+﻿import { Controller, Param, Body, Get, Post, Put, Delete } from '@nestjs/common';
 import { WebAdminSession } from '../../../Services/WebAdmin';
 import { Logger, dummyLogger } from "ts-log";
 import { FileLogger } from '../../../SMERSH/Utilities'

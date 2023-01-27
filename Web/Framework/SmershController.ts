@@ -4,10 +4,15 @@ const elastic = require('@elastic/elasticsearch')
 const { Client } = elastic;
 import { NodesClient } from '@elastic/elasticsearch/lib/api/types';
 import { ConfigOptions } from 'elasticsearch';
+import { Controller, Param, Body, Get, Post, Put, Delete } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 
+@Controller()
 export class SmershController {
     public log: FileLogger;
-    public constructor(log: Logger = dummyLogger) {
+    protected readonly commandBus;
+    public constructor(log: Logger = dummyLogger, commandBus: CommandBus) {
+        this.commandBus = commandBus
         this.log = new FileLogger(`./info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
         this.client = new Client({
             node: process.env["ELASTIC_URL"],

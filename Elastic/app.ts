@@ -1,8 +1,8 @@
 ﻿import { ClientBuilder } from './ClientBuilder'
+export { SearchClient } from './SearchClient'
 
-console.log('Hello world');
-
-console.log(ClientBuilder.getIndices());
-ClientBuilder.BuildClient("http://localhost:9209")
+//
+//console.log(ClientBuilder.getIndices());
+//ClientBuilder.Build("http://localhost:9209")
 //ClientBuilder.getMappings();
-console.log('goodbye world')
+//console.log('goodbye world')
