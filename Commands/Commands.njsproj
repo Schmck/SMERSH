@@ -32,16 +32,16 @@
   <ItemGroup>
     <Content Include="package.json" />
     <Content Include="README.md" />
+    <Content Include="Round\ReceiveChatLineCommand.ts" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Command.ts" />
-    <TypeScriptCompile Include="Current\index.ts" />
     <TypeScriptCompile Include="ICommand.ts" />
-    <TypeScriptCompile Include="Current\ReceiveChatLineCommand.ts" />
+    <TypeScriptCompile Include="Round\index.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Current\" />
+    <Folder Include="Round\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

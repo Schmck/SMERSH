@@ -21,6 +21,7 @@
   "dependencies": {
     "@elastic/elasticsearch": "^8.5.0",
     "@gojob/ts-elasticsearch": "^1.3.3",
+    "@nestjs/platform-express": "^9.2.1",
     "@types/dotenv": "^8.2.0",
     "@types/jsdom": "^20.0.0",
     "axios": "^1.2.1",

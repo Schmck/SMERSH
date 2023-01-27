@@ -1,4 +1,5 @@
-﻿export {
+﻿import 'reflect-metadata';
+export {
     Enumeration,
     Tickets,
     Team,

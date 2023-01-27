@@ -1,11 +1,17 @@
+import 'stream/web'
+import 'reflect-metadata';
 import { createExpressServer } from 'routing-controllers';
 import { WebAdminSession } from '../Services/WebAdmin';
 //import { ClientBuilder } from '../Elastic'
 import "reflect-metadata";
 import { Config, ClientBuilder } from './Framework';
 import * as dotenv from 'dotenv';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './Framework/app.module';
+import { SmershModule } from './Framework/smersh.module';
 
-import 'reflect-metadata';
+
+
 import {
     CurrentStatusController,
     CurrentChatController
@@ -36,7 +42,7 @@ const app = createExpressServer({
         CondemnPlayerController,
 
         //GetLayoutController,
-        //PostLayoutController
+        //PostLayoutController,
         LayoutController
         ], 
 });
@@ -49,4 +55,14 @@ ClientBuilder.Build(config["ELASTIC_URL"])
 //console.log(mappings)
 
 WebAdminSession.set(config["BASE_URL"], config["AUTHCRED"])
-app.listen(1337);
+//app.listen(1337);
+
+
+async function start(port: number) {
+
+    const app = await NestFactory.create(SmershModule)
+    app.listen(port), () => console.log('cqrs module running on port 1337')
+}
+
+
+start(1337)

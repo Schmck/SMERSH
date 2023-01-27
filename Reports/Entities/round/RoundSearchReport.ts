@@ -13,7 +13,7 @@ export class RoundSearchReport extends SearchReport {
 
     public Date: Date;
 
-    public ChatLines : string[];
+    public Lines : string[];
 
     public UpdateCalculatedProperties(): void { }
 }

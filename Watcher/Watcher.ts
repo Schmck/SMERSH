@@ -9,5 +9,5 @@ export abstract class Watcher {
     constructor() {}
    
 
-    public abstract Watch(timeout : number, ...args)
+    public abstract Watch(timeout : number, ...args : any[]) : void
 }

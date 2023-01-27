@@ -8,7 +8,7 @@ import { Command } from '../../Commands/Command'
 
 
 export class Client extends DiscordClient {
-    @Inject(CommandBus)
+    //@Inject(CommandBus)
     public readonly commandBus!: CommandBus;
 
     public constructor(options: ClientOptions) {

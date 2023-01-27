@@ -10,13 +10,13 @@ class guid {
 export abstract class Report implements IReport {
     constructor(id: Guid) {
         if (id) {
-            this.Id = id;
+            this.Id = id.toString();
         } else {
-            this.Id = Guid.create();
+            this.Id = Guid.create().toString();
         }
     }
 
     @Primary()
-    @Field({ object: guid })
-    public Id: Guid
+    @Field('text')
+    public Id: string
 }

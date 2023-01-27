@@ -33,8 +33,16 @@ export class ClientBuilder {
     
             let exists = await client.indices.exists(report)
             if (!exists) {
-               let create =  await client.indices.create(report)
-               let mappings = await client.indices.putMapping(report)
+                let create = await client.indices.create(report);
+                let mappings = await client.indices.putMapping(report);
+
+                let instantiated = new report();
+                let put = await client.index(instantiated)
+
+                let refresh = await client.indices.refresh(report);
+
+                const { documents } = await client.search(report, { body: { query: { match_all: {} } } });
+                console.log(documents)
             }
         }
 

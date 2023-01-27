@@ -1,7 +1,7 @@
 import { Guid } from "guid-typescript";
 import { Event } from '../'
 
-export class RoundStartedEvent extends Event {
+export class RoundEndedEvent extends Event {
 
     constructor(id: Guid, mapId: Guid, date: Date) {
         super(id)
