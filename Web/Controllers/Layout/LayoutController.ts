@@ -6,9 +6,13 @@ import { SmershController, Api } from '../../Framework';
 import { AxiosRequestConfig } from 'axios';
 import { PostLayoutModel } from './PostLayoutModel';
 import { json } from 'body-parser'
+import { CommandBus } from '@nestjs/cqrs'
 
 @Controller('layout')
 export class LayoutController extends SmershController {
+    public constructor(protected readonly commandBus: CommandBus) {
+        super(commandBus)
+    }
 
     @Get('/layout')
     public getLayout() {

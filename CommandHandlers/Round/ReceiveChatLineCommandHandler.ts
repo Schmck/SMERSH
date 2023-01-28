@@ -7,8 +7,8 @@ import { Round } from '../../Domain/Round'
 @CommandHandler(ReceiveChatLineCommand)
 export class ReceiveChatLineCommandHandler implements ICommandHandler<ReceiveChatLineCommand> {
     constructor(
-        private publisher: EventPublisher,
-        private repository: Repository 
+        private repository: Repository,
+        private publisher: EventPublisher
     ) { }
 
     async execute(command : ReceiveChatLineCommand) {

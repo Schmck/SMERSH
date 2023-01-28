@@ -5,13 +5,14 @@ const { Client } = elastic;
 import { NodesClient } from '@elastic/elasticsearch/lib/api/types';
 import { ConfigOptions } from 'elasticsearch';
 import { Controller, Param, Body, Get, Post, Put, Delete } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, CqrsModule } from '@nestjs/cqrs';
+import { ModuleRef } from '@nestjs/core/injector';
+
 
 @Controller()
 export class SmershController {
-    public log: FileLogger;
-    protected readonly commandBus;
-    public constructor(log: Logger = dummyLogger, commandBus: CommandBus) {
+ 
+    public constructor(commandBus: CommandBus, log: Logger = dummyLogger) {
         this.commandBus = commandBus
         this.log = new FileLogger(`./info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
         this.client = new Client({
@@ -19,5 +20,10 @@ export class SmershController {
         } as ConfigOptions)
     }
 
-    public client : Awaited<typeof Client> 
+    public log: FileLogger;
+
+    protected commandBus;
+
+    public client: Awaited<typeof Client> 
+
 }

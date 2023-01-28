@@ -2,18 +2,21 @@
 import { WebAdminSession } from '../../../Services/WebAdmin';
 import { Logger, dummyLogger } from "ts-log";
 import { FileLogger } from '../../../SMERSH/Utilities'
-import { Config, ClientBuilder } from '../../Framework';
+import { Config, ClientBuilder, SmershController } from '../../Framework';
+import { CommandBus } from '@nestjs/cqrs';
+import { ReceiveChatLineCommand } from '../../../Commands/Round'
+import { Guid } from "guid-typescript";
 
 @Controller()
-export class LandingPageController {
+export class LandingPageController extends SmershController {
 
-    public constructor() {
-        this.log = new FileLogger('info.log')
+    public constructor(protected readonly commandBus: CommandBus) {
+        super(commandBus)
     }
 
-    public log : Logger
     @Get('/')
     public GreetVisitor() {
+        this.commandBus.execute(new ReceiveChatLineCommand(Guid.create(), Guid.create(), new Date(), ''))
         return 'great success!'
     }
 
