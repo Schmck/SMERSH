@@ -11,6 +11,10 @@ import { Guid } from "guid-typescript";
 
 @Controller()
 export class CurrentChatController extends SmershController {
+    public constructor(protected readonly commandBus: CommandBus) {
+        super(commandBus)
+    }
+
    
     @Get('/current/chat')
     public async getCurrentChat() {

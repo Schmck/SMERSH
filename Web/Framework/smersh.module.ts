@@ -2,7 +2,9 @@ import { CommandHandlers } from '../../CommandHandlers'
 import { EventHandlers } from '../../EventHandlers'
 import { Repository } from '../../CommandHandlers/Framework'
 import { Module } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
+import { CqrsModule, CommandBus, EventBus } from '@nestjs/cqrs';
+import { OnModuleInit } from '@nestjs/common'
+import { ModuleRef } from '@nestjs/core'
 import { Event } from '../../Events'
 import {
     CurrentStatusController,
@@ -17,13 +19,12 @@ import {
 } from '../Controllers/Admin';
 
 import {
-    GetLayoutController,
-    PostLayoutController,
     LayoutController
 } from '../Controllers/Layout'
 
 
 @Module({
+    imports: [CqrsModule<Event>],
     controllers: [
         LandingPageController,
 
@@ -39,9 +40,12 @@ import {
     providers: [
        Repository,
        ...CommandHandlers,
-       ...EventHandlers,
+       ...EventHandlers
     ]
 })
-export class SmershModule {
+export class SmershModule implements OnModuleInit {
 
+    public onModuleInit(): void {
+        console.log('smersh module initiated', this)
+    }
 }

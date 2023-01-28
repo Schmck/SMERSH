@@ -60,6 +60,7 @@
     <TypeScriptCompile Include="Framework\Api.ts" />
     <TypeScriptCompile Include="Framework\app.module.ts" />
     <TypeScriptCompile Include="Framework\ClientBuilder.ts" />
+    <TypeScriptCompile Include="Framework\smersh.module.ts" />
     <TypeScriptCompile Include="Framework\SmershController.ts" />
     <TypeScriptCompile Include="Controllers\Current\CurrentChatController.ts" />
     <TypeScriptCompile Include="Controllers\Current\CurrentStatusController.ts" />

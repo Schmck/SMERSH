@@ -60,7 +60,7 @@ WebAdminSession.set(config["BASE_URL"], config["AUTHCRED"])
 
 async function start(port: number) {
 
-    const app = await NestFactory.create(SmershModule)
+    const app = await NestFactory.create(AppModule)
     app.listen(port), () => console.log('cqrs module running on port 1337')
 }
 

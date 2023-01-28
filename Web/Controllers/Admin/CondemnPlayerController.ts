@@ -4,10 +4,15 @@ import { WebAdminSession } from '../../../Services/WebAdmin';
 import { SmershController, Api } from '../../Framework';
 import { Parsers } from '../../Utils';
 import axios, { isCancel, AxiosError, AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
+import { CommandBus } from '@nestjs/cqrs'
 
 
 @Controller()
 export class CondemnPlayerController extends SmershController {
+    public constructor(protected readonly commandBus: CommandBus) {
+        super(commandBus)
+    }
+
     @Post('/admin/players/:playerName/:action')
     public postCondemnPlayer(@Param('playerName') playerName: string, @Param('action') action: string) {
         const session = WebAdminSession.get();

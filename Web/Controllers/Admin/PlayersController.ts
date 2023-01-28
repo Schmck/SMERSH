@@ -3,10 +3,15 @@ import { PlayersRoute } from '../../../Services/WebAdmin/Routes';
 import { WebAdminSession } from '../../../Services/WebAdmin';
 import { SmershController } from '../../Framework';
 import { Parsers } from '../../Utils';
+import { CommandBus } from '@nestjs/cqrs'
 
 
 @Controller()
 export class PlayersController extends SmershController {
+    public constructor(protected readonly commandBus: CommandBus) {
+        super(commandBus)
+    }
+
     @Get('/admin/players')
     public getPlayers() {
         const session = WebAdminSession.get();

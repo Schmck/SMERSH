@@ -1,4 +1,5 @@
 ﻿import { Controller, Param, Body, Get, Post, Put, Delete } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs'
 import { PlayersRoute } from '../../../Services/WebAdmin/Routes';
 import { WebAdminSession } from '../../../Services/WebAdmin';
 import { SmershController } from '../../Framework';
@@ -8,6 +9,10 @@ import * as dotenv from 'dotenv';
 
 @Controller()
 export class PlayerController extends SmershController {
+    public constructor(protected readonly commandBus: CommandBus) {
+        super(commandBus)
+    }
+
     @Get('/admin/players/:playerName')
     public getPlayer(@Param("playerName") playerName: string) {
         const session = WebAdminSession.get();

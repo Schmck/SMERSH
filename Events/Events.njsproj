@@ -40,6 +40,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="Event.ts" />
     <TypeScriptCompile Include="index.ts" />
+    <TypeScriptCompile Include="Player\index.ts" />
     <TypeScriptCompile Include="Player\NewPlayerRegisteredEvent.ts" />
     <TypeScriptCompile Include="Round\ChatLineReceivedEvent.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
