@@ -5,13 +5,19 @@ import { Index, Field } from '../../../SMERSH/Utilities'
 
 @Index()
 export class MapSearchReport extends SearchReport {
-    constructor(id: Guid, name : string, timeLimit: number, tickets: Record<number, Tickets>, layouts) {
+    constructor(
+        id: Guid = Guid.create(),
+        name: string = "",
+        timeLimit: number = 0,
+        tickets: Record<number, Tickets> = { [Team.Axis.Value]: new Tickets(Team.Axis.Value, 0, 0), [Team.Allies.Value]: new Tickets(Team.Allies.Value, 0, 0) },
+        layouts : Array<Layout> = [ Layout.Regular ]
+    ) {
         super(id)
 
-        this.MapName = name || "";
-        this.TimeLimit = timeLimit || 0;
-        this.Tickets = tickets || { [Team.Axis.Value]: new Tickets(Team.Axis.Value, 0, 0), [Team.Allies.Value]: new Tickets(Team.Allies.Value, 0, 0) }
-        this.Layouts = layouts || [ Layout.Regular ]
+        this.MapName = name;
+        this.TimeLimit = timeLimit;
+        this.Tickets = tickets
+        this.Layouts = layouts
     }
 
     @Field('keyword')

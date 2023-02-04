@@ -2,7 +2,7 @@
 import { Guid } from "guid-typescript";
 
 export class Domain extends AggregateRoot {
-    public constructor(private id: Guid) {
+    public constructor(id: Guid) {
         super();
         this.Id = id
     }

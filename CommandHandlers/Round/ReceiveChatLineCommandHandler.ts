@@ -15,7 +15,7 @@ export class ReceiveChatLineCommandHandler implements ICommandHandler<ReceiveCha
 
     async execute(command : ReceiveChatLineCommand) {
         const { Id, Line, Date } = command
-        const domain = this.publisher.mergeObjectContext(await this.repository.Get<RoundSearchReport, Round>(Id, new RoundSearchReport()))
+        const domain = this.publisher.mergeObjectContext(await this.repository.Get<RoundSearchReport, Round>(Id, RoundSearchReport, Round))
         domain.receiveChatLine(Line, Date)
         domain.commit();
 

@@ -6,7 +6,12 @@ import { SmershModule } from './smersh.module';
 import { CqrsModule, EventPublisher, EventBus, CommandBus } from '@nestjs/cqrs'
 
 
+@Module({
+    imports: [SmershModule]
+})
+class CqrsMod {
 
+}
 
 @Module({
     imports: [CqrsModule, SmershModule],
@@ -14,3 +19,4 @@ import { CqrsModule, EventPublisher, EventBus, CommandBus } from '@nestjs/cqrs'
 export class AppModule {
 
 }
+
