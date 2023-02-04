@@ -1,5 +1,5 @@
 import { Controller, Param, Body, Get, Post, Put, Delete } from '@nestjs/common';
-import { UseBefore } from 'routing-controllers'
+//import { UseBefore } from 'routing-controllers'
 import { LayoutRoute } from '../../../Services/WebAdmin/Routes';
 import { WebAdminSession } from '../../../Services/WebAdmin';
 import { SmershController, Api } from '../../Framework';
@@ -35,7 +35,7 @@ export class LayoutController extends SmershController {
     }
 
     @Post('/layout/post')
-    @UseBefore(json())
+    //@UseBefore(json())
     public PostLayout(@Body() model: PostLayoutModel) {
 
         if (model && model.layout) {

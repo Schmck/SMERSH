@@ -143,7 +143,7 @@ export const Field = (
   return (target: any, key: string) => {
     const properties: IPropertiesMetadata = Reflect.getMetadata(DECORATORS.PROPERTIES, target.constructor) || {};
     if (properties[key]) {
-      throw new Error(`Multiple usage of @Field() on ${target.constructor.name}.${key}`);
+      //throw new Error(`Multiple usage of @Field() on ${target.constructor.name}.${key}`);
     }
     properties[key] = options;
     Reflect.defineMetadata(DECORATORS.PROPERTIES, properties, target.constructor);

@@ -2,9 +2,12 @@ import { CommandHandlers } from '../../CommandHandlers'
 import { EventHandlers } from '../../EventHandlers'
 import { Repository } from '../../CommandHandlers/Framework'
 import { Module } from '@nestjs/common';
-import { CqrsModule, CommandBus, EventBus } from '@nestjs/cqrs';
+import { Logger, dummyLogger } from "ts-log/build/src/index"
+import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
+import { CqrsModule, CommandBus, EventBus, EventPublisher } from '@nestjs/cqrs';
 import { OnModuleInit } from '@nestjs/common'
 import { ModuleRef } from '@nestjs/core'
+
 import { Event } from '../../Events'
 import {
     CurrentStatusController,
@@ -38,14 +41,19 @@ import {
         LayoutController
     ],
     providers: [
-       Repository,
+        Repository,
        ...CommandHandlers,
        ...EventHandlers
     ]
 })
 export class SmershModule implements OnModuleInit {
 
+    
+
+    public log : FileLogger
+
     public onModuleInit(): void {
-        console.log('smersh module initiated', this)
+        this.log = new FileLogger(`./info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
+        this.log.info('smersh module initiated', this)
     }
 }

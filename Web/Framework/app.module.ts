@@ -3,13 +3,13 @@ import { CommandHandlers } from '../../CommandHandlers'
 import { EventHandlers } from '../../EventHandlers'
 import { Repository } from '../../CommandHandlers/Framework'
 import { SmershModule } from './smersh.module';
-import { CqrsModule } from '@nestjs/cqrs'
+import { CqrsModule, EventPublisher, EventBus, CommandBus } from '@nestjs/cqrs'
 
 
 
 
 @Module({
-    imports: [SmershModule],
+    imports: [CqrsModule, SmershModule],
 })
 export class AppModule {
 

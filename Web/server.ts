@@ -1,6 +1,5 @@
 import 'stream/web'
 import 'reflect-metadata';
-import { createExpressServer } from 'routing-controllers';
 import { WebAdminSession } from '../Services/WebAdmin';
 //import { ClientBuilder } from '../Elastic'
 import "reflect-metadata";
@@ -25,27 +24,10 @@ import {
 } from './Controllers/Admin';
 
 import {
-    GetLayoutController,
-    PostLayoutController,
+
     LayoutController
     } from './Controllers/Layout'
 
-const app = createExpressServer({
-    controllers: [
-        LandingPageController,
-
-        CurrentStatusController,
-        CurrentChatController,
-
-        PlayersController,
-        PlayerController,
-        CondemnPlayerController,
-
-        //GetLayoutController,
-        //PostLayoutController,
-        LayoutController
-        ], 
-});
 
 dotenv.config()
 const config = process.env;

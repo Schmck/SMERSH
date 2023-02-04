@@ -12,7 +12,7 @@ export class ChatLineReceivedEventHandler implements
 {
    
     async handle(event: ChatLineReceivedEvent) {
-        const round = await SearchClient.Get<RoundSearchReport>(event.Id);
+        const round = await SearchClient.Get<RoundSearchReport>(event.Id, new RoundSearchReport());
         round.Lines = [...round.Lines, event.Line]
 
         await SearchClient.Update(round);

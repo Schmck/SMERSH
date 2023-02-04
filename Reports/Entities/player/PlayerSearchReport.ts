@@ -1,6 +1,5 @@
 import { Guid } from "guid-typescript";
 import { SearchReport } from '../../Framework'
-import { Tickets, Team, Layout, Roles } from '../../../SMERSH/ValueObjects'
 import { Index, Field } from '@../../../SMERSH/Utilities'
 
 @Index()
