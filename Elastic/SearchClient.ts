@@ -1,18 +1,28 @@
 import { Guid } from 'guid-typescript'
 import { ClientBuilder } from './ClientBuilder' 
 import { SearchReport } from '../Reports/Framework'
-import { Indexed, IndexedClass } from '../SMERSH/Utilities/types'
+import { IndexedClass } from '../SMERSH/Utilities/types'
+import { RoundSearchReport } from '../Reports/Entities/round'
 
 const config = process.env;
 
 export class SearchClient {
 	
-	public static async Get<T>( id: Guid, type: T): Promise<T> {
+	public static async Get<T>(id: Guid, cls: { new(): T }): Promise<T> {
 		const client = await ClientBuilder.GetClient(config.ELASTIC_URL)
-		const newType = type as IndexedClass<T>;
+		//const newCls = type as IndexedClass<T>;
 		//const { documents } = await client.search(type, { body: { query: { match_all: {} } } })
-		const { document } = await client.get(newType, id.toString())
-		return document
+		//const { document } = await client.get(cls, id.toString())
+		let doc
+
+		try {
+			const { document } = await client.get(cls, id.toString())
+			doc = document
+		}
+		catch (error) {
+			return null;
+        }
+		return doc as T
 	}
 
 	public static async GetMany<T>(type: IndexedClass<T>) : Promise<Array<T>> {
