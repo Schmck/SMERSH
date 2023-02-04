@@ -30,7 +30,6 @@ export class ClientBuilder {
         })
   
         for (let report of reports) {
-    
             let exists = await client.indices.exists(report)
             if (!exists) {
                 let create = await client.indices.create(report);
