@@ -1,7 +1,7 @@
 import { Watcher } from '../Watcher'
 import { WebAdminSession } from '../../Services/WebAdmin';
 import { ChatRoute } from '../../Services/WebAdmin/Routes';
-import { ReceiveChatLineCommand } from '../../Commands/Round'
+import { ReceiveChatLinesCommand } from '../../Commands/Round'
 import { StatusQuery } from '../../Services/WebAdmin/Queries'
 import { Guid } from 'guid-typescript'
 import { Team } from '../../SMERSH/ValueObjects'

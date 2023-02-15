@@ -6,7 +6,7 @@ import { Logger, dummyLogger } from "ts-log/build/src/index"
 import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
 import { CqrsModule, CommandBus, EventBus, EventPublisher } from '@nestjs/cqrs';
 import { OnModuleInit } from '@nestjs/common'
-import { ModuleRef } from '@nestjs/core'
+import { ChatWatcher } from '../../Watcher'
 
 import { Event } from '../../Events'
 import {
@@ -42,6 +42,7 @@ import {
     ],
     providers: [
         Repository,
+        ChatWatcher,
        ...CommandHandlers,
        ...EventHandlers
     ]

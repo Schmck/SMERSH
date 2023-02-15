@@ -178,19 +178,21 @@ export class Core {
    * @param docOrId
    * @param doc
    */
-  index<T>(docOrClass: T | IndexedClass<T>, docOrId?: Partial<T> | string, doc?: Partial<T>): Promise<any> {
+  async index<T>(docOrClass: T | IndexedClass<T>, docOrId?: Partial<T> | string, doc?: Partial<T>): Promise<any> {
     const params = getQueryStructure<T>(this.options, docOrClass, docOrId, doc);
 
     if (!params.document) {
       throw new Error('Document is missing');
     }
 
-    return this.client.index({
-      index: params.index,
-      type: params.type,
-      id: params.id,
-      body: params.document,
+    const response = await this.client.index({
+        index: params.index,
+        type: params.type,
+        id: params.id,
+        body: params.document,
     });
+
+    return response
   }
 
   /**
@@ -232,7 +234,7 @@ export class Core {
    * @param docOrId
    * @param doc
    */
-  update<T>(docOrClass: T | IndexedClass<T>, docOrId?: Partial<T> | string, doc?: Partial<T>): Promise<any> {
+  async update<T>(docOrClass: T | IndexedClass<T>, docOrId?: Partial<T> | string, doc?: Partial<T>): Promise<any> {
     const params = getQueryStructure<T>(this.options, docOrClass, docOrId, doc);
 
     if (!params.document) {
@@ -243,11 +245,20 @@ export class Core {
       throw new Error(`ID is missing when updating a ${params.cls.name}`);
     }
 
-    return this.client.update({
-      index: params.index,
-      type: params.type,
-      id: params.id,
-      body: { doc: params.document },
-    });
+      let response;
+
+      try {
+          response = await this.client.update({
+              index: params.index,
+              type: params.type,
+              id: params.id,
+              body: { doc: params.document },
+          });
+      } catch (error : any) {
+          response = error.body
+      }
+    console.log(260, response)
+
+    return response
   }
 }

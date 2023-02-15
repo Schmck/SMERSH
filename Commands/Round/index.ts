@@ -1,1 +1,1 @@
-export { ReceiveChatLineCommand } from './ReceiveChatLineCommand'
+export { ReceiveChatLinesCommand } from './ReceiveChatLinesCommand'

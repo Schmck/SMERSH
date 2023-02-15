@@ -2,7 +2,7 @@
   "name": "watcher",
   "version": "0.0.0",
   "description": "Watcher",
-  "main": "app.js",
+  "main": "index.js",
   "author": {
     "name": ""
   },

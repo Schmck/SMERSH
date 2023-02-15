@@ -29,7 +29,6 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="app.ts" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="Round\ChatWatcher.ts" />
@@ -37,6 +36,8 @@
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="index.ts" />
+    <TypeScriptCompile Include="Round\index.ts" />
     <TypeScriptCompile Include="Watcher.ts" />
   </ItemGroup>
   <ItemGroup>

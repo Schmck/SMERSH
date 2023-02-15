@@ -8,7 +8,7 @@ import { PostLayoutModel } from './PostLayoutModel';
 import { json } from 'body-parser'
 import { CommandBus } from '@nestjs/cqrs'
 
-@Controller('layout')
+@Controller()
 export class LayoutController extends SmershController {
     public constructor(protected readonly commandBus: CommandBus) {
         super(commandBus)
