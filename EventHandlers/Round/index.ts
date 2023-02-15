@@ -1,2 +1,2 @@
-import { ChatLineReceivedEventHandler } from './ChatLineReceivedEventHandler'
-export const RoundEventHandlers = [ChatLineReceivedEventHandler]
+import { ChatLinesReceivedEventHandler } from './ChatLinesReceivedEventHandler'
+export const RoundEventHandlers = [ChatLinesReceivedEventHandler]

@@ -32,13 +32,13 @@
   <ItemGroup>
     <Content Include="package.json" />
     <Content Include="README.md" />
-    <Content Include="Round\ReceiveChatLineCommand.ts" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Command.ts" />
     <TypeScriptCompile Include="ICommand.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
+    <TypeScriptCompile Include="Round\ReceiveChatLinesCommand.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Round\" />

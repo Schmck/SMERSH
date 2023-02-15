@@ -32,7 +32,6 @@
   <ItemGroup>
     <Content Include="package.json" />
     <Content Include="README.md" />
-    <Content Include="Round\ChatLineReceivedEventHandler.ts" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +41,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="index.ts" />
     <TypeScriptCompile Include="Player\PlayerEventHandler.ts" />
+    <TypeScriptCompile Include="Round\ChatLinesReceivedEventHandler.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />

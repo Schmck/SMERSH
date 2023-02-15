@@ -5,7 +5,7 @@ import { Index, Field } from '@../../../SMERSH/Utilities'
 
 @Index()
 export class RoundSearchReport extends SearchReport {
-    constructor(id: Guid = Guid.create(), mapId: Guid = Guid.create(), date: Date = new Date()) {
+    constructor(id: Guid = Guid.createEmpty(), mapId: Guid = Guid.createEmpty(), date: Date = new Date()) {
         super(id)
 
         this.MapId = mapId;

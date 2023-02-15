@@ -1,3 +1,3 @@
-﻿export { ChatLineReceivedEvent } from './ChatLineReceivedEvent';
+﻿export { ChatLinesReceivedEvent } from './ChatLinesReceivedEvent';
 export { RoundStartedEvent } from './RoundStartedEvent';
 export { RoundEndedEvent } from './RoundEndedEvent';

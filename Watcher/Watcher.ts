@@ -6,7 +6,9 @@ export abstract class Watcher {
     @Inject(CommandBus)
     protected readonly commandBus: CommandBus
 
-    constructor() {}
+    public constructor(commandBus) {
+        this.commandBus = commandBus
+    }
    
 
     public abstract Watch(timeout : number, ...args : any[]) : void

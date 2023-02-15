@@ -40,10 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Round\index.ts" />
-    <TypeScriptCompile Include="Round\ReceiveChatLineCommandHandler.ts" />
     <TypeScriptCompile Include="Framework\index.ts" />
     <TypeScriptCompile Include="Framework\Repository.ts" />
     <TypeScriptCompile Include="index.ts" />
+    <TypeScriptCompile Include="Round\ReceiveChatLinesCommandHandler.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

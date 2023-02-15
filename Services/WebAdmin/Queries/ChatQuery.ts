@@ -41,7 +41,7 @@ export class ChatQuery {
                         message,
                         visibility,
                         team,
-                        timeStamp: new Date().toISOString()
+                        timestamp: new Date().toISOString()
                     }
 
                     messages.push(usermsg)
