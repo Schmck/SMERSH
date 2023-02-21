@@ -8,7 +8,7 @@ import { Config, ClientBuilder } from './Framework';
 import * as dotenv from 'dotenv';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './Framework/app.module';
-import { ChatWatcher } from '../Watcher'
+import { ChatWatcher, RoundWatcher } from '../Watcher'
 import { CommandBus } from '@nestjs/cqrs'
 
 dotenv.config()
@@ -29,8 +29,12 @@ async function start(port: number) {
     await app.listen(port), () => {
         console.log('cqrs module running on port 1337')
     }
-    const chat = new ChatWatcher(app.get(CommandBus));
-    chat.Watch()
+    const bus = app.get(CommandBus);
+    const chat = new ChatWatcher(bus);
+    const round = new RoundWatcher(bus);
+
+    chat.Watch();
+    round.Watch();
  
 }
 

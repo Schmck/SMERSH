@@ -37,8 +37,10 @@
   <ItemGroup>
     <TypeScriptCompile Include="Command.ts" />
     <TypeScriptCompile Include="ICommand.ts" />
+    <TypeScriptCompile Include="Round\EndRoundCommand.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
     <TypeScriptCompile Include="Round\ReceiveChatLinesCommand.ts" />
+    <TypeScriptCompile Include="Round\StartRoundCommand.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Round\" />

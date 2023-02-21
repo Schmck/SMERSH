@@ -6,11 +6,11 @@ export class ChatQuery {
 
     public static async Get() {
         const session = WebAdminSession.get();
-        const result = session.navigate(ChatRoute.GetChat.Action)
+        const dom = await session.navigate(ChatRoute.GetChat.Action)
         const messages = []
 
-        return result.then(dom => {
-            if (dom) {
+        //return result.then(dom => {
+            if (dom && dom.window && dom.window.document) {
                 dom.window.document.querySelectorAll(".chatmessage").forEach(msg => {
                     let username
                     let message
@@ -49,6 +49,6 @@ export class ChatQuery {
             }
 
             return messages
-        })
+        //})
     }
 }

@@ -59,7 +59,7 @@ export class SearchClient {
 
 	public static async Search<T>(type: IndexedClass<T>, query: any) : Promise<Array<T>> {
 		const client = await ClientBuilder.GetClient(config.ELASTIC_URL)
-		const { documents } = await client.search(type, { body: { query: { match_all: {} } } })
+		const { documents } = await client.search(type, { body: query })
 		return documents
 	}
 

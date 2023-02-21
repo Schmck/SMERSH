@@ -1,5 +1,7 @@
-import { ReceiveChatLinesCommandHandler } from './Round'
+import { ReceiveChatLinesCommandHandler, StartRoundCommandHandler, EndRoundCommandHandler } from './Round'
 
 export const CommandHandlers =  [
-    ReceiveChatLinesCommandHandler
+    ReceiveChatLinesCommandHandler,
+    StartRoundCommandHandler,
+    EndRoundCommandHandler
 ]

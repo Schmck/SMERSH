@@ -43,6 +43,8 @@
     <TypeScriptCompile Include="Player\PlayerEventHandler.ts" />
     <TypeScriptCompile Include="Round\ChatLinesReceivedEventHandler.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
+    <TypeScriptCompile Include="Round\RoundEndedEventHandler.ts" />
+    <TypeScriptCompile Include="Round\RoundStartedEventHandler.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

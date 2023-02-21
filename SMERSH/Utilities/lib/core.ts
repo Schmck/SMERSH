@@ -257,8 +257,7 @@ export class Core {
       } catch (error : any) {
           response = error.body
       }
-    console.log(260, response)
-
+   
     return response
   }
 }

@@ -16,7 +16,7 @@ export class LandingPageController extends SmershController {
 
     @Get('/')
     public GreetVisitor() {
-        this.commandBus.execute(new ReceiveChatLinesCommand(Guid.createEmpty(), Guid.createEmpty(), new Date(), [`- ${new Date().toISOString()}`]))
+       // this.commandBus.execute(new ReceiveChatLinesCommand(Guid.createEmpty(), Guid.createEmpty(), new Date(), [`- ${new Date().toISOString()}`]))
         //this.commandBus.execute(new ReceiveChatLinesCommand(Guid.createEmpty(), Guid.createEmpty(), new Date(), [new Date().toISOString()]))
         return 'great success!'
     }
