@@ -3,7 +3,6 @@ import { Inject } from '@nestjs/common'
 
 export abstract class Watcher {
 
-    @Inject(CommandBus)
     protected readonly commandBus: CommandBus
 
     public constructor(commandBus) {

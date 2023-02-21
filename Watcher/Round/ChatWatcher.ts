@@ -8,32 +8,50 @@ import { ChatQuery, StatusQuery } from '../../Services/WebAdmin/Queries'
 import { Status } from 'discord.js';
 import { Controller, Inject, Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs'
+import { SearchClient } from '../../Elastic'
+import { RoundSearchReport } from '../../Reports/Entities/round'
 
 
-@Injectable()
 export class ChatWatcher extends Watcher {
 
-    public constructor(@Inject(CommandBus) protected readonly commandBus: CommandBus = {} as CommandBus) {
+    public constructor(commandBus: CommandBus) {
         super(commandBus)
     }
 
     public override async Watch(timeout: number = 1000, ...args: any[]) {
         const messages = await ChatQuery.Get();
+        const lastMessage = messages[messages.length - 1];
+        const lastMessageDate = new Date(lastMessage.timestamp);
+        const round = await (await SearchClient.Search(RoundSearchReport, {
+            "query": {
+                "match_all": {}
+            },
+            "size": 1,
+            "sort": [
+                {
+                    "Date": {
+                        "order": "desc"
+                    }
+                }
+            ]
+        })).shift()
+        if (round && (round.Date.getDate() === lastMessageDate.getDate() && round.Date.getHours() === lastMessageDate.getHours() )) {
+            let msgs = messages.map(msg => {
+                const date = new Date(new Date(msg.timestamp).setHours(new Date(msg.timestamp).getHours()))
+                const timestamp = msg.timestamp ? `${date.toLocaleString().slice(0, date.toLocaleString().indexOf(','))} ${date.toTimeString().slice(0, 8)}|` : ''
+                const teamMessage = msg.team_message ? '(Team)' : ''
+                let team = msg.team === 'Axis' ? '+' : '-'
 
-        let msgs = messages.map(msg => {
-            const date = new Date(new Date(msg.timestamp).setHours(new Date(msg.timestamp).getHours() + 1))
-            const timestamp = msg.timestamp ? `${date.toLocaleString().slice(0, date.toLocaleString().indexOf(','))} ${date.toTimeString().slice(0, 8)}?` : ''
-            const teamMessage = msg.team_message ? '(Team)' : ''
-            let team = msg.team === 'Axis' ? '+' : '-'
-
-            const newmsg = `${team} ${timestamp} ${teamMessage} ${msg.username}: ${msg.message}`
-            return newmsg
-        })
-        if (msgs.length) {
-            this.commandBus.execute(new ReceiveChatLinesCommand(Guid.createEmpty(), Guid.createEmpty(), new Date(), msgs));
+                const newmsg = `${team} ${timestamp} ${teamMessage} ${msg.username}: ${msg.message}`
+                return newmsg
+            })
+            if (msgs.length) {
+                await this.commandBus.execute(new ReceiveChatLinesCommand(Guid.parse(round.Id), new Date(), msgs));
+            }
         }
-        setTimeout(() => {
-            this.Watch(timeout, [...args, messages])
+        setTimeout(async () => {
+            await this.Watch(timeout, [...args, messages])
+            return;
         }, timeout)
 
         return;

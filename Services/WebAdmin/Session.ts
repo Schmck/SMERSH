@@ -7,7 +7,7 @@ export class WebAdminSession {
     private static _instance: WebAdminSession;
     private authCred = "";
 
-    constructor(url: string, authcred: string, encoding: string = 'windows-1252', cookieJar: CookieJar = new CookieJar(), private readonly log: Logger = dummyLogger) {
+    constructor(url: string, authcred: string, cookieJar: CookieJar = new CookieJar(), private readonly log: Logger = dummyLogger) {
         if (!this.DOMs) {
             this.DOMs = {};
         }
@@ -29,7 +29,7 @@ export class WebAdminSession {
         this.DOMs[url].window.document.cookie += authCookiePart
     }
 
-    public DOMs: Record<string, Awaited<JSDOM>> = {};
+    public DOMs: Record<string, JSDOM> = {};
 
     private CookieJar: CookieJar;
 
@@ -52,13 +52,16 @@ export class WebAdminSession {
             let DOM = this.DOMs[navUrl]
 
             if (!DOM) {
-                this.DOMs[navUrl] = new JSDOM(navUrl)
-               
+                this.DOMs[navUrl] = new JSDOM(navUrl) 
             }
-            this.log.info(this.CookieJar)
+            //this.log.info(this.CookieJar)
             //this.log.info('before fromurl', new Date().toISOString(), Object.entries(this.DOMs));
-            this.close(navUrl)
-            this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, {cookieJar: this.CookieJar})
+            try {
+                await this.close(navUrl)
+                this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
+            }
+            catch (error) {
+            }
 
             //this.log.info('after fromurl', new Date().toISOString(), Object.entries(this.DOMs));
 
@@ -76,7 +79,7 @@ export class WebAdminSession {
             const DOM = this.DOMs[url]
 
             if (DOM.window) {
-                DOM.window.close()
+                await DOM.window.close()
             }
         } else {
             this.log.error('DOMs were not initialized properly')
@@ -87,9 +90,9 @@ export class WebAdminSession {
 
 
 
-    public static set(url: string, authcred: string, encoding: string = 'windows-1252') {
+    public static set(url: string, authcred: string) {
         if (!this._instance) {
-            this._instance = new WebAdminSession(url, authcred, encoding)
+            this._instance = new WebAdminSession(url, authcred)
             this._instance.navigate(url);
         }
 

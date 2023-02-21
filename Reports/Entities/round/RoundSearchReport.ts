@@ -10,7 +10,8 @@ export class RoundSearchReport extends SearchReport {
 
         this.MapId = mapId;
         this.Date = date;
-        this.Lines = []
+        this.Lines = [];
+        this.Players = [];
      
     }
 
@@ -21,7 +22,10 @@ export class RoundSearchReport extends SearchReport {
     public Date: Date;
 
     @Field({ nested : Array<string>})
-    public Lines : string[];
+    public Lines: string[];
+
+    @Field({ nested: Array<Guid> })
+    public Players: Guid[];
 
 
     public UpdateCalculatedProperties(): void { }

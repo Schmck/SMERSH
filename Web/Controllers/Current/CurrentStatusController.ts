@@ -19,7 +19,7 @@ export class CurrentStatusController extends SmershController {
     @Get('/current/status')
     public async getCurrentStatus() {
         const result = await StatusQuery.Get();
-        this.commandBus.execute(new ReceiveChatLinesCommand(Guid.createEmpty(), Guid.createEmpty(), new Date(), ['']))
+        //this.commandBus.execute(new ReceiveChatLinesCommand(Guid.createEmpty(), new Date(), ['']))
         return result ?? 'bad luck'
     }
 }

@@ -39,11 +39,13 @@
     <Folder Include="Framework\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Round\EndRoundCommandHandler.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
     <TypeScriptCompile Include="Framework\index.ts" />
     <TypeScriptCompile Include="Framework\Repository.ts" />
     <TypeScriptCompile Include="index.ts" />
     <TypeScriptCompile Include="Round\ReceiveChatLinesCommandHandler.ts" />
+    <TypeScriptCompile Include="Round\StartRoundCommandHandler.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

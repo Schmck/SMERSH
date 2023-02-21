@@ -1,32 +1,31 @@
-﻿import { ICommandHandler, EventPublisher, CommandHandler } from '@nestjs/cqrs';
-import { Injectable } from '@nestjs/common'
-import { ReceiveChatLinesCommand } from '../../Commands/Round'
+import { ICommandHandler, EventPublisher, CommandHandler } from '@nestjs/cqrs';
+import { EndRoundCommand } from '../../Commands/Round'
 import { Repository } from '../Framework'
 import { RoundSearchReport } from '../../Reports/Entities/round'
 import { Round } from '../../Domain/Round'
 
-@CommandHandler(ReceiveChatLinesCommand)
-export class ReceiveChatLinesCommandHandler implements ICommandHandler<ReceiveChatLinesCommand> {
+@CommandHandler(EndRoundCommand)
+export class EndRoundCommandHandler implements ICommandHandler<EndRoundCommand> {
     constructor(
         protected readonly publisher: EventPublisher,
         protected readonly repository: Repository
     ) {
     }
 
-    async execute(command : ReceiveChatLinesCommand) {
-        const { Id, Lines, Date } = command
+    async execute(command: EndRoundCommand) {
+        const { Id, MapId, Date, Players } = command
         const props = await this.repository.Get<RoundSearchReport, Round>(Id, RoundSearchReport, Round)
         const domain = this.publisher.mergeObjectContext(props)
 
-        await domain.receiveChatLines(Lines, Date)
+        await domain.endRound(MapId, Date, Players)
         await domain.commit()
         return;
 
     }
 
     async call(func: (...args: any[]) => void, ...args: any[]) {
-    setTimeout(() => {
-        func(...args)
-    }, 1000)
+        setTimeout(() => {
+            func(...args)
+        }, 1000)
     }
 }
