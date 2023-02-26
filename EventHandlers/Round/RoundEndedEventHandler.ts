@@ -5,31 +5,19 @@ import { RoundEndedEvent } from '../../Events'
 import { SearchClient } from '../../Elastic'
 import { RoundSearchReport } from '../../Reports/Entities/round'
 import { IndexedClass } from '../../SMERSH/Utilities/types';
-let cls: { new(): RoundSearchReport } = RoundSearchReport;
+import { Guid } from 'guid-typescript';
+let cls: { new(id?: Guid, mapId?: Guid): RoundSearchReport } = RoundSearchReport;
 
 @EventsHandler(RoundEndedEvent)
 export class RoundEndedEventHandler implements IEventHandler<RoundEndedEvent>
 {
 
     async handle(event: RoundEndedEvent) {
+        let partial: Partial<RoundSearchReport> = new cls(event.Id, event.MapId);
+        partial.Players = event.Players;
 
-        let exists = await SearchClient.Exists(event.Id, cls)
-
-        if (exists) {
-            let round: Partial<RoundSearchReport> = new cls();
-            round.Players = event.Players;
-            round.Id = event.Id.toString();
-
-            delete round.Lines;
-            await SearchClient.Update(round);
-        } else {
-            let round = new cls();
-            round.Players = event.Players;
-            round.Id = event.Id.toString();
-
-            delete round.Lines;
-            await SearchClient.Put(round);
-        }
+        delete partial.Lines;
+        await SearchClient.Update(partial);
         return;
     }
 }

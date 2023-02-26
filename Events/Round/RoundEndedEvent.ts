@@ -3,16 +3,17 @@ import { Event } from '../'
 
 export class RoundEndedEvent extends Event {
 
-    constructor(id: Guid, mapId: Guid, date: Date, players : Guid[]) {
+    constructor(id: Guid, mapId: Guid, date: Date, players : string[]) {
         super(id)
+
         this.MapId = mapId;
         this.Date = date;
         this.Players = players;
     }
 
-    public readonly MapId: Guid
+    public readonly MapId: Guid;
 
     public readonly Date: Date;
 
-    public readonly Players : Guid[]
+    public readonly Players: string[]
 }

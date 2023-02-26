@@ -37,12 +37,15 @@
   <ItemGroup>
     <TypeScriptCompile Include="Command.ts" />
     <TypeScriptCompile Include="ICommand.ts" />
+    <TypeScriptCompile Include="Round\ChangeMapCommand.ts" />
+    <TypeScriptCompile Include="Map\index.ts" />
     <TypeScriptCompile Include="Round\EndRoundCommand.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
     <TypeScriptCompile Include="Round\ReceiveChatLinesCommand.ts" />
     <TypeScriptCompile Include="Round\StartRoundCommand.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Map\" />
     <Folder Include="Round\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />

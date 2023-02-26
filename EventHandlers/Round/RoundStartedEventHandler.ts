@@ -4,32 +4,35 @@ import { EventsHandler } from '@nestjs/cqrs/dist/decorators/events-handler.decor
 import { RoundStartedEvent } from '../../Events'
 import { SearchClient } from '../../Elastic'
 import { RoundSearchReport } from '../../Reports/Entities/round'
+import { MapSearchReport } from '../../Reports/Entities/map'
 import { IndexedClass } from '../../SMERSH/Utilities/types';
-let cls: { new(): RoundSearchReport } = RoundSearchReport;
+import { CommandBus } from '@nestjs/cqrs';
+import { Guid } from 'guid-typescript';
+let cls: { new(id: Guid, mapId: Guid): RoundSearchReport } = RoundSearchReport;
+let map: { new(id: Guid): MapSearchReport } = MapSearchReport;
 
 @EventsHandler(RoundStartedEvent)
 export class RoundStartedEventHandler implements IEventHandler<RoundStartedEvent>
 {
+    public constructor(protected readonly commandBus: CommandBus) {
+    }
 
     async handle(event: RoundStartedEvent) {
 
-        let exists = await SearchClient.Exists(event.Id, cls)
+        let partial: Partial<RoundSearchReport> = new cls(event.Id, event.MapId);
+        partial.Players = event.Players;
 
-        if (exists) {
-            let round: Partial<RoundSearchReport> = new cls();
-            round.Players = event.Players;
-            round.Id = event.Id.toString();
-            delete round.Lines;
+        delete partial.Lines;
+        await SearchClient.Update(partial);
 
-            await SearchClient.Update(round);
-        } else {
-            let round = new cls();
-            round.Players = event.Players;
-            round.Id = event.Id.toString();
-            delete round.Lines;
+        let partialMap: Partial<MapSearchReport> = new map(event.MapId)
+        partialMap.TimeLimit = event.TimeLimit;
 
-            await SearchClient.Put(round);
-        }
+        delete partialMap.MapName;
+        delete partialMap.Layouts;
+        delete partialMap.Tickets;
+
+        await SearchClient.Update(partialMap);
         return;
     }
 }

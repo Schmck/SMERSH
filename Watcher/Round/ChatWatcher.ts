@@ -21,7 +21,7 @@ export class ChatWatcher extends Watcher {
     public override async Watch(timeout: number = 1000, ...args: any[]) {
         const messages = await ChatQuery.Get();
         const lastMessage = messages[messages.length - 1];
-        const lastMessageDate = new Date(lastMessage.timestamp);
+        const lastMessageDate = messages.length ? new Date(lastMessage.timestamp) : false;
         const round = await (await SearchClient.Search(RoundSearchReport, {
             "query": {
                 "match_all": {}
@@ -35,18 +35,21 @@ export class ChatWatcher extends Watcher {
                 }
             ]
         })).shift()
-        if (round && (round.Date.getDate() === lastMessageDate.getDate() && round.Date.getHours() === lastMessageDate.getHours() )) {
-            let msgs = messages.map(msg => {
-                const date = new Date(new Date(msg.timestamp).setHours(new Date(msg.timestamp).getHours()))
-                const timestamp = msg.timestamp ? `${date.toLocaleString().slice(0, date.toLocaleString().indexOf(','))} ${date.toTimeString().slice(0, 8)}|` : ''
-                const teamMessage = msg.team_message ? '(Team)' : ''
-                let team = msg.team === 'Axis' ? '+' : '-'
 
-                const newmsg = `${team} ${timestamp} ${teamMessage} ${msg.username}: ${msg.message}`
-                return newmsg
-            })
-            if (msgs.length) {
-                await this.commandBus.execute(new ReceiveChatLinesCommand(Guid.parse(round.Id), new Date(), msgs));
+        const roundDate = round ? new Date(round.Date) : false
+
+        if (roundDate && lastMessageDate && (roundDate.getDate() === lastMessageDate.getDate())) {
+           // let msgs = messages.map(msg => {
+            //    const date = new Date(new Date(msg.timestamp).setHours(new Date(msg.timestamp).getHours()))
+            //    const timestamp = msg.timestamp ? `${date.toLocaleString().slice(0, date.toLocaleString().indexOf(','))} ${date.toTimeString().slice(0, 8)}|` : ''
+            //    const teamMessage = msg.team_message ? '(Team)' : ''
+            //    let team = msg.team === 'Axis' ? '+' : '-'
+
+//                const newmsg = `${team} ${timestamp} ${teamMessage} ${msg.username}: ${msg.message}`
+//                return newmsg
+ //           })
+            if (messages.length) {
+                await this.commandBus.execute(new ReceiveChatLinesCommand(Guid.parse(round.Id), new Date(), messages));
             }
         }
         setTimeout(async () => {

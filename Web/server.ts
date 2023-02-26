@@ -14,21 +14,20 @@ import { CommandBus } from '@nestjs/cqrs'
 dotenv.config()
 const config = process.env;
 console.log(config["ELASTIC_URL"])
-ClientBuilder.Build(config["ELASTIC_URL"])
-SearchClient.ResolveQueue(1000)
+//SearchClient.ResolveQueue(1000)
 //var mappings = ClientBuilder.getMappings()
 //console.log(mappings)
 
-WebAdminSession.set(config["BASE_URL"], config["AUTHCRED"])
 //app.listen(1337);
 
 
 async function start(port: number) {
 
     const app = await NestFactory.create(AppModule)
-    await app.listen(port), () => {
-        console.log('cqrs module running on port 1337')
-    }
+    await app.listen(port), () => { console.log('cqrs module running on port 1337')}
+    await ClientBuilder.Build(config["ELASTIC_URL"])
+    WebAdminSession.set(config["BASE_URL"], config["AUTHCRED"])
+
     const bus = app.get(CommandBus);
     const chat = new ChatWatcher(bus);
     const round = new RoundWatcher(bus);

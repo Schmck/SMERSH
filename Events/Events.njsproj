@@ -40,6 +40,8 @@
   <ItemGroup>
     <TypeScriptCompile Include="Event.ts" />
     <TypeScriptCompile Include="index.ts" />
+    <TypeScriptCompile Include="Map\index.ts" />
+    <TypeScriptCompile Include="Map\MapChangedEvent.ts" />
     <TypeScriptCompile Include="Player\index.ts" />
     <TypeScriptCompile Include="Player\NewPlayerRegisteredEvent.ts" />
     <TypeScriptCompile Include="Round\ChatLinesReceivedEvent.ts" />
@@ -47,6 +49,7 @@
     <TypeScriptCompile Include="Round\RoundStartedEvent.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Map\" />
     <Folder Include="Player\" />
     <Folder Include="Round\" />
   </ItemGroup>

@@ -3,17 +3,18 @@ import { Command } from '../Command'
 
 export class StartRoundCommand extends Command {
 
-    constructor(id: Guid, mapId: Guid, date: Date, players: Guid[]) {
+    constructor(id: Guid, timeLimit: number, date: Date, players: string[]) {
         super(id)
-        this.MapId = mapId
+
+        this.TimeLimit = timeLimit;
         this.Date = date;
         this.Players = players
     }
 
-    public readonly MapId: Guid;
+    public TimeLimit: number;
 
     public readonly Date: Date;
 
-    public readonly Players: Guid[];
+    public readonly Players: string[];
 
 }

@@ -5,7 +5,8 @@ import { ChatLinesReceivedEvent } from '../../Events'
 import { SearchClient } from '../../Elastic'
 import { RoundSearchReport } from '../../Reports/Entities/round'
 import { IndexedClass } from '../../SMERSH/Utilities/types';
-let cls: { new(): RoundSearchReport } = RoundSearchReport;
+import { Guid } from 'guid-typescript';
+let cls: { new(id?: Guid, mapId?: Guid): RoundSearchReport } = RoundSearchReport;
 
 @EventsHandler(ChatLinesReceivedEvent)
 export class ChatLinesReceivedEventHandler implements IEventHandler<ChatLinesReceivedEvent>
@@ -13,23 +14,12 @@ export class ChatLinesReceivedEventHandler implements IEventHandler<ChatLinesRec
    
     async handle(event: ChatLinesReceivedEvent) {
 
-        let exists = await SearchClient.Exists(event.Id, cls)
+        let partial: Partial<RoundSearchReport> = new cls(event.Id);
+        partial.Lines = event.Lines;
 
-        if (exists) {
-            let round: Partial<RoundSearchReport> = new cls();
-            round.Lines = event.Lines;
-            round.Id = event.Id.toString();
-
-            delete round.Players;
-            await SearchClient.Update(round);
-        } else {
-            let round = new cls();
-            round.Lines = event.Lines;
-            round.Id = event.Id.toString();
-
-            delete round.Players;
-            await SearchClient.Put(round);
-        }
+        delete partial.MapId;
+        delete partial.Players;
+        await SearchClient.Update(partial);
         return;
     }
 }

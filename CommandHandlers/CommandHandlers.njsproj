@@ -35,10 +35,12 @@
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Map\" />
     <Folder Include="Round\" />
     <Folder Include="Framework\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Round\ChangeMapCommandHandler.ts" />
     <TypeScriptCompile Include="Round\EndRoundCommandHandler.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
     <TypeScriptCompile Include="Framework\index.ts" />

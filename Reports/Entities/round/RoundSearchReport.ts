@@ -5,10 +5,10 @@ import { Index, Field } from '@../../../SMERSH/Utilities'
 
 @Index()
 export class RoundSearchReport extends SearchReport {
-    constructor(id: Guid = Guid.createEmpty(), mapId: Guid = Guid.createEmpty(), date: Date = new Date()) {
+    constructor(id?: Guid, mapId?: Guid, date: Date = new Date()) {
         super(id)
 
-        this.MapId = mapId;
+        this.MapId = mapId ? mapId.toString() : "";
         this.Date = date;
         this.Lines = [];
         this.Players = [];
@@ -16,16 +16,16 @@ export class RoundSearchReport extends SearchReport {
     }
 
     @Field('text')
-    public MapId : Guid;
+    public MapId : string;
 
     @Field('date')
     public Date: Date;
 
-    @Field({ nested : Array<string>})
-    public Lines: string[];
+    @Field({ nested: Array<Record<string, string>>})
+    public Lines: Array<Record<string, string>>;
 
-    @Field({ nested: Array<Guid> })
-    public Players: Guid[];
+    //@Field({ nested: Array<string> })
+    public Players: Array<string>;
 
 
     public UpdateCalculatedProperties(): void { }
