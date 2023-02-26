@@ -3,7 +3,7 @@ import { Command } from '../Command'
 
 export class ReceiveChatLinesCommand extends Command {
 
-    constructor(id: Guid, date: Date, lines: string[]) {
+    constructor(id: Guid, date: Date, lines: Array<Record<string, string>>) {
         super(id)
    
         this.Date = date;
@@ -12,5 +12,5 @@ export class ReceiveChatLinesCommand extends Command {
 
     public readonly Date: Date;
 
-    public readonly Lines: string[];
+    public readonly Lines: Array<Record<string, string>>;
 }

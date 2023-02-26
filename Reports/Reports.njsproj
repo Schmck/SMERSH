@@ -38,6 +38,7 @@
     <Folder Include="Entities\map\" />
     <Folder Include="Entities\" />
     <Folder Include="Entities\eventStore\" />
+    <Folder Include="Entities\layout\" />
     <Folder Include="Framework\" />
     <Folder Include="Entities\round\" />
     <Folder Include="Entities\player\" />
@@ -45,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Entities\index.ts" />
+    <TypeScriptCompile Include="Entities\layout\LayoutSearchReport.ts" />
     <TypeScriptCompile Include="Entities\map\index.ts" />
     <TypeScriptCompile Include="Entities\player\index.ts" />
     <TypeScriptCompile Include="Entities\round\index.ts" />

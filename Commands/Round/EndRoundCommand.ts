@@ -3,17 +3,15 @@ import { Command } from '../Command'
 
 export class EndRoundCommand extends Command {
 
-    constructor(id: Guid, mapId: Guid, date: Date, players: Guid[]) {
+    constructor(id: Guid, date: Date, players: string[]) {
         super(id)
-        this.MapId = mapId
+
         this.Date = date;
         this.Players = players
     }
 
-    public readonly MapId: Guid;
-
     public readonly Date: Date;
 
-    public readonly Players: Guid[];
+    public readonly Players: string[];
 
 }

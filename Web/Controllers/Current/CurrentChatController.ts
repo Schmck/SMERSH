@@ -36,17 +36,9 @@ export class CurrentChatController extends SmershController {
             ]
         })).shift();
 
-        let msgs = messages.map(msg => {
-            const date = new Date(new Date(msg.timestamp).setHours(new Date(msg.timestamp).getHours() + 1))
-            const timestamp = msg.timestamp ? `${date.toLocaleString().slice(0, date.toLocaleString().indexOf(','))} ${date.toTimeString().slice(0, 8)}│` : ''
-            const teamMessage = msg.team_message ? '(Team)' : ''
-            let team = msg.team === 'Axis' ? '+' : '-'
-
-            const newmsg = `${team} ${timestamp} ${teamMessage} ${msg.username}: ${msg.message}`
-            return newmsg
-        })
-        if (msgs.length && round && (round.Date.getDate() === lastMessageDate.getDate() && round.Date.getHours() === lastMessageDate.getHours())) {
-            this.commandBus.execute(new ReceiveChatLinesCommand(Guid.createEmpty(), new Date(), msgs));
+     
+        if (messages.length && round && (round.Date.getDate() === lastMessageDate.getDate() && round.Date.getHours() === lastMessageDate.getHours())) {
+            this.commandBus.execute(new ReceiveChatLinesCommand(Guid.parse(round.Id), new Date(), messages));
         }
 
         return messages;

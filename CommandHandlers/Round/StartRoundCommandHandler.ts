@@ -13,12 +13,12 @@ export class StartRoundCommandHandler implements ICommandHandler<StartRoundComma
     }
 
     async execute(command: StartRoundCommand) {
-        const { Id, MapId, Date, Players } = command
+        const { Id, Date, Players, TimeLimit } = command
         const props = await this.repository.Get<RoundSearchReport, Round>(Id, RoundSearchReport, Round)
         const domain = this.publisher.mergeObjectContext(props)
 
-        await domain.startRound(MapId, Date, Players)
-        await domain.commit()
+        await domain.startRound(TimeLimit, Date, Players);
+        await domain.commit();
         return;
 
     }

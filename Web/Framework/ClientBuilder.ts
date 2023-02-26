@@ -22,7 +22,7 @@ export class ClientBuilder {
 
     public static logger = new FileLogger(`./info-${this.constructor.name}.log`)
 
-    public static async Build<ElasticSearch>(url: string) {
+    public static async Build(url: string) {
         //const indices = this.getIndices();
         const reports = this.getReports();
         const client = new Elasticsearch({
@@ -32,16 +32,8 @@ export class ClientBuilder {
         for (let report of reports) {
             let exists = await client.indices.exists(report)
             if (!exists) {
-                let create = await client.indices.create(report);
-                let mappings = await client.indices.putMapping(report);
-
-                let instantiated = new report();
-                let put = await client.index(instantiated)
-
-                let refresh = await client.indices.refresh(report);
-
-                const { documents } = await client.search(report, { body: { query: { match_all: {} } } });
-                console.log(documents)
+                await client.indices.create(report);
+                await client.indices.putMapping(report);
             }
         }
 

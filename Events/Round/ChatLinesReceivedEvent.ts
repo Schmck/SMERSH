@@ -3,7 +3,7 @@ import { Event } from '../'
 
 export class ChatLinesReceivedEvent extends Event {
 
-    constructor(id: Guid, date: Date, lines : string[]) {
+    constructor(id: Guid, date: Date, lines: Array<Record<string, string>>) {
         super(id)
  
         this.Date = date;
@@ -12,5 +12,5 @@ export class ChatLinesReceivedEvent extends Event {
 
     public readonly Date: Date;
 
-    public readonly Lines : string[]
+    public readonly Lines: Array<Record<string, string>>
 }

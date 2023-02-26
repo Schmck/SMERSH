@@ -35,11 +35,14 @@
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Map\" />
     <Folder Include="Player\" />
     <Folder Include="Round\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="index.ts" />
+    <TypeScriptCompile Include="Map\index.ts" />
+    <TypeScriptCompile Include="Round\MapChangedEventHandler.ts" />
     <TypeScriptCompile Include="Player\PlayerEventHandler.ts" />
     <TypeScriptCompile Include="Round\ChatLinesReceivedEventHandler.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
