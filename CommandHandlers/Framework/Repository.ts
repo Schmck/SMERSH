@@ -15,7 +15,7 @@ export class Repository {
 
         if (!report) {
             newCls['Id'] = id.toString()
-            report = SearchClient.Put(newCls) as T
+            report = await SearchClient.Put(newCls) as T
         }
 
         Object.keys(report).forEach(key => {

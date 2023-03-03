@@ -19,7 +19,7 @@ export class RoundStartedEventHandler implements IEventHandler<RoundStartedEvent
 
     async handle(event: RoundStartedEvent) {
 
-        let partial: Partial<RoundSearchReport> = new cls(event.Id, event.MapId);
+        let partial: RoundSearchReport = new cls(event.Id, event.MapId);
         partial.Players = event.Players;
 
         delete partial.Lines;

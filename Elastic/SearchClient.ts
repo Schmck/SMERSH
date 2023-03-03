@@ -10,10 +10,10 @@ export class SearchClient {
 
 	public static queue: Array<Promise<any>> = []
 
-	public static async Exists<T>(id: Guid, cls: { new(): T }) {
+	public static async Exists<T>(id: string, cls: { new(): T }) {
 		const client = await ClientBuilder.GetClient(config.ELASTIC_URL)
 		try {
-			await client.get(cls, id.toString())
+			await client.get(cls, id)
 			return true
 		}
 		catch (error) {
@@ -64,7 +64,6 @@ export class SearchClient {
 	}
 
 	public static async Put<T>(document: T) : Promise<T> {
-
 		const client = await ClientBuilder.GetClient(config.ELASTIC_URL)
 		await client.index(document)
 

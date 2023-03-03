@@ -1,2 +1,7 @@
 import { RoundEventHandlers } from './Round'
-export const EventHandlers = [...RoundEventHandlers]
+import { PlayerEventHandlers } from './Player'
+
+export const EventHandlers = [
+    ...RoundEventHandlers,
+    ...PlayerEventHandlers,
+]

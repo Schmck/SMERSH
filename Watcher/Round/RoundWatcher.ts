@@ -2,18 +2,20 @@ import { Watcher } from '../Watcher'
 import { WebAdminSession } from '../../Services/WebAdmin';
 import { ChatRoute } from '../../Services/WebAdmin/Routes';
 import { StartRoundCommand, EndRoundCommand, ChangeMapCommand  } from '../../Commands/Round'
+import { RegisterPlayerCommand  } from '../../Commands/Player'
 import { StatusQuery } from '../../Services/WebAdmin/Queries'
 import { Guid } from 'guid-typescript'
 import { SearchClient } from '../../Elastic'
 import { RoundSearchReport } from '../../Reports/Entities/round'
 import { MapSearchReport } from '../../Reports/Entities/Map';
+import { PlayerSearchReport } from '../../Reports/Entities/player';
 
 export class RoundWatcher extends Watcher {
 
     public override async Watch(timeout = 1000, ...args: any[]) {
         const status = await StatusQuery.Get();
         const prevStatus = args[0] && args[0]['status'];
-        let oldMapTime = args[0] && args[0]['mapTime']
+        let prevMapTime = args[0] && args[0]['mapTime']
         let mapTime = prevStatus && prevStatus.rules && prevStatus.rules.TimeLeft ? parseInt(prevStatus.rules.TimeLeft) : 0
 
         if (status) { 
@@ -45,26 +47,38 @@ export class RoundWatcher extends Watcher {
                     }
             }
             const round = (await SearchClient.Search(RoundSearchReport, roundQuery)).shift()
-            
+            const playerIds: string[] = status.players ? status.players.map(player => player.Id) : []
+            const timeLimit = status.rules && status.rules['TimeLimit'] ? parseInt(status.rules['TimeLimit']) : 0
+            const newMapTime = status.rules && status.rules['TimeLeft'] ? parseInt(status.rules['TimeLeft']) : 0
+            const mapId = map && map.Id ? Guid.parse(map.Id) : Guid.create();
+            const roundId = Guid.create();
 
-            const playerIds: string[] = status && status.players ? status.players.map(player => player.Id) : []
-            let timeLimit = status && status.rules && status.rules['TimeLimit'] ? parseInt(status.rules['TimeLimit']) : 0
-            let newMapTime = status && status.rules && status.rules['TimeLeft'] ? parseInt(status.rules['TimeLeft']) : 0
-            let mapId = map && map.Id ? Guid.parse(map.Id) : Guid.create();
 
-            if (round && newMapTime === mapTime && mapTime !== oldMapTime) {
-                this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds))
+            if (oldMap && newMap && oldMap !== newMap) {
+                await this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
             }
 
-            if (oldMap && newMap && oldMap.length !== 0 && oldMap !== newMap) {
-                const roundId = Guid.create();
-                this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
+            if (round && mapTime && timeLimit === mapTime) {
+                 await this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
             }
 
-            if (round && timeLimit && timeLimit == mapTime) {
-                this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
+            if (round && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
+                 await this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds))
             }
 
+            if (playerIds.length) {
+                for (let playerId of playerIds) {
+                    const exists = await SearchClient.Exists(playerId, PlayerSearchReport)
+
+                    if (!exists) {
+                        const player = status.players.find(player => player.Id === playerId)
+                        if (player && player.Id) {
+                            await this.commandBus.execute(new RegisterPlayerCommand(player.Id, player.Playername))
+                        }
+                    }
+                }
+
+            }
     }
 
         setTimeout(() => {

@@ -31,8 +31,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="package.json" />
-    <Content Include="Player\NewPlayerRegisteredEvent.js" />
-    <Content Include="Player\NewPlayerRegisteredEvent.js.map" />
     <Content Include="README.md" />
     <Content Include="Round\RoundEndedEvent.ts" />
     <Content Include="tsconfig.json" />
@@ -43,7 +41,8 @@
     <TypeScriptCompile Include="Map\index.ts" />
     <TypeScriptCompile Include="Map\MapChangedEvent.ts" />
     <TypeScriptCompile Include="Player\index.ts" />
-    <TypeScriptCompile Include="Player\NewPlayerRegisteredEvent.ts" />
+    <TypeScriptCompile Include="Player\PlayerNameChangedEvent.ts" />
+    <TypeScriptCompile Include="Player\PlayerRegisteredEvent.ts" />
     <TypeScriptCompile Include="Round\ChatLinesReceivedEvent.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
     <TypeScriptCompile Include="Round\RoundStartedEvent.ts" />

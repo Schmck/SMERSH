@@ -1,4 +1,11 @@
-export { ReceiveChatLinesCommandHandler } from './ReceiveChatLinesCommandHandler'
-export { StartRoundCommandHandler } from './StartRoundCommandHandler'
-export { EndRoundCommandHandler } from './EndRoundCommandHandler'
-export { ChangeMapCommandHandler } from './ChangeMapCommandHandler'
+import { ReceiveChatLinesCommandHandler } from './ReceiveChatLinesCommandHandler'
+import { StartRoundCommandHandler } from './StartRoundCommandHandler'
+import { EndRoundCommandHandler } from './EndRoundCommandHandler'
+import { ChangeMapCommandHandler } from './ChangeMapCommandHandler'
+
+export const RoundCommandHandlers = [
+    ReceiveChatLinesCommandHandler,
+    StartRoundCommandHandler,
+    EndRoundCommandHandler,
+    ChangeMapCommandHandler
+]

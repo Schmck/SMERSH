@@ -31,7 +31,7 @@ export class StatusQuery {
                     if (table) {
                         playas = Parsers.playerTable(table as HTMLTableElement)
                         try {
-                            players = players.map((item, i) => Object.assign({}, item, { Id: playas[i].UniqueID }));
+                            players = players.map((item, i) => Object.assign({}, item, { Id: playas[i].UniqueID, IpAddress: playas[i].IP }));
 
                         } catch (error) { }
                     }

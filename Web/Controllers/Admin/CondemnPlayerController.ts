@@ -53,11 +53,16 @@ export class CondemnPlayerController extends SmershController {
                         urlencoded.append("ajax", '1');
                         urlencoded.append("action", action);
 
-                        await client.post(url, urlencoded, config).then(result => {
+                        const response = await client.post(url, urlencoded, config).then(result => {
                             this.log.info(JSON.stringify(result))
+                            return result
                         });
 
-                        return player
+                        return {
+                            resp: response.data,
+                            statusCode: response.status,
+                            player,
+                        }
                     } else return 'worse luck';
                 } else return 'bad luck'
             }
