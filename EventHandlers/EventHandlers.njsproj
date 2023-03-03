@@ -42,8 +42,10 @@
   <ItemGroup>
     <TypeScriptCompile Include="index.ts" />
     <TypeScriptCompile Include="Map\index.ts" />
+    <TypeScriptCompile Include="Player\index.ts" />
+    <TypeScriptCompile Include="Player\PlayerNameChangedEventHandler.ts" />
+    <TypeScriptCompile Include="Player\PlayerRegisteredEventHandler.ts" />
     <TypeScriptCompile Include="Round\MapChangedEventHandler.ts" />
-    <TypeScriptCompile Include="Player\PlayerEventHandler.ts" />
     <TypeScriptCompile Include="Round\ChatLinesReceivedEventHandler.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
     <TypeScriptCompile Include="Round\RoundEndedEventHandler.ts" />

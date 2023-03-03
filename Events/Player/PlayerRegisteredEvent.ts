@@ -1,7 +1,7 @@
 import { Guid } from "guid-typescript"
-import { Event } from "../"
+import { Event } from ".."
 
-export class NewPlayerRegisteredEvent extends Event {
+export class PlayerRegisteredEvent extends Event {
 	constructor(playerId: Guid, name: string) {
 		super(playerId)
 		this.Name = name;

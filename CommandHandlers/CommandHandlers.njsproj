@@ -36,10 +36,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Map\" />
+    <Folder Include="Player\" />
     <Folder Include="Round\" />
     <Folder Include="Framework\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Player\ChangePlayerNameCommandHandler.ts" />
+    <TypeScriptCompile Include="Player\index.ts" />
+    <TypeScriptCompile Include="Player\RegisterPlayerCommandHandler.ts" />
     <TypeScriptCompile Include="Round\ChangeMapCommandHandler.ts" />
     <TypeScriptCompile Include="Round\EndRoundCommandHandler.ts" />
     <TypeScriptCompile Include="Round\index.ts" />

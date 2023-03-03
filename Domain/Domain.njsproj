@@ -36,8 +36,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Map.ts" />
-    <TypeScriptCompile Include="Round.ts" />
+    <TypeScriptCompile Include="Player.ts" />
     <TypeScriptCompile Include="Domain.ts" />
+    <TypeScriptCompile Include="Round.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

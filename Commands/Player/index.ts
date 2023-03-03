@@ -1,8 +1,8 @@
-import { RegisterNewPlayerCommand } from './RegisterNewPlayerCommand';
-import { ReceivePlayerChatLineCommand } from './ReceivePlayerChatLineCommand';
+import { RegisterPlayerCommand } from './RegisterPlayerCommand';
+import { ChangePlayerNameCommand } from './ChangePlayerNameCommand';
 
 
 export {
-    RegisterNewPlayerCommand,
-    ReceivePlayerChatLineCommand,
+    RegisterPlayerCommand,
+    ChangePlayerNameCommand
 }
