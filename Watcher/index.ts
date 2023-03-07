@@ -1,1 +1,1 @@
-export { RoundWatcher, ChatWatcher } from './Round'
+export { RoundWatcher, ChatWatcher, PlayerWatcher } from './Round'

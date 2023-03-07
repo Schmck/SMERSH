@@ -21,6 +21,8 @@ export class ChatLinesReceivedEventHandler implements IEventHandler<ChatLinesRec
 
         delete partial.MapId;
         delete partial.Players;
+        delete partial.IsActive;
+
         await SearchClient.Update(partial);
         return;
     }

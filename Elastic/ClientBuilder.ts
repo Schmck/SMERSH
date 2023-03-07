@@ -53,8 +53,8 @@ export class ClientBuilder {
 
 
 
-    public static async GetClient(url: string) : Promise<Elasticsearch> {
-        const client = await new Elasticsearch({
+    public static GetClient(url: string) : Elasticsearch {
+        const client = new Elasticsearch({
             host: url,
         })
 

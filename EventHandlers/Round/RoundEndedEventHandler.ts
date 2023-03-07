@@ -15,6 +15,7 @@ export class RoundEndedEventHandler implements IEventHandler<RoundEndedEvent>
     async handle(event: RoundEndedEvent) {
         let partial: Partial<RoundSearchReport> = new cls(event.Id, event.MapId);
         partial.Players = event.Players;
+        partial.IsActive = false;
 
         delete partial.Lines;
         await SearchClient.Update(partial);

@@ -38,6 +38,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="index.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
+    <TypeScriptCompile Include="Round\PlayerWatcher.ts" />
     <TypeScriptCompile Include="Watcher.ts" />
   </ItemGroup>
   <ItemGroup>

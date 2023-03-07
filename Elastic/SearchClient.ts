@@ -3,6 +3,7 @@ import { ClientBuilder } from './ClientBuilder'
 import { SearchReport } from '../Reports/Framework'
 import { IndexedClass } from '../SMERSH/Utilities/types'
 import { RoundSearchReport } from '../Reports/Entities/round'
+import { Elasticsearch } from '../SMERSH/Utilities'
 
 const config = process.env;
 
@@ -10,10 +11,11 @@ export class SearchClient {
 
 	public static queue: Array<Promise<any>> = []
 
-	public static async Exists<T>(id: string, cls: { new(): T }) {
-		const client = await ClientBuilder.GetClient(config.ELASTIC_URL)
+	public static client: Elasticsearch = ClientBuilder.GetClient("http://localhost:9209/");
+
+	public static async Exists<T>(id: string, cls: { new(): T }) { 
 		try {
-			await client.get(cls, id)
+			await this.client.get(cls, id)
 			return true
 		}
 		catch (error) {
@@ -22,11 +24,10 @@ export class SearchClient {
     }
 
 	public static async Get<T>(id: Guid, cls: { new(): T }): Promise<T> {
-		const client = await ClientBuilder.GetClient(config.ELASTIC_URL)
 		let doc : T
 
 		try {
-			const { document } = await client.get(cls, id.toString())
+			const { document } = await this.client.get(cls, id.toString())
 			doc = document
 		}
 		catch (error) {
@@ -37,11 +38,10 @@ export class SearchClient {
 	}
 
 	public static async GetSource<T>(id: Guid, cls: { new(): T }): Promise<T> {
-		const client = await ClientBuilder.GetClient(config.ELASTIC_URL)
 		let doc: T
 
 		try {
-			const { response } = await client.get(cls, id.toString())
+			const { response } = await this.client.get(cls, id.toString())
 			doc = response._source
 		}
 		catch (error) {
@@ -52,27 +52,23 @@ export class SearchClient {
 	}
 
 	public static async GetMany<T>(type: IndexedClass<T>) : Promise<Array<T>> {
-		const client = await ClientBuilder.GetClient(config.ELASTIC_URL)
-		const { documents } = await client.search(type, { body: { query: { match_all: {} } } })
+		const { documents } = await this.client.search(type, { body: { query: { match_all: {} } } })
 		return documents
 	}
 
 	public static async Search<T>(type: IndexedClass<T>, query: any) : Promise<Array<T>> {
-		const client = await ClientBuilder.GetClient(config.ELASTIC_URL)
-		const { documents } = await client.search(type, { body: query })
+		const { documents } = await this.client.search(type, { body: query })
 		return documents ?? null
 	}
 
 	public static async Put<T>(document: T) : Promise<T> {
-		const client = await ClientBuilder.GetClient(config.ELASTIC_URL)
-		await client.index(document)
+		await this.client.index(document)
 
 		return document;
 	}
 
 	public static async Update<T>(document: T) : Promise<void> {
-		const client = await ClientBuilder.GetClient(config.ELASTIC_URL)
-		await client.update(document)
+		await this.client.update(document)
 		return
 	}
 
