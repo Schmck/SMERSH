@@ -17,7 +17,7 @@ export class UpdatePlayerRoundCommandHandler implements ICommandHandler<UpdatePl
         const props = await this.repository.Get<PlayerRoundSearchReport, PlayerRound>(Id, PlayerRoundSearchReport, PlayerRound)
         const domain = this.publisher.mergeObjectContext(props)
 
-        await domain.update(PlayerId, RoundId, Role, Team, Score, Kills, Deaths);
+        await domain.update(PlayerId, RoundId, Team, Role, Score, Kills, Deaths);
         await domain.commit()
         return;
     }

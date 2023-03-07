@@ -27,6 +27,8 @@ export class RoundSearchReport extends SearchReport {
     @Field({ nested: Array<string> })
     public Players: Array<string>;
 
+    @Field('boolean')
+    public IsActive: boolean;
 
     public UpdateCalculatedProperties(): void { }
 }
