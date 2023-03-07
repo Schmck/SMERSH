@@ -1,10 +1,10 @@
-﻿import { Team, Roles } from '../../../SMERSH/ValueObjects'
+﻿import { Team, Role } from '../../../SMERSH/ValueObjects'
 
 export class PlayerInfo {
     constructor(team: number, name: string, role: number | string, score: number, kills: number, deaths: number, admin: boolean, spectator: boolean, bot: boolean ) {
         this.Team = Team.fromValue(team)
         this.Name = name;
-        this.Role = typeof role === "number" ? Roles.fromValue(role) : Roles.fromDisplayName(role);
+        this.Role = typeof role === "number" ? Role.fromValue(role) : Role.fromDisplayName(role);
         this.Score = score;
         this.Kills = kills;
         this.Deaths = deaths;
@@ -17,7 +17,7 @@ export class PlayerInfo {
 
     public Name: string;
 
-    public Role: Roles | string;
+    public Role: Role | string;
 
     public Score: number;
 

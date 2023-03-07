@@ -38,6 +38,7 @@
     <Folder Include="Map\" />
     <Folder Include="Player\" />
     <Folder Include="Round\" />
+    <Folder Include="Round\PlayerRound\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="index.ts" />
@@ -48,6 +49,8 @@
     <TypeScriptCompile Include="Round\MapChangedEventHandler.ts" />
     <TypeScriptCompile Include="Round\ChatLinesReceivedEventHandler.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
+    <TypeScriptCompile Include="Round\PlayerRound\index.ts" />
+    <TypeScriptCompile Include="Round\PlayerRound\PlayerRoundUpdatedEventHandler.ts" />
     <TypeScriptCompile Include="Round\RoundEndedEventHandler.ts" />
     <TypeScriptCompile Include="Round\RoundStartedEventHandler.ts" />
   </ItemGroup>

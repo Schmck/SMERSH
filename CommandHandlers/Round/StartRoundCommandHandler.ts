@@ -22,10 +22,4 @@ export class StartRoundCommandHandler implements ICommandHandler<StartRoundComma
         return;
 
     }
-
-    async call(func: (...args: any[]) => void, ...args: any[]) {
-        setTimeout(() => {
-            func(...args)
-        }, 1000)
-    }
 }

@@ -22,10 +22,4 @@ export class EndRoundCommandHandler implements ICommandHandler<EndRoundCommand> 
         return;
 
     }
-
-    async call(func: (...args: any[]) => void, ...args: any[]) {
-        setTimeout(() => {
-            func(...args)
-        }, 1000)
-    }
 }

@@ -2,4 +2,4 @@
 export { Team } from  './round/'
 export { Tickets } from  './map/'
 export { Layout } from  './campaign/'
-export { Roles } from  './player/'
+export { Role } from  './player/'

@@ -39,15 +39,6 @@ export class ChatWatcher extends Watcher {
         const roundDate = round ? new Date(round.Date) : false
 
         if (roundDate && lastMessageDate && (roundDate.getDate() === lastMessageDate.getDate())) {
-           // let msgs = messages.map(msg => {
-            //    const date = new Date(new Date(msg.timestamp).setHours(new Date(msg.timestamp).getHours()))
-            //    const timestamp = msg.timestamp ? `${date.toLocaleString().slice(0, date.toLocaleString().indexOf(','))} ${date.toTimeString().slice(0, 8)}|` : ''
-            //    const teamMessage = msg.team_message ? '(Team)' : ''
-            //    let team = msg.team === 'Axis' ? '+' : '-'
-
-//                const newmsg = `${team} ${timestamp} ${teamMessage} ${msg.username}: ${msg.message}`
-//                return newmsg
- //           })
             if (messages.length) {
                 await this.commandBus.execute(new ReceiveChatLinesCommand(Guid.parse(round.Id), new Date(), messages));
             }

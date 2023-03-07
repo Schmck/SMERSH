@@ -1,10 +1,12 @@
 ﻿import { Report } from '../../../Framework'
 import { Guid } from "guid-typescript";
 
-export class PlayerInfoApiReport extends Report {
+export class PlayerRoundApiReport extends Report {
     constructor(id: Guid) {
         super(id)
     }
+
+    public RoundId: Guid;
 
     public Team: number;//ENUM
 

@@ -23,10 +23,4 @@ export class ReceiveChatLinesCommandHandler implements ICommandHandler<ReceiveCh
         return;
 
     }
-
-    async call(func: (...args: any[]) => void, ...args: any[]) {
-    setTimeout(() => {
-        func(...args)
-    }, 1000)
-    }
 }

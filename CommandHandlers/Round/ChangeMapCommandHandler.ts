@@ -20,12 +20,5 @@ export class ChangeMapCommandHandler implements ICommandHandler<ChangeMapCommand
         await domain.changeMap(MapId, MapName);
         await domain.commit()
         return;
-
-    }
-
-    async call(func: (...args: any[]) => void, ...args: any[]) {
-        setTimeout(() => {
-            func(...args)
-        }, 1000)
     }
 }

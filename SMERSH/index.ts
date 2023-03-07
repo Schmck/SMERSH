@@ -4,7 +4,7 @@ export {
     Tickets,
     Team,
     Layout,
-    Roles,
+    Role,
     } from './ValueObjects/';
 
 export {
