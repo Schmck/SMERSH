@@ -427,7 +427,7 @@
     <TypeScriptCompile Include="ValueObjects\map\MapType.ts" />
     <TypeScriptCompile Include="ValueObjects\map\Tickets.ts" />
     <TypeScriptCompile Include="ValueObjects\player\index.ts" />
-    <TypeScriptCompile Include="ValueObjects\player\Roles.ts" />
+    <TypeScriptCompile Include="ValueObjects\player\Role.ts" />
     <TypeScriptCompile Include="ValueObjects\round\index.ts" />
     <TypeScriptCompile Include="ValueObjects\round\Team.ts" />
   </ItemGroup>

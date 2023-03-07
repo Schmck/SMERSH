@@ -44,6 +44,8 @@
     <TypeScriptCompile Include="Map\index.ts" />
     <TypeScriptCompile Include="Round\EndRoundCommand.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
+    <TypeScriptCompile Include="Round\PlayerRound\index.ts" />
+    <TypeScriptCompile Include="Round\PlayerRound\UpdatePlayerRoundCommand.ts" />
     <TypeScriptCompile Include="Round\ReceiveChatLinesCommand.ts" />
     <TypeScriptCompile Include="Round\StartRoundCommand.ts" />
   </ItemGroup>
@@ -51,6 +53,7 @@
     <Folder Include="Map\" />
     <Folder Include="Player\" />
     <Folder Include="Round\" />
+    <Folder Include="Round\PlayerRound\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

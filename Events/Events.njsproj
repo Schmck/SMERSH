@@ -45,12 +45,15 @@
     <TypeScriptCompile Include="Player\PlayerRegisteredEvent.ts" />
     <TypeScriptCompile Include="Round\ChatLinesReceivedEvent.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
+    <TypeScriptCompile Include="Round\PlayerRound\index.ts" />
+    <TypeScriptCompile Include="Round\PlayerRound\PlayerRoundUpdatedEvent.ts" />
     <TypeScriptCompile Include="Round\RoundStartedEvent.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Map\" />
     <Folder Include="Player\" />
     <Folder Include="Round\" />
+    <Folder Include="Round\PlayerRound\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

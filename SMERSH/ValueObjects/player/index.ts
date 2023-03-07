@@ -1,1 +1,1 @@
-﻿export { Roles } from './Roles'
+﻿export { Role } from './Role'

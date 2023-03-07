@@ -42,7 +42,7 @@
     <Folder Include="Framework\" />
     <Folder Include="Entities\round\" />
     <Folder Include="Entities\player\" />
-    <Folder Include="Entities\round\playerInfo\" />
+    <Folder Include="Entities\round\playerRound\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Entities\index.ts" />
@@ -50,7 +50,10 @@
     <TypeScriptCompile Include="Entities\map\index.ts" />
     <TypeScriptCompile Include="Entities\player\index.ts" />
     <TypeScriptCompile Include="Entities\round\index.ts" />
-    <TypeScriptCompile Include="Entities\round\playerInfo\index.ts" />
+    <TypeScriptCompile Include="Entities\round\playerRound\index.ts" />
+    <TypeScriptCompile Include="Entities\round\playerRound\PlayerRoundApiReport.ts" />
+    <TypeScriptCompile Include="Entities\round\playerRound\PlayerRoundQueryReport.ts" />
+    <TypeScriptCompile Include="Entities\round\playerRound\PlayerRoundSearchReport.ts" />
     <TypeScriptCompile Include="Entities\round\RoundSearchReport.ts" />
     <TypeScriptCompile Include="Framework\index.ts" />
     <TypeScriptCompile Include="Framework\IReport.ts" />
@@ -58,9 +61,6 @@
     <TypeScriptCompile Include="Entities\player\PlayerSearchReport.ts" />
     <TypeScriptCompile Include="Entities\player\PlayerQueryReport.ts" />
     <TypeScriptCompile Include="Entities\player\PlayerApiReport.ts" />
-    <TypeScriptCompile Include="Entities\round\playerInfo\PlayerInfoSearchReport.ts" />
-    <TypeScriptCompile Include="Entities\round\playerInfo\PlayerInfoQueryReport.ts" />
-    <TypeScriptCompile Include="Entities\round\playerInfo\PlayerInfoApiReport.ts" />
     <TypeScriptCompile Include="Framework\Report.ts" />
     <TypeScriptCompile Include="Framework\SearchReport.ts" />
   </ItemGroup>
