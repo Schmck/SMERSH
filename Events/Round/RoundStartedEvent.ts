@@ -16,8 +16,6 @@ export class RoundStartedEvent extends Event {
 
     public readonly TimeLimit; 
 
-    public readonly Date: Date;
-
     public readonly Players: string[];
 
 }

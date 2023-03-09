@@ -6,7 +6,7 @@ import { Config, ClientBuilder } from './Framework';
 import * as dotenv from 'dotenv';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './Framework/app.module';
-import { ChatWatcher, RoundWatcher, PlayerWatcher } from '../Watcher'
+import { ChatWatcher, RoundWatcher } from '../Watcher'
 import { CommandBus } from '@nestjs/cqrs'
 
 dotenv.config()
@@ -28,11 +28,9 @@ async function start(port: number) {
     const bus = app.get(CommandBus);
     const chat = new ChatWatcher(bus);
     const round = new RoundWatcher(bus);
-    const player = new PlayerWatcher(bus);
 
     chat.Watch();
     round.Watch();
-    player.Watch();
  
 }
 

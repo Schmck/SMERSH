@@ -45,6 +45,6 @@ export class Round extends Domain {
     public async changeMap(mapId: Guid, mapName: string) {
 
         this.MapId = mapId;
-         await this.apply(new MapChangedEvent(this.Id, this.MapId, mapName))
+        await this.apply(new MapChangedEvent(this.Id, this.MapId, mapName))
     }
 }

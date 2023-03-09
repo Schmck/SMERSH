@@ -2,3 +2,4 @@
 export { PlayerController } from './PlayerController'
 export { LandingPageController } from './LandingPageController'
 export { CondemnPlayerController } from './CondemnPlayerController'
+export { RebuildController } from './RebuildController'

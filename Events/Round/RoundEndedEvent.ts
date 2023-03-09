@@ -13,7 +13,5 @@ export class RoundEndedEvent extends Event {
 
     public readonly MapId: Guid;
 
-    public readonly Date: Date;
-
     public readonly Players: string[]
 }

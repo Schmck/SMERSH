@@ -4,7 +4,7 @@ import { Repository } from '../../CommandHandlers/Framework'
 import { Module } from '@nestjs/common';
 import { Logger, dummyLogger } from "ts-log/build/src/index"
 import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
-import { CqrsModule, CommandBus, EventBus, EventPublisher } from '@nestjs/cqrs';
+import { CqrsModule, EventBus } from '@nestjs/cqrs';
 import { OnModuleInit } from '@nestjs/common'
 import { ChatWatcher } from '../../Watcher'
 
@@ -18,7 +18,8 @@ import {
     PlayersController,
     PlayerController,
     CondemnPlayerController,
-    LandingPageController
+    LandingPageController,
+    RebuildController
 } from '../Controllers/Admin';
 
 import {
@@ -30,6 +31,7 @@ import {
     imports: [CqrsModule<Event>],
     controllers: [
         LandingPageController,
+        RebuildController,
 
         CurrentStatusController,
         CurrentChatController,
@@ -42,7 +44,6 @@ import {
     ],
     providers: [
         Repository,
-        ChatWatcher,
        ...CommandHandlers,
        ...EventHandlers
     ]

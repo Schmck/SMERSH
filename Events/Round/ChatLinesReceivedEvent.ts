@@ -9,8 +9,5 @@ export class ChatLinesReceivedEvent extends Event {
         this.Date = date;
         this.Lines = lines;
     }
-
-    public readonly Date: Date;
-
     public readonly Lines: Array<Record<string, string>>
 }
