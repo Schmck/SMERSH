@@ -1,7 +1,7 @@
 export { }
 import { IEventHandler } from '@nestjs/cqrs';
 import { EventsHandler } from '@nestjs/cqrs/dist/decorators/events-handler.decorator';
-import { RoundStartedEvent } from '../../Events'
+import { RoundStartedEvent, ChatLinesReceivedEvent, PlayerRegisteredEvent, Event } from '../../Events'
 import { SearchClient } from '../../Elastic'
 import { RoundSearchReport } from '../../Reports/Entities/round'
 import { MapSearchReport } from '../../Reports/Entities/map'
@@ -35,5 +35,12 @@ export class RoundStartedEventHandler implements IEventHandler<RoundStartedEvent
 
         await SearchClient.Update(partialMap);
         return;
+    }
+
+    
+    test(event: ChatLinesReceivedEvent)
+    test(event: PlayerRegisteredEvent) 
+    test(event: Event) {
+        return event
     }
 }

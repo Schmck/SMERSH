@@ -76,7 +76,28 @@ export class RoundWatcher extends Watcher {
             }
 
             if (round && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
-                 await this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds))
+                await this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds))
+            }
+
+            if (round && playerIds.length) {
+                for (let playerId of playerIds) {
+                    const exists = await SearchClient.Exists(playerId, PlayerSearchReport)
+                    const player = status.players.find(player => player.Id === playerId)
+
+                    if (!exists) {
+                        if (player && player.Id) {
+                            await this.commandBus.execute(new RegisterPlayerCommand(player.Id, player.Playername))
+                        }
+                    } else if (player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
+                        const team = Team.fromValue(parseInt(player.Team))
+                        const role = Role.fromDisplayName(player.Role);
+                        const id = Guid.parse((round.Id.toString().slice(0, 27) + playerId.slice(9)))
+
+                        if (team && role) {
+                            await this.commandBus.execute(new UpdatePlayerRoundCommand(id, player.Id, Guid.parse(round.Id), team.Value, role.Value, player.Score, player.Kills, player.Deaths))
+                        }
+                    }
+                }
             }
     }
 
