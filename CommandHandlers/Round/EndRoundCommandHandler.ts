@@ -18,7 +18,7 @@ export class EndRoundCommandHandler implements ICommandHandler<EndRoundCommand> 
         const domain = this.publisher.mergeObjectContext(props)
 
         await domain.endRound(Date, Players)
-        await domain.commit()
+        await domain.commit();
         return;
 
     }

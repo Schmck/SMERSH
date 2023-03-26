@@ -1,10 +1,10 @@
 import { StatusRoute, PlayersRoute } from '../Routes';
 import { WebAdminSession } from '..';
 import { Parsers } from "../../../Web/Utils";
-import { time } from 'console';
+import { Query } from './Query';
 
 
-export class StatusQuery {
+export class StatusQuery extends Query {
     public static async Get() {
         const session = WebAdminSession.get();
 
@@ -17,7 +17,7 @@ export class StatusQuery {
         let teams
 
         if (status && status.window && status.window.document) {
-            const playerTable = status.window.document.querySelector("#players");
+             const playerTable = status.window.document.querySelector("#players");
             const teamTable = status.window.document.querySelector("#teams");
             const currentDl = status.window.document.querySelector("#currentGame");
             const rulesDl = status.window.document.querySelector("#currentRules");
@@ -30,9 +30,10 @@ export class StatusQuery {
 
                     if (table) {
                         playas = Parsers.playerTable(table as HTMLTableElement)
+                       // console.log(playas)
                         try {
-                            players = players.map((item, i) => Object.assign({}, item, { Id: playas[i].UniqueID, IpAddress: playas[i].IP }));
-
+                            players = players.map((item, i) => Object.assign({}, item, { Id: playas[i].UniqueID, IpAddress: playas[i].IP, PlayerKey: playas[i].PlayerKey }));
+ 
                         } catch (error) { }
                     }
                         

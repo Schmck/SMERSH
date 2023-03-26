@@ -19,7 +19,7 @@ export class RoundStartedEventHandler implements IEventHandler<RoundStartedEvent
 
     async handle(event: RoundStartedEvent) {
 
-        let partial: RoundSearchReport = new cls(event.Id, event.MapId);
+        let partial: Partial<RoundSearchReport> = new cls(event.Id, event.MapId);
         partial.Players = event.Players;
         partial.IsActive = true;
 
@@ -35,12 +35,5 @@ export class RoundStartedEventHandler implements IEventHandler<RoundStartedEvent
 
         await SearchClient.Update(partialMap);
         return;
-    }
-
-    
-    test(event: ChatLinesReceivedEvent)
-    test(event: PlayerRegisteredEvent) 
-    test(event: Event) {
-        return event
     }
 }

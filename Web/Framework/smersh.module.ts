@@ -1,5 +1,5 @@
 import { CommandHandlers } from '../../CommandHandlers'
-import { EventHandlers } from '../../EventHandlers'
+import { EventHandlers } from '../../EventHandlers/index'
 import { Repository } from '../../CommandHandlers/Framework'
 import { Module } from '@nestjs/common';
 import { Logger, dummyLogger } from "ts-log/build/src/index"
@@ -17,7 +17,7 @@ import {
 import {
     PlayersController,
     PlayerController,
-    CondemnPlayerController,
+    PolicyController,
     LandingPageController,
     RebuildController
 } from '../Controllers/Admin';
@@ -38,7 +38,7 @@ import {
 
         PlayersController,
         PlayerController,
-        CondemnPlayerController,
+        PolicyController,
 
         LayoutController
     ],
@@ -55,7 +55,7 @@ export class SmershModule implements OnModuleInit {
     public log : FileLogger
 
     public onModuleInit(): void {
-        this.log = new FileLogger(`./info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
+        this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
         this.log.info('smersh module initiated', this)
     }
 }

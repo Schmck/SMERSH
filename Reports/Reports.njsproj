@@ -39,12 +39,15 @@
     <Folder Include="Entities\" />
     <Folder Include="Entities\eventStore\" />
     <Folder Include="Entities\layout\" />
+    <Folder Include="Entities\policy\" />
     <Folder Include="Framework\" />
     <Folder Include="Entities\round\" />
     <Folder Include="Entities\player\" />
     <Folder Include="Entities\round\playerRound\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Entities\policy\PolicySearchReport.ts" />
+    <TypeScriptCompile Include="Entities\policy\index.ts" />
     <TypeScriptCompile Include="Entities\eventStore\EventSearchReport.ts" />
     <TypeScriptCompile Include="Entities\eventStore\index.ts" />
     <TypeScriptCompile Include="Entities\index.ts" />

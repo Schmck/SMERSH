@@ -1,8 +1,9 @@
 import { ChatRoute } from '../Routes';
 import { WebAdminSession } from '..';
 import { Parsers } from "../../../Web/Utils";
+import { Query } from './Query';
 
-export class ChatQuery {
+export class ChatQuery extends Query {
 
     public static async Get() {
         const session = WebAdminSession.get();

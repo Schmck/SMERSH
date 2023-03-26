@@ -10,13 +10,10 @@ import { Controller, Inject, Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs'
 import { SearchClient } from '../../Elastic'
 import { RoundSearchReport } from '../../Reports/Entities/round'
+import { Client } from '../../Discord/Framework';
 
 
 export class ChatWatcher extends Watcher {
-
-    public constructor(commandBus: CommandBus) {
-        super(commandBus)
-    }
 
     public override async Watch(timeout: number = 1000, ...args: any[]) {
         const messages = await ChatQuery.Get();

@@ -5,7 +5,7 @@
         "@nestjs/cqrs": "^9.0.1",
         "@nestjs/platform-express": "9.0.0",
         "@types/dotenv": "^8.2.0",
-        "discord.js": "^14.7.1",
+        "discord.js": "^14.8.0",
         "dotenv": "^16.0.3",
         "guid-typescript": "^1.0.9",
         "html-table-to-json": "^1.0.0",

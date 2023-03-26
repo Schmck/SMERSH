@@ -19,6 +19,7 @@ export class PlayerRegisteredEventHandler implements IEventHandler<PlayerRegiste
     async handle(event: PlayerRegisteredEvent) {
         let player = new cls(event.Id);
         player.Name = event.Name;
+
         await SearchClient.Put(player);
 
         return;

@@ -23,6 +23,7 @@ export class RoundWatcher extends Watcher {
         if (status) { 
             let oldMap = prevStatus && prevStatus.game && prevStatus.game.Map;
             let newMap = status && status.game && status.game['Map']
+
             const map = newMap && (await SearchClient.Search(MapSearchReport, {
                 "query": {
                     "match": {
@@ -30,19 +31,26 @@ export class RoundWatcher extends Watcher {
                     }
                 }
             })).shift()
-            let roundQuery = {
-                "size": 1,
-                "sort": [
-                    {
-                        "Date": {
-                            "order": "desc"
-                        }
-                    }
-                ]
-            };
+
+           
+            if (oldMap && newMap && oldMap !== newMap) {
+                const mapId = map && map.Id ? Guid.parse(map.Id) : Guid.create();
+                const roundId = Guid.create();
+
+                await this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
+            }
 
             if (map) {
-                roundQuery["query"] = {
+                let roundQuery = {
+                    "size": 1,
+                    "sort": [
+                        {
+                            "Date": {
+                                "order": "desc"
+                            }
+                        }
+                    ],
+                    "query": {
                         "bool": {
                             "must": [
                                 {
@@ -58,47 +66,45 @@ export class RoundWatcher extends Watcher {
                             ]
                         }
                     }
-            }
-            const round = (await SearchClient.Search(RoundSearchReport, roundQuery)).shift()
-            const playerIds: string[] = status.players ? status.players.map(player => player.Id) : []
-            const timeLimit = status.rules && status.rules['TimeLimit'] ? parseInt(status.rules['TimeLimit']) : 0
-            const newMapTime = status.rules && status.rules['TimeLeft'] ? parseInt(status.rules['TimeLeft']) : 0
-            const mapId = map && map.Id ? Guid.parse(map.Id) : Guid.create();
-            const roundId = Guid.create();
+                };
+   
+                const round = (await SearchClient.Search(RoundSearchReport, roundQuery)).shift()
+                const playerIds: string[] = status.players ? status.players.map(player => player.Id) : []
+                const timeLimit = status.rules && status.rules['TimeLimit'] ? parseInt(status.rules['TimeLimit']) : 0
+                const newMapTime = status.rules && status.rules['TimeLeft'] ? parseInt(status.rules['TimeLeft']) : 0
+               
 
+                if (round && mapTime && timeLimit === mapTime) {
+                    await this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
+                }
 
-            if (oldMap && newMap && oldMap !== newMap) {
-                await this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
-            }
+                if (round && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
+                    this.log.info(Guid.parse(round.Id), new Date(), prevMapTime, mapTime, newMapTime)
+                    await this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds));
+                }
 
-            if (round && mapTime && timeLimit === mapTime) {
-                 await this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
-            }
+                if (playerIds.length) {
+                    for (let playerId of playerIds) {
+                        const exists = await SearchClient.Exists(playerId, PlayerSearchReport)
+                        const player = status.players.find(player => player.Id === playerId)
 
-            if (round && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
-                await this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds))
-            }
+                        if (!exists) {
+                            if (player && player.Id) {
+                                await this.commandBus.execute(new RegisterPlayerCommand(player.Id, player.Playername))
+                            }
+                        } else if (round && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
+                            const team = Team.fromValue(parseInt(player.Team))
+                            const role = Role.fromDisplayName(player.Role);
+                            const id = Guid.parse((round.Id.toString().slice(0, 27) + playerId.slice(9)))
 
-            if (round && playerIds.length) {
-                for (let playerId of playerIds) {
-                    const exists = await SearchClient.Exists(playerId, PlayerSearchReport)
-                    const player = status.players.find(player => player.Id === playerId)
-
-                    if (!exists) {
-                        if (player && player.Id) {
-                            await this.commandBus.execute(new RegisterPlayerCommand(player.Id, player.Playername))
-                        }
-                    } else if (player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
-                        const team = Team.fromValue(parseInt(player.Team))
-                        const role = Role.fromDisplayName(player.Role);
-                        const id = Guid.parse((round.Id.toString().slice(0, 27) + playerId.slice(9)))
-
-                        if (team && role) {
-                            await this.commandBus.execute(new UpdatePlayerRoundCommand(id, player.Id, Guid.parse(round.Id), team.Value, role.Value, player.Score, player.Kills, player.Deaths))
+                            if (team && role) {
+                                await this.commandBus.execute(new UpdatePlayerRoundCommand(id, player.Id, Guid.parse(round.Id), team.Value, role.Value, player.Score, player.Kills, player.Deaths))
+                            }
                         }
                     }
                 }
             }
+            
     }
 
         setTimeout(() => {

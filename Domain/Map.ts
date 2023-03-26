@@ -16,8 +16,7 @@ export class Map extends Domain {
     public changeMap(mapName: string, timeLimit: number) {
         this.MapName = mapName;
         this.TimeLimit = timeLimit;
-
-
+        return;
     }
     
 }

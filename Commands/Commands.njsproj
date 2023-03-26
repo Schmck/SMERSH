@@ -39,6 +39,8 @@
     <TypeScriptCompile Include="ICommand.ts" />
     <TypeScriptCompile Include="Player\ChangePlayerNameCommand.ts" />
     <TypeScriptCompile Include="Player\index.ts" />
+    <TypeScriptCompile Include="Player\LiftBanCommand.ts" />
+    <TypeScriptCompile Include="Player\ApplyPolicyCommand.ts" />
     <TypeScriptCompile Include="Player\RegisterPlayerCommand.ts" />
     <TypeScriptCompile Include="Round\ChangeMapCommand.ts" />
     <TypeScriptCompile Include="Map\index.ts" />

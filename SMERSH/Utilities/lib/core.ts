@@ -90,16 +90,10 @@ export class Core {
    * Get the number of documents for the cluster, index, type, or a query
    * @param clsOrParams
    */
-  count<T>(clsOrParams: CountParams): Promise<CountResponse>;
-  count<T>(clsOrParams: IndexedClass<T>, countParams?: IndexedCountParams): Promise<CountResponse>;
-  count<T>(clsOrParams: IndexedClass<T> | CountParams, countParams?: IndexedCountParams): Promise<CountResponse> {
+  count<T>(clsOrParams: IndexedClass<T>, countParams?: IndexedCountParams): Promise<CountResponse> {
     let params: CountParams;
-    if (typeof clsOrParams === 'function') {
-      const metadata = getIndexMetadata(this.options, clsOrParams);
-      params = { index: metadata.index, type: metadata.type, ...countParams };
-    } else {
-      params = { ...clsOrParams };
-    }
+    const metadata = getIndexMetadata(this.options, clsOrParams);
+    params = { index: metadata.index, type: metadata.type, ...countParams };
     return this.client.count(params);
   }
 

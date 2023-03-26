@@ -1,19 +1,12 @@
 import { Controller, Param, Body, Get, Post, Put, Delete } from '@nestjs/common';
 import { PlayersRoute } from '../../../Services/WebAdmin/Routes';
-import {
-    ChatLinesReceivedEvent,
-    PlayerRegisteredEvent,
-    PlayerNameChangedEvent,
-    RoundStartedEvent,
-    RoundEndedEvent,
-    MapChangedEvent,
-    PlayerRoundUpdatedEvent,
-} from '../../../Events';
+import { Event } from '../../../Events';
 import { SmershController } from '../../Framework';
 import { Parsers } from '../../Utils';
-import { EventBus, CommandBus } from '@nestjs/cqrs'
+import { EventBus } from '@nestjs/cqrs'
 import { EventSearchReport } from '../../../Reports/Entities/eventStore';
 import { SearchClient } from '../../../Elastic'
+
 
 @Controller()
 export class RebuildController extends SmershController {
@@ -23,16 +16,10 @@ export class RebuildController extends SmershController {
 
     @Get('/rebuild')
     public async rebuild() {
-        const eventTypes = [
-            ChatLinesReceivedEvent,
-            PlayerRegisteredEvent,
-            PlayerNameChangedEvent,
-            RoundStartedEvent,
-            RoundEndedEvent,
-            MapChangedEvent,
-            PlayerRoundUpdatedEvent,
-        ]
+        const eventType = Event
+        const count = await SearchClient.Count<EventSearchReport>(EventSearchReport)
         const events = (await SearchClient.Search(EventSearchReport, {
+            "size": count.count,
             "query": {
                 "match_all": {}
             }

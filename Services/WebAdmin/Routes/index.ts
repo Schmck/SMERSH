@@ -6,7 +6,8 @@ export {
 } from './Current';
 
 export {
-    PlayersRoute
+    PlayersRoute,
+    PolicyRoute
 } from './Admin'
 
 export {

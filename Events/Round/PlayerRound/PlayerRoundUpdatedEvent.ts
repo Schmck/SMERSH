@@ -4,7 +4,7 @@ import { Event } from '../../'
 export class PlayerRoundUpdatedEvent extends Event {
 
 
-    constructor(id: Guid, playerId, roundId: Guid, team: number, role: number, score: number, kills: number, deaths: number) {
+    constructor(id: Guid, playerId: string, roundId: Guid, team: number, role: number, score: number, kills: number, deaths: number) {
         super(id)
 
         this.PlayerId = playerId;
