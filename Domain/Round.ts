@@ -26,25 +26,29 @@ export class Round extends Domain {
         this.Lines = [...this.Lines, ...newLines]
 
         await this.apply(new ChatLinesReceivedEvent(this.Id, this.Date, this.Lines));
+        return;
     }
 
     public async startRound(timeLimit: number, date: Date, players: string[]) {
         this.Date = date;
         this.Players = players
 
-        await this.apply(new RoundStartedEvent(this.Id, this.MapId, timeLimit, this.Date, this.Players))
+        await this.apply(new RoundStartedEvent(this.Id, this.MapId, timeLimit, this.Date, this.Players));
+        return;
     }
 
     public async endRound(date: Date, players: string[]) {
         this.Date = date;
         this.Players = [...this.Players, ...players].filter((player, index, self) => self.findIndex(playa => player === playa) === index);
 
-        await this.apply(new RoundEndedEvent(this.Id, this.MapId, this.Date, this.Players))
+        await this.apply(new RoundEndedEvent(this.Id, this.MapId, this.Date, this.Players));
+        return;
     }
 
     public async changeMap(mapId: Guid, mapName: string) {
 
         this.MapId = mapId;
-        await this.apply(new MapChangedEvent(this.Id, this.MapId, mapName))
+        await this.apply(new MapChangedEvent(this.Id, this.MapId, mapName));
+        return;
     }
 }

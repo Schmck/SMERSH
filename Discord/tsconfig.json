@@ -1,19 +1,15 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ESNext",
-    "lib": [ "es6" ],
-    "sourceMap": true,
-    "strict": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true,
-    "removeComments": true
+    "moduleResolution": "node",
+    "target": "esnext",
+    "lib": [ "esnext", "es2017.object" ],
+    //"sourceMap": true,
+    "inlineSourceMap": true,
+    "inlineSources": true
   },
   "exclude": [
     "node_modules"

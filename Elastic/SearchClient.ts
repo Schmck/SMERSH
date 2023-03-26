@@ -1,8 +1,6 @@
 import { Guid } from 'guid-typescript'
-import { ClientBuilder } from './ClientBuilder' 
-import { SearchReport } from '../Reports/Framework'
+import { ClientBuilder } from './ClientBuilder'
 import { IndexedClass } from '../SMERSH/Utilities/types'
-import { RoundSearchReport } from '../Reports/Entities/round'
 import { Elasticsearch } from '../SMERSH/Utilities'
 
 const config = process.env;
@@ -71,6 +69,11 @@ export class SearchClient {
 		await this.client.update(document)
 		return
 	}
+
+	public static async Count<T>(index: IndexedClass<T>) {
+		const count = await this.client.count<T>(index)
+		return count;
+    }
 
 	public static QueueOperation(operation: (...args: any[]) => void, ...args: any[]) {
 		this.queue.push(new Promise((resolveOuter) => {

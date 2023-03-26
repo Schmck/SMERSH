@@ -4,17 +4,22 @@ import * as dotenv from 'dotenv';
 import { CommandBus } from '@nestjs/cqrs'
 import { Inject } from '@nestjs/common'
 import { Command } from '../../Commands/Command'
+import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
 
-
+dotenv.config()
+const config = process.env;
 
 export class Client extends DiscordClient {
-    //@Inject(CommandBus)
-    public readonly commandBus!: CommandBus;
 
-    public constructor(options: ClientOptions) {
+    public readonly commandBus: CommandBus;
+
+    public constructor(options: ClientOptions, commandBus: CommandBus) {
         super(options)
-        dotenv.config()
-        this.login(process.env["DISCORD_TOKEN"])
+        this.commandBus = commandBus;
+        this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
 
+        this.login(config["DISCORD_TOKEN"])
     }
+
+    public log: FileLogger;
 }

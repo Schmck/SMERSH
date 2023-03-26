@@ -2,7 +2,6 @@
   "name": "smersh",
   "version": "0.0.0",
   "description": "SMERSH",
-  "main": "server.js",
   "author": {
     "name": ""
   },

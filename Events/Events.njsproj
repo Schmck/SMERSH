@@ -40,7 +40,9 @@
     <TypeScriptCompile Include="index.ts" />
     <TypeScriptCompile Include="Map\index.ts" />
     <TypeScriptCompile Include="Map\MapChangedEvent.ts" />
+    <TypeScriptCompile Include="Player\BanLiftedEvent.ts" />
     <TypeScriptCompile Include="Player\index.ts" />
+    <TypeScriptCompile Include="Player\PolicyAppliedEvent.ts" />
     <TypeScriptCompile Include="Player\PlayerNameChangedEvent.ts" />
     <TypeScriptCompile Include="Player\PlayerRegisteredEvent.ts" />
     <TypeScriptCompile Include="Round\ChatLinesReceivedEvent.ts" />

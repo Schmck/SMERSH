@@ -1,5 +1,6 @@
 import { Guid } from "guid-typescript";
 
+
 export class Event {
 
      constructor(id: Guid) {

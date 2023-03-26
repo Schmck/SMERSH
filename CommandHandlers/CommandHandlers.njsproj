@@ -45,6 +45,8 @@
   <ItemGroup>
     <TypeScriptCompile Include="Player\ChangePlayerNameCommandHandler.ts" />
     <TypeScriptCompile Include="Player\index.ts" />
+    <TypeScriptCompile Include="Player\LiftBanCommandHandler.ts" />
+    <TypeScriptCompile Include="Player\ApplyPolicyCommandHandler.ts" />
     <TypeScriptCompile Include="Player\RegisterPlayerCommandHandler.ts" />
     <TypeScriptCompile Include="Round\ChangeMapCommandHandler.ts" />
     <TypeScriptCompile Include="Round\EndRoundCommandHandler.ts" />

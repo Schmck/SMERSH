@@ -2,7 +2,6 @@
   "name": "events",
   "version": "0.0.0",
   "description": "Events",
-  "main": "client.js",
   "author": {
     "name": ""
   },

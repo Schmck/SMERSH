@@ -40,11 +40,15 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Bot.ts" />
+    <TypeScriptCompile Include="Commands\TempbanCommand.ts" />
     <TypeScriptCompile Include="Commands\index.ts" />
+    <TypeScriptCompile Include="Commands\LookupCommand.ts" />
+    <TypeScriptCompile Include="Commands\TestCommand.ts" />
     <TypeScriptCompile Include="Framework\Client.ts" />
     <TypeScriptCompile Include="Framework\Command.ts" />
     <TypeScriptCompile Include="Framework\index.ts" />
     <TypeScriptCompile Include="Framework\Listeners.ts" />
+    <TypeScriptCompile Include="Framework\Utils.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

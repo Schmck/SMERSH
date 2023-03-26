@@ -4,7 +4,7 @@ import { Field } from '@../../../SMERSH/Utilities'
 
 
 export abstract class SearchReport extends Report {
-    constructor(id: Guid) {
+    constructor(id?: Guid) {
         super(id)
     }
 

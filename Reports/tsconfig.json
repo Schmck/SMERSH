@@ -5,7 +5,8 @@
     "composite": true,
     "lib": [ "es6" ],
     "sourceMap": true,
-    "experimentalDecorators":  true
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false
   },
   "exclude": [
     "node_modules"

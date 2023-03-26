@@ -12,5 +12,9 @@ export class PlayerSearchReport extends SearchReport {
     @Field('text')
     public Name: string;
 
+
+    @Field('text')
+    public Ip: string;
+
     UpdateCalculatedProperties(): void { }
 }

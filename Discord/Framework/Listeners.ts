@@ -5,7 +5,7 @@ import { Commands } from '../Commands'
 
 
 export class Listeners {
-    public static log = new FileLogger(`./info-listeners.log`)
+    public static log = new FileLogger(`../logs/info-listeners.log`)
 
 
     public static onReady(client: Client): void {
@@ -13,6 +13,7 @@ export class Listeners {
             if (!client.user || !client.application) {
                 return;
             }
+           // console.log(Commands)
             await client.application.commands.set(Commands);
         })
     }
@@ -31,7 +32,7 @@ export class Listeners {
             interaction.followUp({ content: "An error has occurred" });
             return;
         }
-
+        //console.log(slashCommand)
         await interaction.deferReply();
 
         await slashCommand.run(client, interaction);

@@ -7,5 +7,5 @@ export class PlayerRegisteredEvent extends Event {
 		this.Name = name;
 	}
 
-	public Name: string
+	public Name: string;
 }

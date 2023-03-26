@@ -24,7 +24,7 @@ export class WebAdminSession {
         this.CookieJar = cookieJar;
         this.CookieJar.setCookie(cookie, url)
 
-        this.log = new FileLogger('./info.log')
+        this.log = new FileLogger('../logs/info.log')
         this.DOMs[url] = new JSDOM(url)
         this.DOMs[url].window.document.cookie += authCookiePart
     }
@@ -44,9 +44,9 @@ export class WebAdminSession {
 
         if (navUrl !== baseUrl) {
             navUrl = baseUrl + url
-            this.log.info(url, navUrl)
+            //this.log.info(url, navUrl)
         }
-        this.log.info(`navigating to: `, navUrl)
+        //this.log.info(`navigating to: `, navUrl)
 
         if (this.DOMs) {
             let DOM = this.DOMs[navUrl]
@@ -58,7 +58,11 @@ export class WebAdminSession {
             //this.log.info('before fromurl', new Date().toISOString(), Object.entries(this.DOMs));
             try {
                 await this.close(navUrl)
-                this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
+                this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar, resources: "usable", runScripts: "outside-only" })
+
+                if (navUrl.includes('/ServerAdmin/policy/bans')) {
+                    this.log.info('/ServerAdmin/policy/bans', this.DOMs[navUrl].window.document)
+                }
             }
             catch (error) {
             }
@@ -73,7 +77,7 @@ export class WebAdminSession {
     }
 
     public async close(url: string) {
-        this.log.info(`closing: `, url)
+       // this.log.info(`closing: `, url)
 
         if (this.DOMs) {
             const DOM = this.DOMs[url]

@@ -6,3 +6,5 @@ export { RoundStartedEvent } from './Round';
 export { RoundEndedEvent } from './Round';
 export { MapChangedEvent } from './Map'
 export { PlayerRoundUpdatedEvent } from './Round/PlayerRound'
+export { PolicyAppliedEvent } from './Player'
+export { BanLiftedEvent } from './Player'

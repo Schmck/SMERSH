@@ -40,5 +40,6 @@ export class PlayerRound extends Domain {
         this.Deaths = deaths;
 
         await this.apply(new PlayerRoundUpdatedEvent(this.Id, playerId, roundId, team, role, score, kills, deaths))
+        return;
     }
 }

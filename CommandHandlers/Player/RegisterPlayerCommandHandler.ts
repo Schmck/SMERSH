@@ -17,9 +17,9 @@ export class RegisterPlayerCommandHandler implements ICommandHandler<RegisterPla
         const props = await this.repository.Get<PlayerSearchReport, Player>(Id, PlayerSearchReport, Player)
         const domain = this.publisher.mergeObjectContext(props)
 
-        await domain.registerPlayer(Name);
-        await domain.commit()
-        return;
+        await domain.register(Name);
+        await domain.commit();
 
+        return;
     }
 }

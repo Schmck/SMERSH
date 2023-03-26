@@ -17,10 +17,10 @@ export class ClientBuilder {
 
     public log: FileLogger;
     public constructor(log: Logger = dummyLogger) {
-        this.log = new FileLogger(`./info-${this.constructor.name}.log`)
+        this.log = new FileLogger(`../logs/info-${this.constructor.name}.log`)
     }
 
-    public static logger = new FileLogger(`./info-${this.constructor.name}.log`)
+    public static logger = new FileLogger(`../logs/info-${this.constructor.name}.log`)
 
     public static async Build(url: string) {
         //const indices = this.getIndices();
