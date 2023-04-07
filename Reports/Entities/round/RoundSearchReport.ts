@@ -10,8 +10,8 @@ export class RoundSearchReport extends SearchReport {
 
         this.MapId = mapId ? mapId.toString() : "";
         this.Date = date;
-        this.Lines = [];
-        this.Players = [];
+        //this.Lines = [];
+        //this.Players = [];
      
     }
 
@@ -24,7 +24,7 @@ export class RoundSearchReport extends SearchReport {
     @Field({nested: Array<Record<string, string>>})
     public Lines: Array<Record<string, string>>;
 
-    @Field({ nested: Array<string> })
+    @Field('text')
     public Players: Array<string>;
 
     @Field('boolean')

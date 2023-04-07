@@ -2,7 +2,7 @@ import { Guid } from "guid-typescript"
 import { Event } from ".."
 
 export class PolicyAppliedEvent extends Event {
-	constructor(id: Guid, playerId: string, channelId: string, action: string, name: string, reason: string, banDate: Date, unbanDate: Date, plainId?: number) {
+	constructor(id: Guid, playerId: string, channelId: string, action: string, name: string, reason: string, banDate: Date, unbanDate?: Date, plainId?: number) {
 		super(id)
 
 		this.PlayerId = playerId;
@@ -26,7 +26,7 @@ export class PolicyAppliedEvent extends Event {
 
 	public BanDate: Date
 
-	public UnbanDate: Date
+	public UnbanDate?: Date
 
 	public PlainId?: number
 }

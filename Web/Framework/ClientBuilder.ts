@@ -88,7 +88,6 @@ export class ClientBuilder {
         }).filter(r => r).map(report => {
             let copy = {}
             for (let key in report) {
-                console.log(report[key])
                 copy = { ...copy, ...report[key] }
 
                 if (Array.isArray(copy[key])) {
@@ -101,7 +100,6 @@ export class ClientBuilder {
         mappings = mappings.map(report => {
             let copy = report;
             for (let key in report) {
-                console.log(report[key])
                 if (Array.isArray(report[key])) {
                     copy[key] = report[key][0]
                 }
@@ -145,9 +143,6 @@ export class ClientBuilder {
         mappings = mappings.map(report => {
             let copy = report
             for (let key in report) {
-                console.log(report[key])
-               
-
                 if (copy[key]["fields"] && copy[key]["fields"]["0"]) {
                     copy[key]["fields"] = copy[key]["fields"]["0"]
                 }
@@ -156,7 +151,6 @@ export class ClientBuilder {
             return copy
         })
 
-        console.log(mappings)
         this.logger.info(JSON.stringify(mappings))
         return mappings
     }

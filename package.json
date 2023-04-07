@@ -8,8 +8,12 @@
         "discord.js": "^14.8.0",
         "dotenv": "^16.0.3",
         "guid-typescript": "^1.0.9",
+        "hex2dec": "^1.1.2",
         "html-table-to-json": "^1.0.0",
         "linq-to-typescript": "11.0.0",
+        "qs": "^6.11.1",
+        "querystring": "^0.2.1",
+        "steamapi": "^2.2.0",
         "stream": "^0.0.2"
     },
     "devDependencies": {

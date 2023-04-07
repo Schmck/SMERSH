@@ -26,7 +26,7 @@ export class Player extends Domain {
 
     }
 
-    public async applyPolicy(actionId: Guid, channelId: string, action: Action, name: string, reason: string, banDate: Date, unbanDate: Date, plainId?: number) {
+    public async applyPolicy(actionId: Guid, channelId: string, action: Action, name: string, reason: string, banDate: Date, unbanDate?: Date, plainId?: number) {
         this.apply(new PolicyAppliedEvent(actionId, this.Id.toString(), channelId, action.DisplayName, name, reason, banDate, unbanDate, plainId));
         return;
     }

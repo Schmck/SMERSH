@@ -19,7 +19,11 @@ export class Repository {
         }
 
         Object.keys(report).forEach(key => {
-            domain[key] = report[key]
+            if (typeof report[key] === 'string' && report[key].match(/^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$/) && Guid.parse(report[key]) !== Guid.createEmpty()) {
+                domain[key] = Guid.parse(report[key])
+            } else {
+                domain[key] = report[key]
+            }
         })
 
         return domain

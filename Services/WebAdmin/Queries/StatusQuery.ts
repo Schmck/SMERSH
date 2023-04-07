@@ -30,7 +30,6 @@ export class StatusQuery extends Query {
 
                     if (table) {
                         playas = Parsers.playerTable(table as HTMLTableElement)
-                       // console.log(playas)
                         try {
                             players = players.map((item, i) => Object.assign({}, item, { Id: playas[i].UniqueID, IpAddress: playas[i].IP, PlayerKey: playas[i].PlayerKey }));
  

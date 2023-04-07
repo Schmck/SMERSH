@@ -7,6 +7,7 @@ import { Action } from '../../SMERSH/ValueObjects/player';
 import { Api } from '../../Web/Framework'
 import { PolicyRoute } from '../../Services/WebAdmin/Routes';
 import { AxiosRequestConfig } from 'axios';
+import qs from 'qs'
 
 export class BanWatcher extends Watcher {
 
@@ -40,23 +41,24 @@ export class BanWatcher extends Watcher {
             this.log.info(JSON.stringify(ban))
             if (ban.UnbanDate && new Date(ban.UnbanDate) <= new Date()) {
 
-                const urlencoded = new URLSearchParams();
-                urlencoded.append("banId", `plainId:${ban.PlainId}`);
-                urlencoded.append("action", "delete");
+                const urlencoded = `banid=plainid:${ban.PlainId}&action=delete`
+        
                 const config: AxiosRequestConfig =
                 {
                     headers: {
-                        "Content-type": "application/x-www-form-urlencoded"
+                        "Content-type": "application/x-www-form-urlencoded",
+                        "Cookie": `authcred="${env["AUTHCRED"]}"`
                     },
                 }
 
-                axios.post(url, urlencoded, config).then(result => {
+                await axios.post(url, urlencoded, config).then(result => {
                     this.log.info(result)
-                    return result
+                    //return result
+                    this.commandBus.execute(new LiftBanCommand(Guid.parse(ban.Id), ban.PlayerId as any))
+
                 });
 
-                await this.commandBus.execute(new LiftBanCommand(Guid.parse(ban.Id), ban.PlayerId as any))
-            }
+            }  
         }
 
         setTimeout(() => {

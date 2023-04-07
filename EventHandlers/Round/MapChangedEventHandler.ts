@@ -35,6 +35,7 @@ export class MapChangedEventHandler implements IEventHandler<MapChangedEvent>
         }
 
         let round = new rnd(event.Id, event.MapId);
+        round.IsActive = true;
         await SearchClient.Put(round)
 
         return;

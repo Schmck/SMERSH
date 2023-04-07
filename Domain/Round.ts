@@ -21,11 +21,17 @@ export class Round extends Domain {
     }
 
     public async receiveChatLines(lines: Array<Record<string, string>>, date: Date) {
-        const newLines = lines.filter(line => !this.Lines.some(line2 => line2.message === line.message))
         this.Date = date;
-        this.Lines = [...this.Lines, ...newLines]
 
-        await this.apply(new ChatLinesReceivedEvent(this.Id, this.Date, this.Lines));
+        if (this.Lines) {
+            const newLines = lines.filter(line => !this.Lines.some(line2 => line2.message === line.message))
+            this.Lines = [...this.Lines, ...newLines]
+
+        } else {
+            this.Lines = lines
+        }
+
+        await this.apply(new ChatLinesReceivedEvent(this.Id, this.MapId, this.Date, this.Lines));
         return;
     }
 
@@ -39,7 +45,12 @@ export class Round extends Domain {
 
     public async endRound(date: Date, players: string[]) {
         this.Date = date;
-        this.Players = [...this.Players, ...players].filter((player, index, self) => self.findIndex(playa => player === playa) === index);
+
+        if (this.Players && this.Players.length) {
+            this.Players = [...this.Players, ...players].filter((player, index, self) => self.findIndex(playa => player === playa) === index);
+        } else {
+            this.Players = players;
+        }
 
         await this.apply(new RoundEndedEvent(this.Id, this.MapId, this.Date, this.Players));
         return;

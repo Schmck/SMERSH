@@ -40,5 +40,8 @@ async function start(port: number) {
 
 }
 
-
+process.on('uncaughtException', function (err) {
+    console.error(err);
+    console.log("Node NOT Exiting...");
+});
 start(1337);

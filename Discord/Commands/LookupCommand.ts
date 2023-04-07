@@ -14,11 +14,7 @@ export const LookupCommand: Command = {
         type: ApplicationCommandOptionType.String
     }],
     run: async (client: Client, interaction: CommandInteraction) => {
-       // console.log(interaction.options)
-        //console.log(interaction)
-        //console.log(interaction)
         const input = interaction.options.get('input');
-        //console.log(input)
         let match
 
         if (input && typeof (input.value) === 'string') {
