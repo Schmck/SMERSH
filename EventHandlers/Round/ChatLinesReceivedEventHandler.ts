@@ -16,12 +16,8 @@ export class ChatLinesReceivedEventHandler implements IEventHandler<ChatLinesRec
    
     async handle(event: ChatLinesReceivedEvent) {
 
-        let partial: Partial<RoundSearchReport> = new cls(event.Id);
+        let partial: Partial<RoundSearchReport> = new cls(event.Id, event.MapId);
         partial.Lines = event.Lines;
-
-        delete partial.MapId;
-        delete partial.Players;
-        delete partial.IsActive;
 
         await SearchClient.Update(partial);
         return;

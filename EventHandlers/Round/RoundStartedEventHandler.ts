@@ -21,9 +21,7 @@ export class RoundStartedEventHandler implements IEventHandler<RoundStartedEvent
 
         let partial: Partial<RoundSearchReport> = new cls(event.Id, event.MapId);
         partial.Players = event.Players;
-        partial.IsActive = true;
 
-        delete partial.Lines;
         await SearchClient.Update(partial);
 
         let partialMap: Partial<MapSearchReport> = new map(event.MapId)

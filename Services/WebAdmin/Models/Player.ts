@@ -1,25 +1,28 @@
 ﻿import { Team } from '../../../SMERSH/ValueObjects'
 
 export class Player {
-    constructor(team: number, name: string, ping: number, ip: string, uniqueId: string, admin: boolean, spectator: boolean, bot: boolean) {
+    constructor(team: number, playername: string, playerKey: string, ping: number, ip: string, id: string, admin: boolean, spectator: boolean, bot: boolean) {
         this.Team = Team.fromValue(team)
-        this.Name = name;
+        this.Playername = playername;
+        this.PlayerKey = playerKey;
         this.Ping = ping;
         this.Ip = ip;
-        this.UniqueId = uniqueId;
+        this.Id = id;
         this.Admin = admin;
         this.Spectator = spectator;
     }
 
     public Team: Team | null;
 
-    public Name: string;
+    public Playername: string;
+
+    public PlayerKey: string;
 
     public Ping: number;
 
     public Ip: string;
 
-    public UniqueId: string;
+    public Id: string;
 
     public Admin: boolean;
 

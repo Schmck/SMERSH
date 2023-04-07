@@ -13,7 +13,7 @@ export class Listeners {
             if (!client.user || !client.application) {
                 return;
             }
-           // console.log(Commands)
+
             await client.application.commands.set(Commands);
         })
     }

@@ -54,6 +54,7 @@
     <TypeScriptCompile Include="WebAdmin\Models\PlayerInfo.ts" />
     <TypeScriptCompile Include="WebAdmin\Models\RulesInfo.ts" />
     <TypeScriptCompile Include="WebAdmin\Models\TeamInfo.ts" />
+    <TypeScriptCompile Include="WebAdmin\Queries\PlayerQuery.ts" />
     <TypeScriptCompile Include="WebAdmin\Queries\PolicyQuery.ts" />
     <TypeScriptCompile Include="WebAdmin\Queries\ChatQuery.ts" />
     <TypeScriptCompile Include="WebAdmin\Queries\index.ts" />

@@ -53,7 +53,8 @@ export class PolicyController extends SmershController {
                         const config: AxiosRequestConfig = 
                         {
                             headers: {
-                                "Content-type": "application/x-www-form-urlencoded"
+                                "Content-type": "application/x-www-form-urlencoded",
+                                "Cookie": `authcred="${env["AUTHCRED"]}"`
                             },
                         }
 

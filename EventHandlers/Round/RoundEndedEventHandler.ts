@@ -17,7 +17,6 @@ export class RoundEndedEventHandler implements IEventHandler<RoundEndedEvent>
         partial.Players = event.Players;
         partial.IsActive = false;
 
-        delete partial.Lines;
         await SearchClient.Update(partial);
         return;
     }

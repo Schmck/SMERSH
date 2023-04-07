@@ -11,7 +11,8 @@ import axios, { isCancel, AxiosError, AxiosRequestConfig, RawAxiosRequestHeaders
 import { Utils } from '../Framework'
 import { Action } from "../../SMERSH/ValueObjects/player";
 import { Guid } from "guid-typescript";
-
+import { stringify } from 'querystring'
+import qs from 'qs'
 
 
 export const TempbanCommand: Command = {
@@ -36,13 +37,9 @@ export const TempbanCommand: Command = {
         }
     ],
     run: async (client: Client, interaction: CommandInteraction) => {
-        // console.log(interaction.options)
-        //console.log(interaction)
-        //console.log(interaction)
         const input = interaction.options.get('input');
         const duration = interaction.options.get('duration')
         const reason = interaction.options.get('reason')
-        const urlencoded = new URLSearchParams();
         let unbanDate: Date;
         let match;
 
@@ -108,24 +105,22 @@ export const TempbanCommand: Command = {
                 
                 const axios = Api.axios();
                 const url = env["BASE_URL"] + PolicyRoute.AddBan.Action
-                urlencoded.append("uniqueid", player.Id);
-                urlencoded.append("action", "add");
+                const urlencoded = qs.stringify({
+                    "uniqueid": player.Id,
+                    "action": 'add'
+                })
+
                 const config: AxiosRequestConfig =
                 {
                     headers: {
-                        "Content-type": "application/x-www-form-urlencoded"
+                        "Content-type": "application/x-www-form-urlencoded",
+                        "Cookie": `authcred="${env["AUTHCRED"]}"`
                     },
                 }
                 
 
-                //let response;
-                client.log.info('this is a player or it better be' ,player)
-                //PolicyQuery.Post(player.Id)
-                //console.log(response)
-
-                axios.post(url, urlencoded, config).then(result => {
-                     client.log.info(result)
-                   // return result
+                await axios.post(url, urlencoded, config).then(result => {
+                     client.log.info(JSON.stringify(result.data))
                 });
 
                 await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Ban, player.Name, reason.value.toString(), new Date(), unbanDate, plainId))

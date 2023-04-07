@@ -28,7 +28,7 @@ export class PolicySearchReport extends SearchReport {
     public BanDate: Date;
 
     @Field('date')
-    public UnbanDate: Date;
+    public UnbanDate?: Date;
 
     @Field('integer')
     public PlainId?: number;

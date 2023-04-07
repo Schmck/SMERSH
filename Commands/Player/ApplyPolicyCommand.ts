@@ -3,7 +3,7 @@ import { Command } from "../Command"
 import { Action } from "../../SMERSH/ValueObjects/player"
 
 export class ApplyPolicyCommand extends Command {
-	constructor(actionId: Guid, playerId: string, channelId: string, action: Action, name: string, reason: string, banDate: Date, unbanDate: Date, plainId?: number) {
+	constructor(actionId: Guid, playerId: string, channelId: string, action: Action, name: string, reason: string, banDate: Date, unbanDate?: Date, plainId?: number) {
 		super(actionId)
 
 		this.PlayerId = playerId;
@@ -28,7 +28,7 @@ export class ApplyPolicyCommand extends Command {
 
 	public BanDate: Date
 
-	public UnbanDate: Date
+	public UnbanDate?: Date
 
 	public PlainId?: number;
 
