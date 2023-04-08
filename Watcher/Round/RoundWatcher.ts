@@ -8,7 +8,7 @@ import { StatusQuery } from '../../Services/WebAdmin/Queries'
 import { Guid } from 'guid-typescript'
 import { SearchClient } from '../../Elastic'
 import { RoundSearchReport } from '../../Reports/Entities/round'
-import { MapSearchReport } from '../../Reports/Entities/Map';
+import { MapSearchReport } from '../../Reports/Entities/map';
 import { PlayerSearchReport } from '../../Reports/Entities/player';
 import { Enumeration, Role, Team } from '../../SMERSH/ValueObjects';
 import { stringify } from 'querystring';

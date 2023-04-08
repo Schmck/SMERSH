@@ -7,7 +7,7 @@ import { CqrsModule } from '@nestjs/cqrs'
 
 
 @Module({
-    imports: [CqrsModule, SmershModule],
+    imports: [SmershModule],
 })
 export class AppModule {
 

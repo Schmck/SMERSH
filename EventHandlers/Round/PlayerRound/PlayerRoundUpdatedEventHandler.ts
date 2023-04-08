@@ -18,6 +18,7 @@ export class PlayerRoundUpdatedEventHandler implements IEventHandler<PlayerRound
 
         let partial: Partial<PlayerRoundSearchReport> = new cls(event.Id);
 
+        partial.Date = event.Date;
         partial.PlayerId = event.PlayerId;
         partial.RoundId = event.RoundId.toString();
         partial.Team = event.Team;

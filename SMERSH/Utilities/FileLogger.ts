@@ -28,6 +28,10 @@ export class FileLogger implements Logger {
         this.append("ERROR", `${message} ${JSON.stringify(optionalParams)}`);
     }
 
+    public console(...messages: any[]) {
+  
+    }
+
     private append(type: string, message: string) {
         fs.writeSync(this.fd, `${new Date().toISOString()} ${type} ${message}\n`);
     }

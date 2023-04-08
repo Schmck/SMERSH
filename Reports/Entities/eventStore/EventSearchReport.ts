@@ -9,10 +9,14 @@ export class EventSearchReport extends SearchReport {
         super(id)
         this.Event = event;
         this.Type = event ? event.constructor.name : ''
+        this.Date = event.Date;
     }
 
     @Field({nested: Event})
     public Event: Event;
+
+    @Field('date')
+    public Date: Date;
 
     @Field('text')
     public Type: string;

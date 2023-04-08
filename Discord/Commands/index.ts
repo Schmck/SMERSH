@@ -4,4 +4,5 @@ import { LookupCommand } from './LookupCommand'
 import { TestCommand } from './TestCommand'
 import { TempbanCommand } from './TempbanCommand'
 import { KickCommand } from './KickCommand'
-export const Commands: Command[] = [HelloCommand, LookupCommand, TempbanCommand, KickCommand];
+import { ChatLogCommand } from './ChatLogCommand'
+export const Commands: Command[] = [HelloCommand, LookupCommand, TempbanCommand, KickCommand, ChatLogCommand];

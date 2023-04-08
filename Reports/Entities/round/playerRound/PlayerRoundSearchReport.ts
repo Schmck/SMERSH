@@ -16,6 +16,9 @@ export class PlayerRoundSearchReport extends SearchReport {
     @Field('text')
     public RoundId: string;
 
+    @Field('date')
+    public Date: Date;
+
     @Field('integer')
     public Team: number;
 
