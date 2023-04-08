@@ -5,7 +5,7 @@ import { Module } from '@nestjs/common';
 import { Logger, dummyLogger } from "ts-log/build/src/index"
 import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
 import { CqrsModule, EventBus } from '@nestjs/cqrs';
-import { OnModuleInit } from '@nestjs/common'
+import { OnModuleInit, OnApplicationBootstrap } from '@nestjs/common'
 import { ChatWatcher } from '../../Watcher'
 
 import { Event } from '../../Events'
@@ -48,13 +48,10 @@ import {
        ...EventHandlers
     ]
 })
-export class SmershModule implements OnModuleInit {
-
-    
-
+export class SmershModule implements OnApplicationBootstrap {
     public log : FileLogger
 
-    public onModuleInit(): void {
+    public onApplicationBootstrap(): void {
         this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
         this.log.info('smersh module initiated', this)
     }

@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Bot.ts" />
+    <TypeScriptCompile Include="Commands\ChatLogCommand.ts" />
     <TypeScriptCompile Include="Commands\KickCommand.ts" />
     <TypeScriptCompile Include="Commands\TempbanCommand.ts" />
     <TypeScriptCompile Include="Commands\index.ts" />

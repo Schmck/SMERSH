@@ -24,4 +24,14 @@ export class Utils {
             return `${playerName}\u2502 ${playerId}\u2502${ipAddress}`
         })].flat().reverse().reduce((line, table) => `${table}\n${line}`, '')
     }
+
+    public static generateChatLine(line: Record<string, string>) {
+        const date = new Date(new Date(line.timestamp).setHours(new Date(line.timestamp).getHours() + 1))
+        const timestamp = line.timestamp ? `${date.toLocaleString().slice(0, date.toLocaleString().indexOf(','))} ${date.toTimeString().slice(0, 8)}?` : ''
+        const teamMessage = line.team_message ? '(Team)' : ''
+        const team = line.team === 'Allies' ? '-' : '+'
+
+        const newLine = `${team} ${timestamp} ${teamMessage} ${line.username}: ${line.message}`
+        return newLine
+    }
 }
