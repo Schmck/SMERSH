@@ -70,7 +70,6 @@ export const TempbanCommand: Command = {
             let untilString = until
             unbanDate = new Date();
 
-            //console.log(until, format)
             switch (format) {
                 case 'h':
                     unbanDate = addHours(unbanDate, untilInt);
@@ -91,7 +90,6 @@ export const TempbanCommand: Command = {
             }
 
 
-            //console.log(match)
             const plainId = await PolicyQuery.GetNextPlainId();
             const player = (await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
                 "query": {
@@ -100,9 +98,6 @@ export const TempbanCommand: Command = {
                 }
             })).shift()
 
-            
-
-            //console.log(player)
             if (player) {
                 client.log.info('channelid', interaction.channelId as any as Guid);
                 client.log.info('playerid', player.Id as any as Guid);

@@ -26,7 +26,7 @@ export const ChatLogCommand: Command = {
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         let match
-        let regex
+        let regexp
 
         if (input && typeof (input.value) === 'string') {
             if (input.value.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
@@ -53,7 +53,7 @@ export const ChatLogCommand: Command = {
         const players = await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
             "query": {
                 match,
-                regex
+                regexp
             }
         })
         const player = players.shift();
@@ -80,12 +80,11 @@ export const ChatLogCommand: Command = {
             })
 
             const lines = rounds.map(round => {
-                const filtered = round.Lines.filter(line => line.username === player.Name).sort((lineA, lineB) => new Date(lineA.timestamp).getTime() - new Date(lineB.timestamp).getTime())
+                const filtered = round.Lines.filter(line => line.username === player.Name).sort((lineA, lineB) => new Date(lineB.timestamp).getTime() - new Date(lineA.timestamp).getTime())
                 return filtered.map(line => Utils.generateChatLine(line))
             }).flat()
 
             if (lines.join('\n').length > 1900) {
-                //const file = await (new Blob([lines.join('\n')], { type: "text/plain", endings: 'native' })).arrayBuffer()
                 const file = Buffer.from(lines.join('\n'))
                 await interaction.followUp({
                     files: [{

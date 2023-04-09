@@ -32,7 +32,7 @@ export class Listeners {
             interaction.followUp({ content: "An error has occurred" });
             return;
         }
-        //console.log(slashCommand)
+
         await interaction.deferReply();
 
         await slashCommand.run(client, interaction);
