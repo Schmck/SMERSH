@@ -55,8 +55,13 @@ export const ChatLogCommand: Command = {
         if (player) {
             const rounds = await SearchClient.Search<RoundSearchReport>(RoundSearchReport, {
                 "query": {
-                    "match": {
-                        "Players": player.Id
+                    "nested": {
+                        "path": "Lines",
+                        "query": {
+                            "match": {
+                                "Lines.id": player.Id
+                            }
+                        }
                     }
                 },
                 "sort": [

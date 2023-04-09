@@ -31,7 +31,11 @@ export class StatusQuery extends Query {
                     if (table) {
                         playas = Parsers.playerTable(table as HTMLTableElement)
                         try {
-                            players = players.map((item, i) => Object.assign({}, item, { Id: playas[i].UniqueID, IpAddress: playas[i].IP, PlayerKey: playas[i].PlayerKey }));
+                           // players = players.map((player, i) => Object.assign({}, player, { Id: playas[i].UniqueID, IpAddress: playas[i].IP, PlayerKey: playas[i].PlayerKey }));
+                            players = players.map((player, i) => {
+                                const playa = playas.find(playa => playa.Playername === player.Playername)
+                                return Object.assign({}, player, { Id: playa.UniqueID, IpAddress: playa.IP, PlayerKey: playa.PlayerKey })
+                            });
  
                         } catch (error) { }
                     }
