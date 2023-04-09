@@ -49,6 +49,11 @@ export const LookupCommand: Command = {
                 ${playerTable}
                 \`\`\``,
             });
+        } else {
+            await interaction.followUp({
+                ephemeral: true,
+                content: `could not find ${input.value} in the database`
+            });
         }
     }
 };
