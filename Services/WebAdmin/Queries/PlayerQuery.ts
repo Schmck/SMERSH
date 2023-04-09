@@ -80,4 +80,23 @@ export class PlayerQuery extends Query {
         }
         return null;
     }
+
+    public static async GetPlayer(name: string) {
+        const session = WebAdminSession.get();
+
+        const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
+
+
+        let players: Array<Player>;
+        if (admin && admin.window && admin.window.document) {
+            const table = admin.window.document.querySelector("#players");
+
+            if (table) {
+                players = Parsers.playerTable(table as HTMLTableElement)
+            }
+
+            return players.shift()
+        }
+        return null;
+    }
 }

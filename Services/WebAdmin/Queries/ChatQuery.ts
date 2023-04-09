@@ -40,7 +40,7 @@ export class ChatQuery extends Query {
                     }
 
                     if (username) {
-                        const player = await PlayerQuery.GetByName(username)
+                        const player = await PlayerQuery.GetPlayer(username)
                         id = player.Id;
                     }
 
