@@ -7,7 +7,7 @@ export class Player {
         this.PlayerKey = playerKey;
         this.Ping = ping;
         this.Ip = ip;
-        this.Id = id;
+        this.UniqueID = id;
         this.Admin = admin;
         this.Spectator = spectator;
     }
