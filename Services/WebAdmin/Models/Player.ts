@@ -22,7 +22,7 @@ export class Player {
 
     public Ip: string;
 
-    public Id: string;
+    public UniqueID: string;
 
     public Admin: boolean;
 
