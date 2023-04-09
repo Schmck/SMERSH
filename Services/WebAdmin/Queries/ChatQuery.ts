@@ -42,7 +42,9 @@ export class ChatQuery extends Query {
 
                     if (username) {
                         const player = players.find(player => player.Playername === username)
-                        id = player.UniqueID;
+                        if (player) {
+                            id = player.UniqueID;
+                        }
                     }
 
 
