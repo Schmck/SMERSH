@@ -132,7 +132,6 @@ export class ClientBuilder {
                             }
                         }
 
-                        //console.log(key, current[key])
                         return { ...prev, [key]: current[key] }
                     }, {})
                 }
