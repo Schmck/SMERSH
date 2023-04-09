@@ -31,6 +31,7 @@ export const KickCommand: Command = {
         const input = interaction.options.get('input');
         const reason = interaction.options.get('reason');
         let match
+        let regexp
 
         if (input && typeof (input.value) === 'string') {
             if (input.value.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
@@ -42,8 +43,12 @@ export const KickCommand: Command = {
                     "Id": `0x0110000${input.value}`
                 }
             } else {
-                match = {
-                    "Name": `.*${input.value}.*`
+                regexp = {
+                    "Name": {
+                        "value": `.*${input.value}.*`,
+                        "flags": "ALL",
+                        "case_insensitive": true
+                    }
                 }
             }
         }
@@ -52,7 +57,8 @@ export const KickCommand: Command = {
 
         const players = await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
             "query": {
-                match
+                match,
+                regexp
             }
         })
         const player = players.shift();
