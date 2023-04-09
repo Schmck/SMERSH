@@ -10,6 +10,7 @@ export class ChatQuery extends Query {
     public static async Get() {
         const session = WebAdminSession.get();
         const dom = await session.navigate(ChatRoute.GetChat.Action)
+        const players = await PlayerQuery.GetPlayers();
         const messages = []
 
         //return result.then(dom => {
@@ -40,8 +41,8 @@ export class ChatQuery extends Query {
                     }
 
                     if (username) {
-                        const player = await PlayerQuery.GetPlayer(username)
-                        id = player.Id;
+                        const player = players.find(player => player.Playername === username)
+                        id = player.UniqueID;
                     }
 
 
