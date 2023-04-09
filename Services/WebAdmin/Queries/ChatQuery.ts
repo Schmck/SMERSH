@@ -2,6 +2,8 @@ import { ChatRoute } from '../Routes';
 import { WebAdminSession } from '..';
 import { Parsers } from "../../../Web/Utils";
 import { Query } from './Query';
+import { PlayerQuery } from './PlayerQuery';
+import { Player } from '../Models';
 
 export class ChatQuery extends Query {
 
@@ -12,11 +14,12 @@ export class ChatQuery extends Query {
 
         //return result.then(dom => {
             if (dom && dom.window && dom.window.document) {
-                dom.window.document.querySelectorAll(".chatmessage").forEach(msg => {
+                dom.window.document.querySelectorAll(".chatmessage").forEach(async msg => {
                     let username
                     let message
                     let visibility
                     let team
+                    let id
 
                     if (msg.querySelector('.username')) {
                         username = msg.querySelector('.username').innerHTML
@@ -36,9 +39,15 @@ export class ChatQuery extends Query {
                         team = team ? 'Axis' : 'Allies'
                     }
 
+                    if (username) {
+                        const player = await PlayerQuery.GetByName(username)
+                        id = player.Id;
+                    }
+
 
                     const usermsg = {
                         username,
+                        id,
                         message,
                         visibility,
                         team,
