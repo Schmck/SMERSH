@@ -26,6 +26,7 @@ export const ChatLogCommand: Command = {
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         let match
+        let regex
 
         if (input && typeof (input.value) === 'string') {
             if (input.value.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
@@ -37,8 +38,12 @@ export const ChatLogCommand: Command = {
                     "Id": `0x0110000${input.value}`
                 }
             } else {
-                match = {
-                    "Name": `.*${input.value}.*`
+                regexp = {
+                    "Name": {
+                        "value": `.*${input.value}.*`,
+                        "flags": "ALL",
+                        "case_insensitive": true
+                    }
                 }
             }
         }
@@ -47,7 +52,8 @@ export const ChatLogCommand: Command = {
 
         const players = await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
             "query": {
-                match
+                match,
+                regex
             }
         })
         const player = players.shift();

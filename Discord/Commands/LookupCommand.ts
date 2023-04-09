@@ -16,6 +16,7 @@ export const LookupCommand: Command = {
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         let match
+        let regexp
 
         if (input && typeof (input.value) === 'string') {
             if (input.value.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
@@ -27,8 +28,12 @@ export const LookupCommand: Command = {
                     "Id": `0x0110000${input.value}`
                 }
             } else {
-                match = {
-                    "Name": `.*${input.value}.*`
+                regexp = {
+                    "Name": {
+                        "value": `.*${input.value}.*`,
+                        "flags": "ALL",
+                        "case_insensitive": true
+                    }
                 }
             }
         }
@@ -37,7 +42,8 @@ export const LookupCommand: Command = {
 
         const players = await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
             "query": {
-               match
+                match,
+               regexp
             }
         })
 
