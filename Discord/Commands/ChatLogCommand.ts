@@ -82,11 +82,16 @@ export const ChatLogCommand: Command = {
                 }],
                 ephemeral: true
             });
-        } else {
+        } else if (lines.length) {
             await interaction.followUp({
                 ephemeral: true,
                 content: `\`\`\`diff\n${lines.join('\n')}
                 \`\`\``
+            });
+        } else {
+            await interaction.followUp({
+                ephemeral: true,
+                content: `could not find chat log for ${player.Name}`
             });
         }
         
