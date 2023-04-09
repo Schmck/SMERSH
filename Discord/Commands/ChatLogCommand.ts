@@ -51,7 +51,7 @@ export const ChatLogCommand: Command = {
             }
         })
         const player = players.shift();
-        
+
         const rounds = await SearchClient.Search<RoundSearchReport>(RoundSearchReport, {
             "query": {
                 "match": {
@@ -68,17 +68,27 @@ export const ChatLogCommand: Command = {
         })
 
         const lines = rounds.map(round => {
-            const filtered = round.Lines.filter(line => line.username === player.Name)
+            const filtered = round.Lines.filter(line => line.username === player.Name).sort((lineA, lineB) => new Date(lineA.timestamp).getTime() - new Date(lineB.timestamp).getTime())
             return filtered.map(line => Utils.generateChatLine(line))
         }).flat()
         
         if (lines.join('\n').length > 1900) {
-            return;
-        }
-        await interaction.followUp({
-            ephemeral: true,
-            content: `\`\`\`diff\n${lines.join('\n')}
+            //const file = await (new Blob([lines.join('\n')], { type: "text/plain", endings: 'native' })).arrayBuffer()
+            const file = Buffer.from(lines.join('\n'))
+            await interaction.followUp({
+                files: [{
+                    attachment: file,
+                    name: `${player.Id}.txt`
+                }],
+                ephemeral: true
+            });
+        } else {
+            await interaction.followUp({
+                ephemeral: true,
+                content: `\`\`\`diff\n${lines.join('\n')}
                 \`\`\``
-        });
+            });
+        }
+        
     }
 };
