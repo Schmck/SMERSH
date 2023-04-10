@@ -80,7 +80,7 @@ export const ChatLogCommand: Command = {
             })
 
             const lines = rounds.map(round => {
-                const filtered = round.Lines.filter(line => line.username === player.Name).sort((lineA, lineB) => new Date(lineB.timestamp).getTime() - new Date(lineA.timestamp).getTime())
+                const filtered = round.Lines.filter(line => line.id === player.Id).sort((lineA, lineB) => new Date(lineB.timestamp).getTime() - new Date(lineA.timestamp).getTime())
                 return filtered.map(line => Utils.generateChatLine(line))
             }).flat()
 
