@@ -89,7 +89,7 @@ export class RoundWatcher extends Watcher {
 
                 if (playerIds.length) {
                     for (let playerId of playerIds) {
-                        const exists = await SearchClient.Exists(playerId, PlayerSearchReport)
+                        const exists = await SearchClient.Get(playerId as any as Guid, PlayerSearchReport)
                         const player = status.players.find(player => player.Id === playerId)
                         
 
