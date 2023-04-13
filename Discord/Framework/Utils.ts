@@ -34,4 +34,90 @@ export class Utils {
         const newLine = `${team} ${timestamp} ${teamMessage} ${line.username}: ${line.message}`
         return newLine
     }
+
+    public static battleDesc(current, resp) {
+        if (current.teams.some(team => team.score && (team.attacking || team.rounds_won))) {
+            var teams = current.teams.map(team => {
+                var nextRound = resp.teams.find(tm => tm.name === team.name)
+                var description = []
+                var territory = ""
+                if (team.rounds_won) {
+                    //description[0] = team.name === 'Allies' ? 'The red army' : 'The german wehrmacht'
+                    /*if(team.name === 'Allies') {
+                        description[0] = 'The red army '
+                    }
+            
+                    if(team.name === 'Axis') {
+                        description[0] = 'The german wehrmacht '
+                    }*/
+
+                    description[0] = `${team.name} `
+                    description[1] = 'has crushed '
+
+                    if (nextRound.territories === team.territories) {
+                        description[4] = ' and has taken the territory'
+                    }
+
+                    if (nextRound.territories > team.territories) {
+                        description[4] = ' and has taken the territory'
+                    }
+
+                    if (!team.attacking) {
+                        description[4] = ' and keeps the territory'
+
+                        if (current.rules.time_left === -1) {
+                            description[1] = 'has withstood '
+                        }
+                    }
+
+                } else {
+                    if (team.name === 'Allies') {
+                        description[2] = 'the soviet '
+                    }
+
+                    if (team.name === 'Axis') {
+                        description[2] = 'the german '
+                    }
+
+                    if (team.attacking) {
+                        description[2] += 'attack'
+                    } else {
+                        description[2] += 'defense'
+                    }
+                    //description[2] = team.name === 'Allies' ? `the soviet ${team.attacking ?  'attack' : 'defense'}` : `the german ${team.attacking ? 'attack' : 'defense'}`
+
+                    // if(nextRound.territories < team.territories) {
+                    //     territory = 'and lost a territory'
+                    // }
+                    // if(nextRound.territories === team.territories) {
+                    //     territory = 'and held their territory'
+                    // }
+                }
+
+
+                return description
+            }) //.flat().filter(f => f)
+            let map = current.game.map
+            let timeLeft = Utils.secToMin(current.rules.time_left)
+            map = map.slice(map.indexOf('|') + 1)
+            teams[1][3] = ` at${map}`
+            teams[1][6] = ` with ${timeLeft} left`
+            console.log(teams, current.teams, resp.teams)
+            teams = teams.reduce((keys, arr) => [...Object.keys(arr), ...keys].flat().sort((a, b) => a - b), []).map((key, index) => teams.find(item => item[key])[key])
+            return teams.join('')
+        }
+    }
+
+    public static secToMin(sec) {
+        let minutesLeft,
+            secondsLeft,
+            timeLeft
+
+        secondsLeft = sec % 60 <= 9 ? '0'.concat(`${sec % 60}`) : sec % 60
+        minutesLeft = `${secondsLeft.toString().includes('-') ? '-' : ''}${(sec - sec % 60) / 60 <= 9 ? '0'.concat(`${(sec - sec % 60) / 60}`) : (sec - sec % 60) / 60}`
+        secondsLeft = secondsLeft.toString().replace('-', '')
+        timeLeft = `${minutesLeft}:${secondsLeft}`
+
+        return timeLeft
+    }
 }

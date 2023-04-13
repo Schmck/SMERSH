@@ -46,6 +46,7 @@
     <Folder Include="Entities\round\playerRound\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Entities\layout\index.ts" />
     <TypeScriptCompile Include="Entities\policy\PolicySearchReport.ts" />
     <TypeScriptCompile Include="Entities\policy\index.ts" />
     <TypeScriptCompile Include="Entities\eventStore\EventSearchReport.ts" />

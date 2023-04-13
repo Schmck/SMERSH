@@ -7,10 +7,13 @@ import { Index, Field } from '../../../SMERSH/Utilities'
 export class LayoutSearchReport extends SearchReport {
     constructor( id: Guid = Guid.create()) {
         super(id)
-        this.Maps = []
     }
 
-    public Maps: Array<Guid>;
+    public Name: string;
+
+    public IsActive: boolean;
+
+    public Maps: Record<string, string[]>;
 
     public UpdateCalculatedProperties(): void { }
 }

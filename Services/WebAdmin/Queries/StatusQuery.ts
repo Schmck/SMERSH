@@ -2,19 +2,20 @@ import { StatusRoute, PlayersRoute } from '../Routes';
 import { WebAdminSession } from '..';
 import { Parsers } from "../../../Web/Utils";
 import { Query } from './Query';
+import { RulesInfo, GameInfo, PlayerInfo, TeamInfo, Status } from '../Models'
 
 
 export class StatusQuery extends Query {
-    public static async Get() {
+    public static async Get<Status>() {
         const session = WebAdminSession.get();
 
         const status = await session.navigate(StatusRoute.GetStatus.Action)
         const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
        
-        let game = {}
-        let rules = {}
-        let players
-        let teams
+        let game: GameInfo;
+        let rules: RulesInfo;
+        let players: Array<PlayerInfo>
+        let teams: Array<TeamInfo>
 
         if (status && status.window && status.window.document) {
              const playerTable = status.window.document.querySelector("#players");
@@ -48,21 +49,21 @@ export class StatusQuery extends Query {
             }
 
             if (currentDl) {
-                game = Parsers.dlElement(currentDl);
+                game = Parsers.dlElement(currentDl) as any;
             }
 
             if (rulesDl) {
-                rules = Parsers.dlElement(rulesDl);
-                let [timeLimit, timeLeft] = rules['TimeLimit'].replace(/[^\d+|\s]/g, '').split(' ').filter(r => r)
-                rules['TimeLimit'] = timeLimit;
-                rules['TimeLeft'] = timeLeft;
+                rules = Parsers.dlElement(rulesDl) as any;
+                let [timeLimit, timeLeft] = rules['TimeLimit'].toString().replace(/[^\d+|\s]/g, '').split(' ').map(r => parseInt(r, 10)).filter(r => r)
+                rules.TimeLimit = timeLimit;
+                rules.TimeLeft = timeLeft;
             }
-            return {
+            return new Status(
                 players,
                 teams,
                 game,
                 rules,
-            };
+            );
         }
         return null;
     }

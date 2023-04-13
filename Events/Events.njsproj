@@ -38,6 +38,8 @@
   <ItemGroup>
     <TypeScriptCompile Include="Event.ts" />
     <TypeScriptCompile Include="index.ts" />
+    <TypeScriptCompile Include="Layout\index.ts" />
+    <TypeScriptCompile Include="Layout\LayoutChangedEvent.ts" />
     <TypeScriptCompile Include="Map\index.ts" />
     <TypeScriptCompile Include="Map\MapChangedEvent.ts" />
     <TypeScriptCompile Include="Player\BanLiftedEvent.ts" />
@@ -53,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Map\" />
+    <Folder Include="Layout\" />
     <Folder Include="Player\" />
     <Folder Include="Round\" />
     <Folder Include="Round\PlayerRound\" />

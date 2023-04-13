@@ -12,6 +12,7 @@ import {
     PlayerRoundUpdatedEvent,
     PolicyAppliedEvent,
     BanLiftedEvent,
+    LayoutChangedEvent,
 } from '../Events'
 import { SearchClient } from '../Elastic'
 import { EventSearchReport } from '../Reports/Entities/eventStore';
@@ -32,6 +33,7 @@ let cls: { new(id?: Guid, event?: Event): EventSearchReport } = EventSearchRepor
     PlayerRoundUpdatedEvent,
     PolicyAppliedEvent,
     BanLiftedEvent,
+    LayoutChangedEvent,
 )
 export class StoreEventHandler implements
     IEventHandler<PlayerRegisteredEvent>,
@@ -42,7 +44,8 @@ export class StoreEventHandler implements
     IEventHandler<MapChangedEvent>,
     IEventHandler<PlayerRoundUpdatedEvent>,
     IEventHandler<PolicyAppliedEvent>,
-    IEventHandler<BanLiftedEvent>
+    IEventHandler<BanLiftedEvent>,
+    IEventHandler<LayoutChangedEvent>
 {
     public constructor(protected readonly commandBus: CommandBus) {
         }
@@ -57,6 +60,7 @@ export class StoreEventHandler implements
     async handle(event: ChatLinesReceivedEvent)
     async handle(event: PolicyAppliedEvent)
     async handle(event: BanLiftedEvent)
+    async handle(event: LayoutChangedEvent)
     async handle(event: Event) {
 
 

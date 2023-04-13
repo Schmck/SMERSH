@@ -37,6 +37,8 @@
   <ItemGroup>
     <TypeScriptCompile Include="Command.ts" />
     <TypeScriptCompile Include="ICommand.ts" />
+    <TypeScriptCompile Include="Layout\ChangeLayoutCommand.ts" />
+    <TypeScriptCompile Include="Layout\index.ts" />
     <TypeScriptCompile Include="Player\ChangePlayerNameCommand.ts" />
     <TypeScriptCompile Include="Player\index.ts" />
     <TypeScriptCompile Include="Player\LiftBanCommand.ts" />
@@ -53,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Map\" />
+    <Folder Include="Layout\" />
     <Folder Include="Player\" />
     <Folder Include="Round\" />
     <Folder Include="Round\PlayerRound\" />

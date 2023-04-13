@@ -5,4 +5,5 @@ import { TestCommand } from './TestCommand'
 import { TempbanCommand } from './TempbanCommand'
 import { KickCommand } from './KickCommand'
 import { ChatLogCommand } from './ChatLogCommand'
-export const Commands: Command[] = [HelloCommand, LookupCommand, TempbanCommand, KickCommand, ChatLogCommand];
+import { SaveLayoutCommand } from './SaveLayoutCommand'
+export const Commands: Command[] = [HelloCommand, LookupCommand, TempbanCommand, KickCommand, ChatLogCommand, SaveLayoutCommand];

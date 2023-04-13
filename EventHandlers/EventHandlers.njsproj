@@ -39,12 +39,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Map\" />
+    <Folder Include="Layout\" />
     <Folder Include="Player\" />
     <Folder Include="Round\" />
     <Folder Include="Round\PlayerRound\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="index.ts" />
+    <TypeScriptCompile Include="Layout\index.ts" />
+    <TypeScriptCompile Include="Layout\LayoutChangedEventHandler.ts" />
     <TypeScriptCompile Include="Map\index.ts" />
     <TypeScriptCompile Include="Player\BanLiftedEventHandler.ts" />
     <TypeScriptCompile Include="Player\index.ts" />

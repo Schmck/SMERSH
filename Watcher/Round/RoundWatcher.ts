@@ -1,6 +1,7 @@
 import { Watcher } from '../Watcher'
 import { WebAdminSession } from '../../Services/WebAdmin';
 import { ChatRoute } from '../../Services/WebAdmin/Routes';
+import { Status } from '../../Services/WebAdmin/Models';
 import { StartRoundCommand, EndRoundCommand, ChangeMapCommand  } from '../../Commands/Round'
 import { UpdatePlayerRoundCommand  } from '../../Commands/Round/PlayerRound'
 import { RegisterPlayerCommand, ChangePlayerNameCommand  } from '../../Commands/Player'
@@ -10,24 +11,23 @@ import { SearchClient } from '../../Elastic'
 import { RoundSearchReport } from '../../Reports/Entities/round'
 import { MapSearchReport } from '../../Reports/Entities/map';
 import { PlayerSearchReport } from '../../Reports/Entities/player';
-import { Enumeration, Role, Team } from '../../SMERSH/ValueObjects';
 import { stringify } from 'querystring';
 import SteamApi from 'steamapi'
 import { hexToDec } from 'hex2dec'
 
 export class RoundWatcher extends Watcher {
 
-    public override async Watch(timeout = 1000, ...args: any[]) {
+    public override async Watch(timeout = 1000, ...args: Array<{status: Status, mapTime: number}>) {
         const env = process.env;
-        const status = await StatusQuery.Get();
         const steam: SteamApi = new SteamApi(env["STEAM_TOKEN"])
-        const prevStatus = args[0] && args[0]['status'];
-        let prevMapTime = args[0] && args[0]['mapTime']
-        let mapTime = prevStatus && prevStatus.rules && prevStatus.rules.TimeLeft ? parseInt(prevStatus.rules.TimeLeft) : 0
+        const status = await StatusQuery.Get();
+        const prevStatus = args[0] && args[0].status;
+        let prevMapTime = args[0] && args[0].mapTime
+        let mapTime = (prevStatus && prevStatus.Rules && prevStatus.Rules.TimeLeft) || 0
 
         if (status) { 
-            let oldMap = prevStatus && prevStatus.game && prevStatus.game.Map;
-            let newMap = status && status.game && status.game['Map']
+            let oldMap = prevStatus && prevStatus.Game && prevStatus.Game.Map;
+            let newMap = status && status.Game && status.Game.Map
 
             const map = newMap && (await SearchClient.Search(MapSearchReport, {
                 "query": {
@@ -74,9 +74,9 @@ export class RoundWatcher extends Watcher {
                 };
 
                 const round = (await SearchClient.Search(RoundSearchReport, roundQuery)).shift()
-                const playerIds: string[] = status.players ? status.players.map(player => player.Id) : []
-                const timeLimit = status.rules && status.rules['TimeLimit'] ? parseInt(status.rules['TimeLimit']) : 0
-                const newMapTime = status.rules && status.rules['TimeLeft'] ? parseInt(status.rules['TimeLeft']) : 0
+                const playerIds: string[] = status.Players ? status.Players.map(player => player.Id) : []
+                const timeLimit = status.Rules && status.Rules.TimeLimit ? status.Rules.TimeLimit : 0
+                const newMapTime = status.Rules && status.Rules.TimeLeft ? status.Rules.TimeLeft : 0
 
 
                 if (round && mapTime && timeLimit && timeLimit === mapTime) {
@@ -90,14 +90,13 @@ export class RoundWatcher extends Watcher {
                 if (playerIds.length) {
                     for (let playerId of playerIds) {
                         const exists = await SearchClient.Get(playerId as any as Guid, PlayerSearchReport)
-                        const player = status.players.find(player => player.Id === playerId)
+                        const player = status.Players.find(player => player.Id === playerId)
+                        const decId = player && player.Id && hexToDec(player.Id)
+                        const playa = decId && await steam.getUserSummary(decId)
                         
 
                         if (!exists) {
                             if (player && player.Id) {
-                                const decId = hexToDec(player.Id)
-                                const playa = await steam.getUserSummary(decId)
-
                                 if (player.Playername !== playa.nickname) {
                                     this.log.info(player.Id, player.Playername, playa.nickname, playa.steamID)
                                     await this.commandBus.execute(new RegisterPlayerCommand(player.Id, playa.nickname))
@@ -109,13 +108,13 @@ export class RoundWatcher extends Watcher {
 
 
                             }
-                        } else if (player && exists.Name !== player.Playername) {
+                        } else if (player && exists.Name !== player.Playername && player.Playername === playa.nickname) {
                             await this.commandBus.execute(new ChangePlayerNameCommand(player.Id, player.Playername))
                         }
 
                         if (exists && round && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
-                            const team = Team.fromValue(parseInt(player.Team))
-                            const role = Role.fromDisplayName(player.Role);
+                            const team = player.Team;
+                            const role = player.Role;
                             const id = Guid.parse((round.Id.toString().slice(0, 27) + playerId.slice(9)))
 
                             if (team && role) {

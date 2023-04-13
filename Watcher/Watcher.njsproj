@@ -42,6 +42,7 @@
     <TypeScriptCompile Include="index.ts" />
     <TypeScriptCompile Include="Round\BanWatcher.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
+    <TypeScriptCompile Include="Round\LayoutWatcher.ts" />
     <TypeScriptCompile Include="Watcher.ts" />
   </ItemGroup>
   <ItemGroup>
