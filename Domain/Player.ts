@@ -20,8 +20,9 @@ export class Player extends Domain {
     }
 
     public async changeName(name: string) {
+        const oldName = this.Name;
         this.Name = name;
-        this.apply(new PlayerNameChangedEvent(this.Id, this.Name));
+        this.apply(new PlayerNameChangedEvent(this.Id, this.Name, oldName));
         return;
 
     }
