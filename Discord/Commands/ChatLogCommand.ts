@@ -56,6 +56,18 @@ export const ChatLogCommand: Command = {
                 regexp
             }
         })
+
+        if (players.length > 1) {
+            let playerTable: string = await Utils.generatePlayerTable(players, false)
+            await interaction.followUp({
+                ephemeral: true,
+                content: `\`\`\`prolog
+                ${playerTable}
+                \`\`\``,
+            });
+            return;
+        }
+
         const player = players.shift();
 
         if (player) {
