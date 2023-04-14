@@ -19,7 +19,8 @@ import {
     PlayerController,
     PolicyController,
     LandingPageController,
-    RebuildController
+    RebuildController,
+    RoleBanController
 } from '../Controllers/Admin';
 
 import {
@@ -40,7 +41,8 @@ import {
         PlayerController,
         PolicyController,
 
-        LayoutController
+        LayoutController,
+        RoleBanController
     ],
     providers: [
         Repository,
