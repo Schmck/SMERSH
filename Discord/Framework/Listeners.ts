@@ -21,17 +21,19 @@ export class Listeners {
 
     public static onInteractionCreate(client: Client): void {
         client.on('interactionCreate', async (interaction: Interaction) => {
+
+            if (interaction.inGuild()) {
+                if (interaction.isAutocomplete()) {
+                    this.handleAutoComplete(client, interaction)
+                }
+
+                if (interaction.isCommand() || interaction.isContextMenuCommand()) {
+
+
+                    this.handleSlashCommand(client, interaction)
+                }
+            }
            
-            if (interaction.isAutocomplete()) {
-                this.handleAutoComplete(client, interaction)
-            }
-
-            if (interaction.isCommand() || interaction.isContextMenuCommand()) {
-                
-
-                this.handleSlashCommand(client, interaction)
-            }
-
             
         })
     }
