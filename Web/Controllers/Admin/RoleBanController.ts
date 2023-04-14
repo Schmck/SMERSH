@@ -19,6 +19,7 @@ export class RoleBanController extends SmershController {
     @Post('/admin/rolebans')
     public postRoleBans(@Body()model: RoleBanModel) {
         Object.keys(model.Players).forEach(id => {
+            let actionId = Guid.create();
             let ban = model.Players[id]
             let sides = ban.sides
             let teams: Array<Team> = [];
@@ -59,7 +60,7 @@ export class RoleBanController extends SmershController {
             roles.forEach(role => {
                 teams.forEach(team => {
                     sides.forEach(side => {
-                        this.commandBus.execute(new ApplyRoleBanCommand(Guid.create(), id, ban.channelId, ban.aliases[0], "", role, team, side, new Date()))
+                        this.commandBus.execute(new ApplyRoleBanCommand(actionId, id, ban.channelId, ban.aliases[0], "", role, team, side, new Date()))
                     })
                 })
             })
