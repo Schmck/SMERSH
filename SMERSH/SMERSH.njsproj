@@ -429,6 +429,7 @@
     <TypeScriptCompile Include="ValueObjects\player\Action.ts" />
     <TypeScriptCompile Include="ValueObjects\player\index.ts" />
     <TypeScriptCompile Include="ValueObjects\player\Role.ts" />
+    <TypeScriptCompile Include="ValueObjects\player\RoleBan.ts" />
     <TypeScriptCompile Include="ValueObjects\round\index.ts" />
     <TypeScriptCompile Include="ValueObjects\round\Team.ts" />
   </ItemGroup>

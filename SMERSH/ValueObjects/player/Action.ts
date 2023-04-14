@@ -17,4 +17,6 @@ export class Action extends Enumeration {
 
     public static Unmute: Action = new Action(5, "unmutevoice")
 
+    public static RoleBan: Action = new Action(6, "roleban")
+
 }

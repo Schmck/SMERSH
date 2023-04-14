@@ -1,3 +1,6 @@
+import { PolicySearchReport} from "../../Reports/Entities/policy"
+import { Role, Team, RoleBan } from "../../SMERSH/ValueObjects"
+
 export class Utils {
 
     public static async generatePlayerTable(players, showIpAddress = true) {
@@ -33,6 +36,50 @@ export class Utils {
 
         const newLine = `${team} ${timestamp} ${teamMessage} ${line.username}: ${line.message}`
         return newLine
+    }
+
+    public static generateRoleBanTable(policies: PolicySearchReport[]) {
+        const roleBans = policies.map(policy => {
+            return Object.keys(policy.RoleBans).map(r => {
+                const role = parseInt(r, 10)
+                const roleBans = policy.RoleBans[role].map(ban => {
+                    return Object.assign({}, ban, { Name: policy.Name, Id: policy.PlayerId, Role: role })
+                }) 
+                return roleBans
+
+            }).flat()
+        }).flat()
+        const longestPlayerName = roleBans.reduce((longestName, roleban) => longestName >= roleban.Name.length ? longestName : roleban.Name.length, 0)
+        const roleBannedPlayers = roleBans.map((roleBan, index) => {
+            let name = roleBan.Name;
+            let bannedTeams = roleBan.Teams.map(team => Team.fromValue(team).DisplayName).join(', ')
+            let bannedRole = Role.fromValue(roleBan.Role).DisplayName
+            let playerName = `${name}${' '.repeat(name.length > 16 ? longestPlayerName + 3 : 16 + 3 - name.length)}`
+            let playerId = roleBan && roleBan.Id ? roleBan.Id.slice(9) : ""
+            let playerSide = roleBan && roleBan.Sides && roleBan.Sides.length === 1 ? ` ${roleBan.Sides[0]} ` : "   both    "
+            console.log(playerName, bannedTeams.length, bannedTeams)
+            bannedTeams = bannedTeams && bannedTeams.length ? `${bannedTeams}${' '.repeat(13 - bannedTeams.length)}` : ' '.repeat(13)
+
+            if (playerId) {
+                playerId = `${playerId}${' '.repeat(10 - playerId.length)}`
+            }
+
+            if (roleBan.Sides && roleBan.Sides.length > 1) {
+                playerSide = "   both    "
+            }
+
+            if (index === 0) {
+                let playerNames = `Banned Players  ${' '.repeat(longestPlayerName > 16 ? longestPlayerName + 3 - 16 : 3)}`
+                return [
+                    `${playerNames}\u2502 0x0110000 \u2502 banned teams \u2502 banned side \u2502 banned roles  `,
+                    `${'\u2500'.repeat(longestPlayerName > 16 ? longestPlayerName + 3 : 16 + 3)}\u253C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500`,
+                    `${playerName}\u2502 ${playerId}\u2502 ${bannedTeams}\u2502 ${playerSide} \u2502 ${bannedRole}`
+                ]
+            }
+
+            return `${playerName}\u2502 ${playerId}\u2502 ${bannedTeams}\u2502 ${playerSide} \u2502 ${bannedRole}`
+        }).flat().filter(player => player)
+        return roleBannedPlayers
     }
 
     public static battleDesc(current, resp) {

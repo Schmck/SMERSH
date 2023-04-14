@@ -22,11 +22,11 @@ export class PlayerInfo {
 
     public PlayerKey: string;
 
-    public Team: Team;
+    public Team: string;
 
     public Playername: string;
 
-    public Role: Role;
+    public Role: string;
 
     public Score: number;
 

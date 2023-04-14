@@ -4,7 +4,7 @@ import { Parsers } from "../../../Web/Utils";
 import { StatusRoute, PlayersRoute } from '../Routes';
 import { Query } from './Query';
 import { PlayerSearchReport } from '../../../Reports/Entities/player';
-import { Player } from '../Models';
+import { Player, PlayerInfo } from '../Models';
 
 export class PlayerQuery extends Query {
 
@@ -15,7 +15,7 @@ export class PlayerQuery extends Query {
         const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
 
       
-        let players
+        let players : Array<PlayerInfo>
 
         if (status && status.window && status.window.document) {
             const playerTable = status.window.document.querySelector("#players");
@@ -29,7 +29,10 @@ export class PlayerQuery extends Query {
                     if (table) {
                         playas = Parsers.playerTable(table as HTMLTableElement)
                         try {
-                            players = players.map((item, i) => Object.assign({}, item, { Id: playas[i].UniqueID, IpAddress: playas[i].IP, PlayerKey: playas[i].PlayerKey }));
+                            players = players.map((item, i) => {
+                                let playa = playas.find(plyr => plyr.Playername === item.Playername)
+                                return Object.assign({}, item, { Id: playa.UniqueID, IpAddress: playa.IP, PlayerKey: playa.PlayerKey })
+                            });
 
                         } catch (error) { }
                     }

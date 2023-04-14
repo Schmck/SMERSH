@@ -1,6 +1,8 @@
 import { Guid } from "guid-typescript";
 import { SearchReport } from '../../Framework'
 import { Index, Field } from '@../../../SMERSH/Utilities'
+import { RoleBan } from "../../../SMERSH/ValueObjects";
+
 
 @Index()
 export class PolicySearchReport extends SearchReport {
@@ -19,6 +21,9 @@ export class PolicySearchReport extends SearchReport {
     public Reason: string;
 
     @Field('text')
+    public Name: string;
+
+    @Field('text')
     public Action: string;
 
     @Field('boolean')
@@ -32,6 +37,9 @@ export class PolicySearchReport extends SearchReport {
 
     @Field('integer')
     public PlainId?: number;
+
+    @Field({ nested: Object })
+    public RoleBans: Record<number, Array<RoleBan>>   
 
     UpdateCalculatedProperties(): void { }
 }

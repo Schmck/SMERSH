@@ -8,6 +8,7 @@ export class PolicyAppliedEvent extends Event {
 		this.PlayerId = playerId;
 		this.ChannelId = channelId;
 		this.Action = action;
+		this.Name = name;
 		this.Reason = reason;
 		this.BanDate = banDate;
 		this.UnbanDate = unbanDate;

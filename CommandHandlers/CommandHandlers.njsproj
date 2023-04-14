@@ -46,10 +46,12 @@
   <ItemGroup>
     <TypeScriptCompile Include="Layout\ChangeLayoutCommandHandler.ts" />
     <TypeScriptCompile Include="Layout\index.ts" />
+    <TypeScriptCompile Include="Player\ApplyRoleBanCommandHandler.ts" />
     <TypeScriptCompile Include="Player\ChangePlayerNameCommandHandler.ts" />
     <TypeScriptCompile Include="Player\index.ts" />
     <TypeScriptCompile Include="Player\LiftBanCommandHandler.ts" />
     <TypeScriptCompile Include="Player\ApplyPolicyCommandHandler.ts" />
+    <TypeScriptCompile Include="Player\LiftRoleBanCommandHandler.ts" />
     <TypeScriptCompile Include="Player\RegisterPlayerCommandHandler.ts" />
     <TypeScriptCompile Include="Round\ChangeMapCommandHandler.ts" />
     <TypeScriptCompile Include="Round\EndRoundCommandHandler.ts" />

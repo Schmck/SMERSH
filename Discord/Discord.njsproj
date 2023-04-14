@@ -29,7 +29,6 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Commands\HelloCommand.ts" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="tsconfig.json" />
@@ -42,11 +41,13 @@
     <TypeScriptCompile Include="Bot.ts" />
     <TypeScriptCompile Include="Commands\ChatLogCommand.ts" />
     <TypeScriptCompile Include="Commands\KickCommand.ts" />
+    <TypeScriptCompile Include="Commands\RemoveRoleBanCommand.ts" />
+    <TypeScriptCompile Include="Commands\RoleBanCommand.ts" />
+    <TypeScriptCompile Include="Commands\RoleBansCommand.ts" />
     <TypeScriptCompile Include="Commands\SaveLayoutCommand.ts" />
     <TypeScriptCompile Include="Commands\TempbanCommand.ts" />
     <TypeScriptCompile Include="Commands\index.ts" />
     <TypeScriptCompile Include="Commands\LookupCommand.ts" />
-    <TypeScriptCompile Include="Commands\TestCommand.ts" />
     <TypeScriptCompile Include="Framework\Client.ts" />
     <TypeScriptCompile Include="Framework\Command.ts" />
     <TypeScriptCompile Include="Framework\index.ts" />

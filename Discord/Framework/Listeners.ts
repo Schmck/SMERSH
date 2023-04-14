@@ -1,7 +1,8 @@
 import { Logger, dummyLogger } from "ts-log/build/src/index";
 import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
-import { CommandInteraction, Client, Interaction } from "discord.js";
+import { CommandInteraction, Client, Interaction, AutocompleteInteraction } from "discord.js";
 import { Commands } from '../Commands'
+import { PlayerInfo } from "../../Services/WebAdmin/Models";
 
 
 export class Listeners {
@@ -20,10 +21,25 @@ export class Listeners {
 
     public static onInteractionCreate(client: Client): void {
         client.on('interactionCreate', async (interaction: Interaction) => {
+           
+            if (interaction.isAutocomplete()) {
+                this.handleAutoComplete(client, interaction)
+            }
+
             if (interaction.isCommand() || interaction.isContextMenuCommand()) {
+                
+
                 this.handleSlashCommand(client, interaction)
             }
+
+            
         })
+    }
+
+    public static async handleAutoComplete(client: Client, interaction: AutocompleteInteraction): Promise<void> {
+        const slashCommand = Commands.find(c => c.name === interaction.commandName);
+       
+        await slashCommand.autocomplete(client, interaction)
     }
 
     public static async handleSlashCommand(client: Client, interaction: CommandInteraction): Promise<void> {

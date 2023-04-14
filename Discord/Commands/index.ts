@@ -1,9 +1,9 @@
 import { Command } from "../Framework/Command"
-import { HelloCommand } from './HelloCommand'
 import { LookupCommand } from './LookupCommand'
-import { TestCommand } from './TestCommand'
 import { TempbanCommand } from './TempbanCommand'
 import { KickCommand } from './KickCommand'
 import { ChatLogCommand } from './ChatLogCommand'
 import { SaveLayoutCommand } from './SaveLayoutCommand'
-export const Commands: Command[] = [HelloCommand, LookupCommand, TempbanCommand, KickCommand, ChatLogCommand, SaveLayoutCommand];
+import { RoleBanCommand } from './RoleBanCommand'
+import { RoleBansCommand } from './RoleBansCommand'
+export const Commands: Command[] = [LookupCommand, TempbanCommand, KickCommand, ChatLogCommand, SaveLayoutCommand, RoleBanCommand, RoleBansCommand];

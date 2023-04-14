@@ -1,7 +1,8 @@
 import { Guid } from "guid-typescript";
 import { Domain } from './Domain'
-import { PlayerRegisteredEvent, PlayerNameChangedEvent, PolicyAppliedEvent, BanLiftedEvent } from '../Events/Player'
+import { PlayerRegisteredEvent, PlayerNameChangedEvent, PolicyAppliedEvent, BanLiftedEvent, RoleBanAppliedEvent, RoleBanLiftedEvent } from '../Events/Player'
 import { Action } from '../SMERSH/ValueObjects/player'
+import { Role, Team } from "../SMERSH/ValueObjects";
 
 export class Player extends Domain {
 
@@ -31,9 +32,10 @@ export class Player extends Domain {
         this.apply(new PolicyAppliedEvent(actionId, this.Id.toString(), channelId, action.DisplayName, name, reason, banDate, unbanDate, plainId));
         return;
     }
-
+   
     public async liftBan(actionId: Guid) {
         this.apply(new BanLiftedEvent(actionId, this.Id));
         return;
     }
+
 }

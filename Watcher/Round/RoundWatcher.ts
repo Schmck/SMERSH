@@ -14,6 +14,7 @@ import { PlayerSearchReport } from '../../Reports/Entities/player';
 import { stringify } from 'querystring';
 import SteamApi from 'steamapi'
 import { hexToDec } from 'hex2dec'
+import { Role, Team } from '../../SMERSH/ValueObjects';
 
 export class RoundWatcher extends Watcher {
 
@@ -113,8 +114,8 @@ export class RoundWatcher extends Watcher {
                         }
 
                         if (exists && round && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
-                            const team = player.Team;
-                            const role = player.Role;
+                            const team = Team.fromDisplayName(player.Team);
+                            const role = Role.fromDisplayName(player.Role);
                             const id = Guid.parse((round.Id.toString().slice(0, 27) + playerId.slice(9)))
 
                             if (team && role) {

@@ -9,10 +9,13 @@ export class LayoutSearchReport extends SearchReport {
         super(id)
     }
 
+    @Field('text')
     public Name: string;
 
+    @Field('boolean')
     public IsActive: boolean;
 
+    @Field({ nested: Object})
     public Maps: Record<string, string[]>;
 
     public UpdateCalculatedProperties(): void { }

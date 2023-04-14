@@ -47,6 +47,8 @@
     <TypeScriptCompile Include="Player\PolicyAppliedEvent.ts" />
     <TypeScriptCompile Include="Player\PlayerNameChangedEvent.ts" />
     <TypeScriptCompile Include="Player\PlayerRegisteredEvent.ts" />
+    <TypeScriptCompile Include="Player\RoleBanAppliedEvent.ts" />
+    <TypeScriptCompile Include="Player\RoleBanLiftedEvent.ts" />
     <TypeScriptCompile Include="Round\ChatLinesReceivedEvent.ts" />
     <TypeScriptCompile Include="Round\index.ts" />
     <TypeScriptCompile Include="Round\PlayerRound\index.ts" />

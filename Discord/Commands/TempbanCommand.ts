@@ -1,11 +1,11 @@
-import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType } from "discord.js";
+import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteInteraction } from "discord.js";
 import { Client } from '../Framework'
 import { Command } from "../Framework/Command"
 import { SearchClient } from '../../Elastic'
 import { Api } from '../../Web/Framework'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { PlayersRoute, PolicyRoute } from '../../Services/WebAdmin/Routes';
-import { PolicyQuery } from '../../Services/WebAdmin/Queries';
+import { PlayerQuery, PolicyQuery } from '../../Services/WebAdmin/Queries';
 import { ApplyPolicyCommand } from '../../Commands/Player'
 import axios, { isCancel, AxiosError, AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
 import { Utils } from '../Framework'
@@ -23,7 +23,8 @@ export const TempbanCommand: Command = {
         {
             name: 'input',
             description: 'name or ID of player',
-            type: ApplicationCommandOptionType.String
+            type: ApplicationCommandOptionType.String,
+            autocomplete: true,
         },
         {
             name: 'duration',
@@ -36,6 +37,15 @@ export const TempbanCommand: Command = {
             type: ApplicationCommandOptionType.String
         }
     ],
+    autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
+        const focusedValue = interaction.options.getFocused(true);
+        const players = await PlayerQuery.Get();
+        if (players) {
+            const choices = players.map(player => { return { name: player.Playername, value: player.Id } })
+            const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
+            interaction.respond(filtered.slice(0, 24));
+        }
+    },
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         const duration = interaction.options.get('duration')

@@ -1,8 +1,9 @@
-import { CommandInteraction, Client, ApplicationCommandType, ApplicationCommandOptionType } from "discord.js";
+import { CommandInteraction, Client, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteInteraction } from "discord.js";
 import { Command } from "../Framework/Command"
 import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { Utils } from '../Framework'
+import { PlayerQuery } from "../../Services/WebAdmin/Queries";
 
 export const LookupCommand: Command = {
     name: "lookup",
@@ -11,8 +12,18 @@ export const LookupCommand: Command = {
     options: [{
         name: 'input',
         description: 'name or ID of player',
-        type: ApplicationCommandOptionType.String
+        type: ApplicationCommandOptionType.String,
+        autocomplete: true,
     }],
+    autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
+        const focusedValue = interaction.options.getFocused(true);
+        const players = await PlayerQuery.Get();
+        if (players) {
+            const choices = players.map(player => { return { name: player.Playername, value: player.Id } })
+            const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
+            interaction.respond(filtered.slice(0, 24));
+        }
+    },
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         let match
