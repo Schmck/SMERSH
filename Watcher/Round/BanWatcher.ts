@@ -70,20 +70,22 @@ export class BanWatcher extends Watcher {
                         roleBans.forEach(roleBan => {
                             if (role.Value === playerRole && roleBan.Teams && roleBan.Teams.includes(team.Value)) {
                                 if ((roleBan.Sides && roleBan.Sides.includes(side)) || (!roleBan.Sides || !roleBan.Sides.length)) {
-                                    const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
-                                    const config: AxiosRequestConfig =
-                                    {
-                                        headers: {
-                                            "Content-type": "application/x-www-form-urlencoded",
-                                            "Cookie": `authcred="${env["AUTHCRED"]}"`
-                                        },
+                                    if(player.Kills || player.Deaths) {
+                                        const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
+                                        const config: AxiosRequestConfig =
+                                        {
+                                            headers: {
+                                                "Content-type": "application/x-www-form-urlencoded",
+                                                "Cookie": `authcred="${env["AUTHCRED"]}"`
+                                            },
+                                        }
+
+                                        const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
+
+                                        axios.post(url, urlencoded, config).then(result => {
+                                            this.log.info(JSON.stringify(result.data))
+                                        });
                                     }
-
-                                    const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
-
-                                    axios.post(url, urlencoded, config).then(result => {
-                                        this.log.info(JSON.stringify(result.data))
-                                    });
                                 }
                             }
                         })

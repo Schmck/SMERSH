@@ -27,6 +27,10 @@ export class Parsers {
                 if(vl === 'No') {
                     vl = false;
                 }
+
+                if(Number.isInteger(parseInt(vl))) {
+                    vl = parseInt(vl)
+                }
                 return [[result.headers[index].replace(' ', '')], vl]
             }))
         })
@@ -53,6 +57,7 @@ export class Parsers {
 
         return result.values.map(value => {
             return Object.fromEntries(value.map((val, index) => {
+                let header = result.headers[index].toString()
                 let vl = val
 
                 if(vl === 'Yes') {
@@ -62,9 +67,13 @@ export class Parsers {
                 if(vl === 'No') {
                     vl = false;
                 }
-                return [[result.headers[index].replace(' ', '')], vl]
+
+                if(Number.isInteger(parseInt(vl)) && !header.includes('Player name') && !header.includes('PlayerKey') && !header.includes('Unique ID') && !header.includes('IP')) {
+                    vl = parseInt(vl)
+                }
+                return [[header.replace(' ', '')], vl]
             }))
-        }).sort((a, b) => a.Playername.localeCompare(b.Playername))
+        }).sort((a, b) => a.Playername.toString().localeCompare(b.Playername.toString()))
     }
 
     public static dlElement(dl: Element) {
