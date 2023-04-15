@@ -16,7 +16,7 @@ export class BanWatcher extends Watcher {
     public override async Watch(timeout = 60000, ...args: any[]) {
         const count = await SearchClient.Count<PolicySearchReport>(PolicySearchReport)
         const status = await StatusQuery.Get();
-        const players = status.Players;
+        const players = status && status.Players ? status.Players: [];
         const bans = await SearchClient.Search(PolicySearchReport, {
             "query": {
                 "bool": {
@@ -52,13 +52,12 @@ export class BanWatcher extends Watcher {
         const env = process.env;
         const axios = Api.axios();
 
-        console.log(bans)
         for (let ban of bans) {
             this.log.info(JSON.stringify(ban))
 
 
             if (ban.Action === Action.RoleBan.DisplayName) {
-                const player = players.find(player => player.Id.toString() === ban.PlayerId.toString())
+                const player = players.find(player => player.Id && player.Id.toString() === ban.PlayerId.toString())
                 if (player) {
                     const role : Role = Role.fromDisplayName(player.Role)
                     const team : Team = Team.fromValue(parseInt(player.Team, 10))

@@ -8,7 +8,7 @@ export class Parsers {
             })
 
 
-        })
+        })[0]
         const values = Object.values((table).tBodies[0].children).map(item => {
             return Object.values(item.children).map(row => {
                 return row.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')
@@ -18,7 +18,16 @@ export class Parsers {
 
         return result.values.map(value => {
             return Object.fromEntries(value.map((val, index) => {
-                return [[result.headers[0][index].replace(' ', '')], val]
+                let vl = val
+
+                if(vl === 'Yes') {
+                    vl = true
+                }
+
+                if(vl === 'No') {
+                    vl = false;
+                }
+                return [[result.headers[index].replace(' ', '')], vl]
             }))
         })
     }
@@ -44,7 +53,16 @@ export class Parsers {
 
         return result.values.map(value => {
             return Object.fromEntries(value.map((val, index) => {
-                return [[result.headers[index].replace(' ', '')], val]
+                let vl = val
+
+                if(vl === 'Yes') {
+                    vl = true
+                }
+
+                if(vl === 'No') {
+                    vl = false;
+                }
+                return [[result.headers[index].replace(' ', '')], vl]
             }))
         }).sort((a, b) => a.Playername.localeCompare(b.Playername))
     }

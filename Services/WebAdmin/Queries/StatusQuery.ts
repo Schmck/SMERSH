@@ -32,10 +32,12 @@ export class StatusQuery extends Query {
                     if (table) {
                         playas = Parsers.playerTable(table as HTMLTableElement)
                         try {
-                           // players = players.map((player, i) => Object.assign({}, player, { Id: playas[i].UniqueID, IpAddress: playas[i].IP, PlayerKey: playas[i].PlayerKey }));
-                            players = players.map((player, i) => {
+                           players = players.map((player, i) => {
                                 const playa = playas.find(playa => playa.Playername === player.Playername)
+                                if(playa) {
                                 return Object.assign({}, player, { Id: playa.UniqueID, IpAddress: playa.IP, PlayerKey: playa.PlayerKey })
+                                }
+                                return player
                             });
  
                         } catch (error) { }

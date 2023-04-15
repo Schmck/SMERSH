@@ -29,12 +29,15 @@ export class PlayerQuery extends Query {
                     if (table) {
                         playas = Parsers.playerTable(table as HTMLTableElement)
                         try {
-                            players = players.map((item, i) => {
-                                let playa = playas.find(plyr => plyr.Playername === item.Playername)
-                                return Object.assign({}, item, { Id: playa.UniqueID, IpAddress: playa.IP, PlayerKey: playa.PlayerKey })
-                            });
-
-                        } catch (error) { }
+                            players = players.map((player, i) => {
+                                 const playa = playas.find(playa => playa.Playername === player.Playername)
+                                 if(playa) {
+                                 return Object.assign({}, player, { Id: playa.UniqueID, IpAddress: playa.IP, PlayerKey: playa.PlayerKey })
+                                 }
+                                 return player
+                             });
+  
+                         } catch (error) { }
                     }
 
                 }
@@ -66,12 +69,17 @@ export class PlayerQuery extends Query {
 
                     if (table) {
                         playas = Parsers.playerTable(table as HTMLTableElement)
-                        try {
-                            players = players.map((item, i) => Object.assign({}, item, { Id: playas[i].UniqueID, IpAddress: playas[i].IP, PlayerKey: playas[i].PlayerKey }));
+                       try {
+                           // players = players.map((player, i) => Object.assign({}, player, { Id: playas[i].UniqueID, IpAddress: playas[i].IP, PlayerKey: playas[i].PlayerKey }));
+                            players = players.map((player, i) => {
+                                const playa = playas.find(playa => playa.Playername === player.Playername)
+                                if(playa) {
+                                return Object.assign({}, player, { Id: playa.UniqueID, IpAddress: playa.IP, PlayerKey: playa.PlayerKey })
+                                }
+                                return player
+                            });
                             players = players.filter(player => player.Playername.toLowerCase().includes(name.toLowerCase()))
-                            this.log.info(JSON.stringify(players))
-
-
+ 
                         } catch (error) { }
                     }
 

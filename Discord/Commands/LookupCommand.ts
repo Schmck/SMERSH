@@ -19,7 +19,7 @@ export const LookupCommand: Command = {
         const focusedValue = interaction.options.getFocused(true);
         const players = await PlayerQuery.Get();
         if (players) {
-            const choices = players.map(player => { return { name: player.Playername, value: player.Id } })
+            const choices = players.filter(player => !player.Bot && player.Id).map(player => { return { name: player.Playername, value: player.Id } })
             const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
             interaction.respond(filtered.slice(0, 24));
         }
