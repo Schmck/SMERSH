@@ -8,7 +8,7 @@ export class Parsers {
             })
 
 
-        })
+        })[0]
         const values = Object.values((table).tBodies[0].children).map(item => {
             return Object.values(item.children).map(row => {
                 return row.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')
@@ -18,7 +18,20 @@ export class Parsers {
 
         return result.values.map(value => {
             return Object.fromEntries(value.map((val, index) => {
-                return [[result.headers[0][index].replace(' ', '')], val]
+                let vl = val
+
+                if(vl === 'Yes') {
+                    vl = true
+                }
+
+                if(vl === 'No') {
+                    vl = false;
+                }
+
+                if(Number.isInteger(parseInt(vl))) {
+                    vl = parseInt(vl)
+                }
+                return [[result.headers[index].replace(' ', '')], vl]
             }))
         })
     }
@@ -44,9 +57,23 @@ export class Parsers {
 
         return result.values.map(value => {
             return Object.fromEntries(value.map((val, index) => {
-                return [[result.headers[index].replace(' ', '')], val]
+                let header = result.headers[index].toString()
+                let vl = val
+
+                if(vl === 'Yes') {
+                    vl = true
+                }
+
+                if(vl === 'No') {
+                    vl = false;
+                }
+
+                if(Number.isInteger(parseInt(vl)) && !header.includes('Player name') && !header.includes('PlayerKey') && !header.includes('Unique ID') && !header.includes('IP')) {
+                    vl = parseInt(vl)
+                }
+                return [[header.replace(' ', '')], vl]
             }))
-        }).sort((a, b) => a.Playername.localeCompare(b.Playername))
+        }).sort((a, b) => a.Playername.toString().localeCompare(b.Playername.toString()))
     }
 
     public static dlElement(dl: Element) {
