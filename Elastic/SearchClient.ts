@@ -9,7 +9,7 @@ export class SearchClient {
 
 	public static queue: Array<Promise<any>> = []
 
-	public static client: Elasticsearch = ClientBuilder.GetClient("http://localhost:9209/");
+	public static client: Elasticsearch = ClientBuilder.GetClient(JSON.parse(process.argv[process.argv.length - 1])["ELASTIC_URL"]);
 
 	public static async Exists<T>(id: string, cls: { new(): T }) { 
 		try {
