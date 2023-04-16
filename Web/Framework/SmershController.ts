@@ -12,7 +12,7 @@ import { ModuleRef } from '@nestjs/core/injector';
 @Controller()
 export class SmershController {
  
-    public constructor(commandBus?: CommandBus, log: Logger = dummyLogger) {
+    public constructor(commandBus?: CommandBus) {
         this.commandBus = commandBus
         this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
         this.client = new Client({

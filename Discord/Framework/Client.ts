@@ -13,12 +13,12 @@ export class Client extends DiscordClient {
 
     public readonly commandBus: CommandBus;
 
-    public constructor(options: ClientOptions, commandBus: CommandBus) {
+    public constructor(token: string, options: ClientOptions, commandBus: CommandBus) {
         super(options)
         this.commandBus = commandBus;
         this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
 
-        this.login(config["DISCORD_TOKEN"])
+        this.login(token)
     }
 
     public log: FileLogger;

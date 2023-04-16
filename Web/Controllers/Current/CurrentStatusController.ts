@@ -12,9 +12,6 @@ import { SmershController } from '../../Framework'
 
 @Controller()
 export class CurrentStatusController extends SmershController {
-    public constructor(protected readonly commandBus: CommandBus) {
-        super(commandBus)
-    }
 
     @Get('/current/status')
     public async getCurrentStatus() {

@@ -12,9 +12,6 @@ import { Action } from '../../../SMERSH/ValueObjects/player';
 
 @Controller()
 export class PolicyController extends SmershController {
-    public constructor(protected readonly commandBus: CommandBus) {
-        super(commandBus)
-    }
 
     @Post('/admin/players/:playerName/unban')
     public postUnban(@Param('playerName') playerName: string) {

@@ -9,9 +9,6 @@ import * as dotenv from 'dotenv';
 
 @Controller()
 export class PlayerController extends SmershController {
-    public constructor(protected readonly commandBus: CommandBus) {
-        super(commandBus)
-    }
 
     @Get('/admin/players/:playerName')
     public getPlayer(@Param("playerName") playerName: string) {

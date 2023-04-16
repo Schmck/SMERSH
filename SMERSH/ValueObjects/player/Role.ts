@@ -27,4 +27,10 @@ export class Role extends Enumeration {
 
     public static AntiTank: Role = new Role(10, "ANTI-TANK SOLDIER")
 
+    public static AutomaticRifleman: Role = new Role(11, "AUTOMATIC RIFLEMAN")
+
+    public static FlameThrower: Role = new Role(12, "FLAMETHROWER")
+
+    public static LightMortar: Role = new Role(12, "LIGHT MORTAR")
+
 }

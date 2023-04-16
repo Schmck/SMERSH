@@ -52,7 +52,6 @@ export class BanWatcher extends Watcher {
         const env = process.env;
         const axios = Api.axios();
 
-        console.log(bans)
         for (let ban of bans) {
             this.log.info(JSON.stringify(ban))
 

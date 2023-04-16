@@ -10,10 +10,6 @@ import { Guid } from "guid-typescript";
 @Controller()
 export class LandingPageController extends SmershController {
 
-    public constructor(protected readonly commandBus: CommandBus) {
-        super(commandBus)
-    }
-
     @Get('/')
     public GreetVisitor() {
         return 'great success!'

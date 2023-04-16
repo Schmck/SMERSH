@@ -10,9 +10,6 @@ import { CommandBus } from '@nestjs/cqrs'
 
 @Controller()
 export class LayoutController extends SmershController {
-    public constructor(protected readonly commandBus: CommandBus) {
-        super(commandBus)
-    }
 
     @Get('/layout')
     public getLayout() {

@@ -12,9 +12,6 @@ import { Guid } from 'guid-typescript';
 
 @Controller()
 export class RoleBanController extends SmershController {
-    public constructor(protected readonly commandBus: CommandBus) {
-        super(commandBus)
-    }
 
     @Post('/admin/rolebans')
     public async postRoleBans(@Body()model: RoleBanModel) {

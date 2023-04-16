@@ -8,9 +8,6 @@ import { CommandBus } from '@nestjs/cqrs'
 
 @Controller()
 export class PlayersController extends SmershController {
-    public constructor(protected readonly commandBus: CommandBus) {
-        super(commandBus)
-    }
 
     @Get('/admin/players')
     public getPlayers() {
