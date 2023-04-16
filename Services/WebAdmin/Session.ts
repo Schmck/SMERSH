@@ -40,7 +40,7 @@ export class WebAdminSession {
 
     public async navigate(url: string) {
         let navUrl = url;
-        let baseUrl = process.env["BASE_URL"];
+        let baseUrl = JSON.parse(process.argv[process.argv.length - 1])["BASE_URL"];
 
         if (navUrl !== baseUrl) {
             navUrl = baseUrl + url

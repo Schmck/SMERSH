@@ -17,25 +17,28 @@ export class CurrentChatController extends SmershController {
     @Get('/current/chat')
     public async getCurrentChat() {
         const messages = await ChatQuery.Get();
-        const lastMessage = messages[messages.length - 1];
-        const lastMessageDate = new Date(lastMessage.timestamp);
-        const round = await (await SearchClient.Search(RoundSearchReport, {
-            "query": {
-                "match_all": {}
-            },
-            "size": 1,
-            "sort": [
-                {
-                    "Date": {
-                        "order": "desc"
-                    }
-                }
-            ]
-        })).shift();
+        
 
-     
-        if (messages.length && round && (round.Date.getDate() === lastMessageDate.getDate() && round.Date.getHours() === lastMessageDate.getHours())) {
-            this.commandBus.execute(new ReceiveChatLinesCommand(Guid.parse(round.Id), new Date(), messages));
+        if (messages.length) {
+            const lastMessage = messages[messages.length - 1];
+            const lastMessageDate = new Date(lastMessage.timestamp);
+            const round = await (await SearchClient.Search(RoundSearchReport, {
+                "query": {
+                    "match_all": {}
+                },
+                "size": 1,
+                "sort": [
+                    {
+                        "Date": {
+                            "order": "desc"
+                        }
+                    }
+                ]
+            })).shift();
+
+            if (round && (new Date(round.Date).getDate() === lastMessageDate.getDate() && new Date(round.Date).getHours() === lastMessageDate.getHours())) {
+                this.commandBus.execute(new ReceiveChatLinesCommand(Guid.parse(round.Id), new Date(), messages));
+            }
         }
 
         return messages;
