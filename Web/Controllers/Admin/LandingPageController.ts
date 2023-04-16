@@ -14,10 +14,4 @@ export class LandingPageController extends SmershController {
     public GreetVisitor() {
         return 'great success!'
     }
-
-    @Get('/elastic')
-    public BuildIndices() {
-        const config = process.env;
-        return ClientBuilder.Build(config["ELASTIC_URL"])
-    }
 }

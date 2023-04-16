@@ -38,7 +38,7 @@ export class RoundWatcher extends Watcher {
                 }
             })).shift()
         
-           
+
             if (oldMap && newMap && oldMap !== newMap) {
                 const mapId = map && map.Id ? Guid.parse(map.Id) : Guid.create();
                 const roundId = Guid.create();

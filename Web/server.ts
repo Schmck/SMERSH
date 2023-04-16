@@ -17,12 +17,12 @@ const config = process.env;
 const args = process.argv;
 
 
-async function start(baseUrl: string, authcred: string, token: string, port: number) {
+async function start(baseUrl: string, elasticUrl, authcred: string, token: string, port: number) {
 
     const app = await NestFactory.create(AppModule)
     await app.listen(port, () => { console.log(`cqrs module running on port ${port}`) })
 
-    await ClientBuilder.Build(config["ELASTIC_URL"])
+    await ClientBuilder.Build(elasticUrl)
 
     WebAdminSession.set(baseUrl, authcred)
 
@@ -52,7 +52,7 @@ function boot() {
 }*/
 function boot() {
     const webAdmin = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
-    start(webAdmin.BASE_URL.toString(), webAdmin.AUTHCRED.toString(), webAdmin.DISCORD_TOKEN.toString(), parseInt(webAdmin.PORT.toString()))
+    start(webAdmin.BASE_URL.toString(), webAdmin.ELASTIC_URL.toString(), webAdmin.AUTHCRED.toString(), webAdmin.DISCORD_TOKEN.toString(), parseInt(webAdmin.PORT.toString()))
 }
 
 boot();
