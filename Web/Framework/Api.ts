@@ -10,7 +10,7 @@ import * as dotenv from 'dotenv';
 
 export class Api {
     public static axios() {
-        const env = process.argv[process.argv.length - 1];
+        const env = JSON.parse(process.argv[process.argv.length - 1]);
         const authcred = env['AUTHCRED'];
         const url = env["BASE_URL"];
 

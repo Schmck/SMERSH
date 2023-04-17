@@ -19,7 +19,7 @@ import { Role, Team } from '../../SMERSH/ValueObjects';
 export class RoundWatcher extends Watcher {
 
     public override async Watch(timeout = 1000, ...args: Array<{status: Status, mapTime: number}>) {
-        const env = process.env;
+        const env = JSON.parse(process.argv[process.argv.length - 1]);
         const steam: SteamApi = new SteamApi(env["STEAM_TOKEN"])
         const status = await StatusQuery.Get();
         const prevStatus = args[0] && args[0].status;

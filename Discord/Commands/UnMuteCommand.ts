@@ -91,7 +91,9 @@ export const UnMuteCommand: Command = {
             }
         }
 
+        let num;
 
+        num = '0'
 
         const policy = (await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
             "query": {
