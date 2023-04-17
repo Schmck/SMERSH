@@ -54,7 +54,7 @@ export class BanWatcher extends Watcher {
             "size": count.count
             })
 
-        const argv = process.argv[process.argv.length - 1];
+        const argv = JSON.parse(process.argv[process.argv.length - 1]);
         const axios = Api.axios();
 
         for (let ban of bans) {

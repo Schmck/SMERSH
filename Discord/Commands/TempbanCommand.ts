@@ -111,7 +111,7 @@ export const TempbanCommand: Command = {
             if (player) {
                 client.log.info('channelid', interaction.channelId as any as Guid);
                 client.log.info('playerid', player.Id as any as Guid);
-                const env = process.argv[process.argv.length - 1];
+                const env = JSON.parse(process.argv[process.argv.length - 1]);
 
                 
                 const axios = Api.axios();
