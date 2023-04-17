@@ -92,12 +92,14 @@ export class RoundWatcher extends Watcher {
                     for (let playerId of playerIds) {
                         const exists = await SearchClient.Get(playerId as any as Guid, PlayerSearchReport)
                         const player = status.Players.find(player => player.Id === playerId)
-                        const decId = player && player.Id && hexToDec(player.Id)
-                        const playa = decId && await steam.getUserSummary(decId)
+                        
                         
 
                         if (!exists) {
                             if (player && player.Id) {
+                                const decId = hexToDec(player.Id)
+                                const playa = decId && await steam.getUserSummary(decId)
+
                                 if (player.Playername !== playa.nickname) {
                                     this.log.info(player.Id, player.Playername, playa.nickname, playa.steamID)
                                     await this.commandBus.execute(new RegisterPlayerCommand(player.Id, playa.nickname))
@@ -109,8 +111,13 @@ export class RoundWatcher extends Watcher {
 
 
                             }
-                        } else if (player && exists.Name !== player.Playername && player.Playername === playa.nickname) {
-                            await this.commandBus.execute(new ChangePlayerNameCommand(player.Id, player.Playername))
+                        } else if (player && exists.Name !== player.Playername) {
+                            const decId = hexToDec(player.Id)
+                            const playa = decId && await steam.getUserSummary(decId)
+
+                            if(player.Playername === playa.nickname) {
+                                await this.commandBus.execute(new ChangePlayerNameCommand(player.Id, player.Playername))
+                            }
                         }
 
                         if (exists && round && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
