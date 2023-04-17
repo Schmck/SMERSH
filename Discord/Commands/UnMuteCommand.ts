@@ -16,7 +16,7 @@ import qs from 'qs'
 import { PolicySearchReport } from "../../Reports/Entities/policy";
 
 
-export const MuteCommand: Command = {
+export const UnMuteCommand: Command = {
     name: "unmute",
     description: "unmute a player",
     type: ApplicationCommandType.ChatInput,
