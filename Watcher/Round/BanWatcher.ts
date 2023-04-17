@@ -99,7 +99,7 @@ export class BanWatcher extends Watcher {
                
             }
 
-            if (ban.Action === Action.Mute.DisplayName && ban.UnbanDate && new Date(ban.UnbanDate) <= new Date()) {
+            if (ban.Action === Action.Mute.DisplayName && ban.UnbanDate && new Date(ban.UnbanDate) >= new Date()) {
                 const player = players.find(player => player.Id && player.Id.toString() === ban.PlayerId.toString())
                 if (player) {
                     const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
@@ -139,7 +139,7 @@ export class BanWatcher extends Watcher {
                 }
             }
 
-            if (ban.UnbanDate && new Date(ban.UnbanDate) >= new Date()) {
+            if (ban.Action === Action.Ban.DisplayName && ban.UnbanDate && new Date(ban.UnbanDate) <= new Date()) {
 
                 const urlencoded = `banid=plainid:${ban.PlainId}&action=delete`
                 const url = argv["BASE_URL"] + PolicyRoute.AddBan.Action
