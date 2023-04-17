@@ -45,7 +45,7 @@ export class PolicyController extends SmershController {
                     if (player) {
                         this.log.info(player.Playername)
                         const client = Api.axios();
-                        const env = process.env;
+                        const env = process.argv[process.argv.length - 1];
                         const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
                         const config: AxiosRequestConfig = 
                         {

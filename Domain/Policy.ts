@@ -1,6 +1,6 @@
 import { Guid } from "guid-typescript";
 import { Domain } from './Domain'
-import { PlayerRegisteredEvent, PlayerNameChangedEvent, PolicyAppliedEvent, BanLiftedEvent, RoleBanAppliedEvent, RoleBanLiftedEvent } from '../Events/Player'
+import { RoleBanAppliedEvent, RoleBanLiftedEvent, MuteLiftedEvent } from '../Events/Player'
 import { Action } from '../SMERSH/ValueObjects/player'
 import { Role, Team } from "../SMERSH/ValueObjects";
 import { RoleBan } from '../SMERSH/ValueObjects'
@@ -83,6 +83,11 @@ export class Policy extends Domain {
 
     public async liftRoleBan() {
         this.apply(new RoleBanLiftedEvent(this.Id, this.PlayerId));
+        return;
+    }
+
+    public async liftMute() {
+        this.apply(new MuteLiftedEvent(this.Id, this.PlayerId));
         return;
     }
 

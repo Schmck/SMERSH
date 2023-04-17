@@ -48,7 +48,7 @@ export class PolicyQuery extends Query {
 
 
             const client = Api.axios();
-            const env = process.env;
+            const env = process.argv[process.argv.length - 1];
             const url = env["BASE_URL"] + PolicyRoute.DeleteBan.Action
             const config: AxiosRequestConfig =
             {

@@ -14,7 +14,7 @@ import { LayoutSearchReport } from "../../Reports/Entities/layout";
 
 export const SaveLayoutCommand: Command = {
     name: "save",
-    description: "search the SMERSH database for chatlogs",
+    description: "saves the layout that is currently on the server",
     type: ApplicationCommandType.ChatInput,
     options: [
         {

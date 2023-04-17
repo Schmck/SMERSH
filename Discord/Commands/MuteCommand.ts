@@ -15,9 +15,9 @@ import { stringify } from 'querystring'
 import qs from 'qs'
 
 
-export const TempbanCommand: Command = {
-    name: "tempban",
-    description: "temporarily ban a player from the server",
+export const MuteCommand: Command = {
+    name: "mute",
+    description: "prevent a player from using VOIP on the server",
     type: ApplicationCommandType.ChatInput,
     options: [
         {
@@ -100,7 +100,6 @@ export const TempbanCommand: Command = {
             }
 
 
-            const plainId = await PolicyQuery.GetNextPlainId();
             const player = (await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
                 "query": {
                     match,
@@ -109,36 +108,11 @@ export const TempbanCommand: Command = {
             })).shift()
 
             if (player) {
-                client.log.info('channelid', interaction.channelId as any as Guid);
-                client.log.info('playerid', player.Id as any as Guid);
-                const env = process.argv[process.argv.length - 1];
-
-                
-                const axios = Api.axios();
-                const url = env["BASE_URL"] + PolicyRoute.AddBan.Action
-                const urlencoded = qs.stringify({
-                    "uniqueid": player.Id,
-                    "action": 'add'
-                })
-
-                const config: AxiosRequestConfig =
-                {
-                    headers: {
-                        "Content-type": "application/x-www-form-urlencoded",
-                        "Cookie": `authcred="${env["AUTHCRED"]}"`
-                    },
-                }
-                
-
-                await axios.post(url, urlencoded, config).then(result => {
-                     client.log.info(JSON.stringify(result.data))
-                });
-
-                await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Ban, player.Name, reason.value.toString(), new Date(), unbanDate, plainId))
+                await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Mute, player.Name, reason.value.toString(), new Date(), unbanDate))
 
                 await interaction.followUp({
                     ephemeral: true,
-                    content: `${player.Name} was banned for ${untilString} for ${reason.value} until ${unbanDate.toString().split(' GMT')[0]}`
+                    content: `${player.Name} was muted for ${untilString} for ${reason.value} until ${unbanDate.toString().split(' GMT')[0]}`
                 });
             }
         }

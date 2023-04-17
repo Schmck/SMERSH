@@ -38,6 +38,11 @@ export class BanWatcher extends Watcher {
                                         "match": {
                                             "Action": Action.RoleBan.DisplayName
                                         }
+                                    },
+                                    {
+                                        "match": {
+                                            "Action": Action.Mute.DisplayName
+                                        }
                                     }
                                 ]
                             }
@@ -49,7 +54,7 @@ export class BanWatcher extends Watcher {
             "size": count.count
             })
 
-        const env = process.env;
+        const argv = process.argv[process.argv.length - 1];
         const axios = Api.axios();
 
         for (let ban of bans) {
@@ -71,12 +76,12 @@ export class BanWatcher extends Watcher {
                             if (role.Value === playerRole && roleBan.Teams && roleBan.Teams.includes(team.Value)) {
                                 if ((roleBan.Sides && roleBan.Sides.includes(side)) || (!roleBan.Sides || !roleBan.Sides.length)) {
                                     if(player.Kills || player.Deaths) {
-                                        const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
+                                        const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
                                         const config: AxiosRequestConfig =
                                         {
                                             headers: {
                                                 "Content-type": "application/x-www-form-urlencoded",
-                                                "Cookie": `authcred="${env["AUTHCRED"]}"`
+                                                "Cookie": `authcred="${argv["AUTHCRED"]}"`
                                             },
                                         }
 
@@ -89,24 +94,61 @@ export class BanWatcher extends Watcher {
                                 }
                             }
                         })
-
-                     
                     })
-                    
                 }
                
             }
 
-            if (ban.UnbanDate && new Date(ban.UnbanDate) <= new Date()) {
+            if (ban.Action === Action.Mute.DisplayName && ban.UnbanDate && new Date(ban.UnbanDate) <= new Date()) {
+                const player = players.find(player => player.Id && player.Id.toString() === ban.PlayerId.toString())
+                if (player) {
+                    const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
+                    const config: AxiosRequestConfig =
+                    {
+                        headers: {
+                            "Content-type": "application/x-www-form-urlencoded",
+                            "Cookie": `authcred="${argv["AUTHCRED"]}"`
+                        },
+                    }
+
+                    const urlencoded = `ajax=1&action=mute&playerkey=${player.PlayerKey}`
+
+                    axios.post(url, urlencoded, config).then(result => {
+                        this.log.info(JSON.stringify(result.data))
+                    });
+                }
+            }
+
+            if (ban.Action === Action.Mute.DisplayName && ban.UnbanDate && new Date(ban.UnbanDate) > new Date()) {
+                const player = players.find(player => player.Id && player.Id.toString() === ban.PlayerId.toString())
+                if (player) {
+                    const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
+                    const config: AxiosRequestConfig =
+                    {
+                        headers: {
+                            "Content-type": "application/x-www-form-urlencoded",
+                            "Cookie": `authcred="${argv["AUTHCRED"]}"`
+                        },
+                    }
+
+                    const urlencoded = `ajax=1&action=unmute&playerkey=${player.PlayerKey}`
+
+                    axios.post(url, urlencoded, config).then(result => {
+                        this.log.info(JSON.stringify(result.data))
+                    });
+                }
+            }
+
+            if (ban.UnbanDate && new Date(ban.UnbanDate) >= new Date()) {
 
                 const urlencoded = `banid=plainid:${ban.PlainId}&action=delete`
-                const url = env["BASE_URL"] + PolicyRoute.AddBan.Action
+                const url = argv["BASE_URL"] + PolicyRoute.AddBan.Action
 
                 const config: AxiosRequestConfig =
                 {
                     headers: {
                         "Content-type": "application/x-www-form-urlencoded",
-                        "Cookie": `authcred="${env["AUTHCRED"]}"`
+                        "Cookie": `authcred="${argv["AUTHCRED"]}"`
                     },
                 }
 

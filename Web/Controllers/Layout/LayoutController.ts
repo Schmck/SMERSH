@@ -56,7 +56,7 @@ export class LayoutController extends SmershController {
     }
 
     public async callApi(layout: Record<string, string[]>) {
-        const env = process.env;
+        const env = process.argv[process.argv.length - 1];
         const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action
         const config: AxiosRequestConfig =
         {

@@ -4,6 +4,7 @@ import { ApplyPolicyCommandHandler } from './ApplyPolicyCommandHandler'
 import { LiftBanCommandHandler } from './LiftBanCommandHandler'
 import { ApplyRoleBanCommandHandler } from './ApplyRoleBanCommandHandler'
 import { LiftRoleBanCommandHandler } from './LiftRoleBanCommandHandler'
+import { LiftMuteCommandHandler } from './LiftMuteCommandHandler'
 
 
 export const PlayerCommandHandlers = [
@@ -13,5 +14,5 @@ export const PlayerCommandHandlers = [
     LiftBanCommandHandler,
     ApplyRoleBanCommandHandler,
     LiftRoleBanCommandHandler,
-
+    LiftMuteCommandHandler
 ]

@@ -4,6 +4,7 @@ import { PolicyAppliedEventHandler } from './PolicyAppliedEventHandler'
 import { BanLiftedEventHandler } from './BanLiftedEventHandler'
 import { RoleBanAppliedEventHandler } from './RoleBanAppliedEventHandler'
 import { RoleBanLiftedEventHandler } from './RoleBanLiftedEventHandler'
+import { MuteLiftedEventHandler } from './MuteLiftedEventHandler'
 
 
 export const PlayerEventHandlers = [
@@ -12,5 +13,6 @@ export const PlayerEventHandlers = [
     PolicyAppliedEventHandler,
     BanLiftedEventHandler,
     RoleBanAppliedEventHandler,
-    RoleBanLiftedEventHandler
+    RoleBanLiftedEventHandler,
+    MuteLiftedEventHandler
 ]
