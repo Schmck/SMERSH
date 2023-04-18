@@ -42,10 +42,9 @@ export class Utils {
         const roleBans = policies.map(policy => {
             return Object.keys(policy.RoleBans).map(r => {
                 const role = parseInt(r, 10)
-                const roleBans = policy.RoleBans[role].map(ban => {
-                    return Object.assign({}, ban, { Name: policy.Name, Id: policy.PlayerId, Role: role })
-                }) 
-                return roleBans
+                const roleBan = Object.assign({}, { Name: policy.Name, Id: policy.PlayerId, Role: role }, policy.RoleBans[role])
+
+                return roleBan
 
             }).flat()
         }).flat()

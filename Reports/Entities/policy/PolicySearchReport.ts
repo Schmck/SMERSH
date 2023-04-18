@@ -39,7 +39,7 @@ export class PolicySearchReport extends SearchReport {
     public PlainId?: number;
 
     @Field({ nested: Object })
-    public RoleBans: Record<number, Array<RoleBan>>   
+    public RoleBans: Record<number, RoleBan>   
 
     UpdateCalculatedProperties(): void { }
 }

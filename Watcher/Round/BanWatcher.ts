@@ -70,30 +70,28 @@ export class BanWatcher extends Watcher {
                    
                     Object.keys(ban.RoleBans).forEach(rol => {
                         const playerRole = parseInt(rol, 10)
-                        const roleBans = ban.RoleBans[playerRole]
+                        const roleBan = ban.RoleBans[playerRole]
 
-                        roleBans.forEach(roleBan => {
-                            if (role.Value === playerRole && roleBan.Teams && roleBan.Teams.includes(team.Value)) {
-                                if ((roleBan.Sides && roleBan.Sides.includes(side)) || (!roleBan.Sides || !roleBan.Sides.length)) {
-                                    if(player.Kills || player.Deaths) {
-                                        const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
-                                        const config: AxiosRequestConfig =
-                                        {
-                                            headers: {
-                                                "Content-type": "application/x-www-form-urlencoded",
-                                                "Cookie": `authcred="${argv["AUTHCRED"]}"`
-                                            },
-                                        }
-
-                                        const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
-
-                                        axios.post(url, urlencoded, config).then(result => {
-                                            this.log.info(JSON.stringify(result.data))
-                                        });
+                        if (role.Value === playerRole && roleBan.Teams && roleBan.Teams.includes(team.Value)) {
+                            if ((roleBan.Sides && roleBan.Sides.includes(side)) || (!roleBan.Sides || !roleBan.Sides.length)) {
+                                if(player.Kills || player.Deaths) {
+                                    const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
+                                    const config: AxiosRequestConfig =
+                                    {
+                                        headers: {
+                                            "Content-type": "application/x-www-form-urlencoded",
+                                            "Cookie": `authcred="${argv["AUTHCRED"]}"`
+                                        },
                                     }
+
+                                    const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
+
+                                    axios.post(url, urlencoded, config).then(result => {
+                                        this.log.info(JSON.stringify(result.data))
+                                    });
                                 }
                             }
-                        })
+                        }
                     })
                 }
                
