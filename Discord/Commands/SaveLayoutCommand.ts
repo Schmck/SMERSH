@@ -21,6 +21,7 @@ export const SaveLayoutCommand: Command = {
             name: 'name',
             description: 'name of the layout',
             type: ApplicationCommandOptionType.String,
+            required: true,
             choices: [
                 {
                     name: 'regular',

@@ -24,17 +24,20 @@ export const TempbanCommand: Command = {
             name: 'input',
             description: 'name or ID of player',
             type: ApplicationCommandOptionType.String,
+            required: true,
             autocomplete: true,
         },
         {
             name: 'duration',
             description: 'duration of the ban',
-            type: ApplicationCommandOptionType.String
+            type: ApplicationCommandOptionType.String,
+            required: true,
         },
         {
             name: 'reason',
             description: 'explain yourself',
-            type: ApplicationCommandOptionType.String
+            type: ApplicationCommandOptionType.String,
+            required: true,
         }
     ],
     autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
@@ -113,7 +116,7 @@ export const TempbanCommand: Command = {
                 client.log.info('playerid', player.Id as any as Guid);
                 const env = JSON.parse(process.argv[process.argv.length - 1]);
 
-                
+
                 const axios = Api.axios();
                 const url = env["BASE_URL"] + PolicyRoute.AddBan.Action
                 const urlencoded = qs.stringify({
@@ -128,10 +131,10 @@ export const TempbanCommand: Command = {
                         "Cookie": `authcred="${env["AUTHCRED"]}"`
                     },
                 }
-                
+
 
                 await axios.post(url, urlencoded, config).then(result => {
-                     client.log.info(JSON.stringify(result.data))
+                    client.log.info(JSON.stringify(result.data))
                 });
 
                 await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Ban, player.Name, reason.value.toString(), new Date(), unbanDate, plainId))
@@ -139,6 +142,11 @@ export const TempbanCommand: Command = {
                 await interaction.followUp({
                     ephemeral: true,
                     content: `${player.Name} was banned for ${untilString} for ${reason.value} until ${unbanDate.toString().split(' GMT')[0]}`
+                });
+            } else {
+                await interaction.followUp({
+                    ephemeral: true,
+                    content: `could not find ${input.value} in the database`
                 });
             }
         }

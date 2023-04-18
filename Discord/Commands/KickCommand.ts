@@ -17,15 +17,17 @@ export const KickCommand: Command = {
     type: ApplicationCommandType.ChatInput,
     options: [
         {
-        name: 'input',
-        description: 'name or ID of player',
-        type: ApplicationCommandOptionType.String,
-        autocomplete: true,
+            name: 'input',
+            description: 'name or ID of player',
+            type: ApplicationCommandOptionType.String,
+            required: true,
+            autocomplete: true,
         },
         {
             name: 'reason',
             description: 'explain yourself',
-            type: ApplicationCommandOptionType.String
+            type: ApplicationCommandOptionType.String,
+            required: true,
         }
     ],
     autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
@@ -72,7 +74,6 @@ export const KickCommand: Command = {
             }
         })
         const player = players.shift();
-        const playa = await PlayerQuery.GetByName(player.Name)
 
         if (players.length > 1) {
             let playerTable: string = await Utils.generatePlayerTable(players, false)
@@ -85,27 +86,39 @@ export const KickCommand: Command = {
             return;
         }
 
-        await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Kick, player.Name, reason.value.toString(), new Date()))
+        if (player) {
+            const playa = await PlayerQuery.GetByName(player.Name)
 
-        const env = JSON.parse(process.argv[process.argv.length - 1]);
-        const axios = Api.axios();
-        const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
-        const config: AxiosRequestConfig =
-        {
-            headers: {
-                "Content-type": "application/x-www-form-urlencoded",
-                "Cookie": `authcred="${env["AUTHCRED"]}"`
-            },
+
+
+            await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Kick, player.Name, reason.value.toString(), new Date()))
+
+            const env = JSON.parse(process.argv[process.argv.length - 1]);
+            const axios = Api.axios();
+            const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
+            const config: AxiosRequestConfig =
+            {
+                headers: {
+                    "Content-type": "application/x-www-form-urlencoded",
+                    "Cookie": `authcred="${env["AUTHCRED"]}"`
+                },
+            }
+
+            const urlencoded = `ajax=1&action=kick&playerkey=${playa.PlayerKey}`
+
+            axios.post(url, urlencoded, config).then(result => {
+                client.log.info(JSON.stringify(result.data))
+            });
+            await interaction.followUp({
+                ephemeral: true,
+                content: `${player.Name} was kicked for ${reason.value}`
+            });
+        } else {
+            await interaction.followUp({
+                ephemeral: true,
+                content: `could not find ${input.value} in the database}`
+            });
         }
-
-        const urlencoded = `ajax=1&action=kick&playerkey=${playa.PlayerKey}`
-
-        axios.post(url, urlencoded, config).then(result => {
-            client.log.info(JSON.stringify(result.data))
-        });
-        await interaction.followUp({
-            ephemeral: true,
-            content: `${player.Name} was kicked for ${reason.value}`
-        });
+        
     }
 };

@@ -21,25 +21,29 @@ export const RoleBanCommand: Command = {
             name: 'input',
             description: 'name or ID of player',
             type: ApplicationCommandOptionType.String,
+            required: true,
             autocomplete: true,
         },
         {
             name: 'reason',
             description: 'pick a reason, any reason',
             type: ApplicationCommandOptionType.String,
+            required: true,
         },
         {
             name: 'role',
             'description': 'pick a role, any role', 
-            'type': ApplicationCommandOptionType.String,
+            type: ApplicationCommandOptionType.String,
+            required: true,
             choices: Role.getAll().map(role => {
                 return { name: role.DisplayName, value: role.DisplayName }
             }),
         },
         {
             name: 'team',
-            'description': 'pick a team, any team',
-            'type': ApplicationCommandOptionType.String,
+            description: 'pick a team, any team',
+            type: ApplicationCommandOptionType.String,
+            required: true,
             choices: Team.getAll().map(team => {
                 return { name: team.DisplayName, value: team.DisplayName }
             }),
@@ -47,8 +51,9 @@ export const RoleBanCommand: Command = {
         },
         {
             name: 'side',
-            'description': 'pick a side, any side',
-            'type': ApplicationCommandOptionType.String,
+            description: 'pick a side, any side',
+            type: ApplicationCommandOptionType.String,
+            required: true,
             choices: [
                 {
                     name: 'attacking',

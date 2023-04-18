@@ -11,8 +11,8 @@ import { PolicySearchReport } from "../../Reports/Entities/policy";
 import { Action } from "../../SMERSH/ValueObjects/player";
 
 
-export const RemoveRoleBanCommand: Command = {
-    name: "roleban",
+export const UnRoleBanCommand: Command = {
+    name: "unroleban",
     description: "remove role ban from player",
     type: ApplicationCommandType.ChatInput,
     options: [

@@ -24,17 +24,20 @@ export const MuteCommand: Command = {
             name: 'input',
             description: 'name or ID of player',
             type: ApplicationCommandOptionType.String,
+            required: true,
             autocomplete: true,
         },
         {
             name: 'duration',
             description: 'duration of the ban',
-            type: ApplicationCommandOptionType.String
+            type: ApplicationCommandOptionType.String,
+            required: true,
         },
         {
             name: 'reason',
             description: 'explain yourself',
-            type: ApplicationCommandOptionType.String
+            type: ApplicationCommandOptionType.String,
+            required: true,
         }
     ],
     autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {

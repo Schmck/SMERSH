@@ -25,6 +25,7 @@ export const UnMuteCommand: Command = {
             name: 'input',
             description: 'name of player',
             type: ApplicationCommandOptionType.String,
+            required: true,
             autocomplete: true,
         },
     ],

@@ -13,6 +13,7 @@ export const LookupCommand: Command = {
         name: 'input',
         description: 'name or ID of player',
         type: ApplicationCommandOptionType.String,
+        required: true,
         autocomplete: true,
     }],
     autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {

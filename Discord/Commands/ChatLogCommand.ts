@@ -21,6 +21,7 @@ export const ChatLogCommand: Command = {
             name: 'input',
             description: 'name or ID of player',
             type: ApplicationCommandOptionType.String,
+            required: true,
             autocomplete: true,
         },
     ],
