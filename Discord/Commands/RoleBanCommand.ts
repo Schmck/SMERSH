@@ -69,11 +69,24 @@ export const RoleBanCommand: Command = {
     ],
     autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
         const focusedValue = interaction.options.getFocused(true);
-        const players = await PlayerQuery.Get();
-        if (players) {
-            const choices = players.filter(player => !player.Bot && player.Id).map(player => { return { name: player.Playername, value: player.Id } })
-            const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
-            interaction.respond(filtered.slice(0, 24));
+        if (focusedValue.value) {
+            const players = await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
+                query: {
+                    regexp: {
+                        "Name": {
+                            "value": `.*${focusedValue.value}.*`,
+                            "flags": "ALL",
+                            "case_insensitive": true
+                        }
+                    }
+                },
+                size: 24,
+            })
+            if (players) {
+                const choices = players.map(player => { return { name: player.Name, value: player.Id } })
+                const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
+                interaction.respond(filtered.slice(0, 24));
+            }
         }
     },
 

@@ -9,7 +9,7 @@ export class EventSearchReport extends SearchReport {
         super(id)
         this.Event = event;
         this.Type = event ? event.constructor.name : ''
-        this.Date = event.Date;
+        this.Date = event ? event.Date : new Date();
     }
 
     @Field({nested: Event})
