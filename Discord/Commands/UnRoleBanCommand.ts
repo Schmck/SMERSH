@@ -1,4 +1,4 @@
-import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType } from "discord.js";
+import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteInteraction } from "discord.js";
 import { Command } from "../Framework/Command"
 import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
@@ -17,17 +17,50 @@ export const UnRoleBanCommand: Command = {
     type: ApplicationCommandType.ChatInput,
     options: [
         {
-            name: 'remove',
-            description: 'remove',
-            type: ApplicationCommandOptionType.SubcommandGroup,
-            options: []
-        },
-        {
             name: 'input',
             description: 'name or ID of player',
             type: ApplicationCommandOptionType.String,
+            required: true,
+            autocomplete: true,
         },
     ],
+    autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
+        const focusedValue = interaction.options.getFocused(true);
+        if (focusedValue.value) {
+            const policies = await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
+                query: {
+                    bool: {
+                        must: [
+                            {
+                                match: {
+                                    IsActive: true
+                                }
+                            },
+                            {
+                                match: {
+                                    Action: Action.RoleBan.DisplayName
+                                }
+                            }
+                        ]
+
+                    },
+                    regexp: {
+                        Name: {
+                            value: `.*${focusedValue.value}.*`,
+                            flags: "ALL",
+                            case_insensitive: true
+                        }
+                    }
+                },
+                size: 24,
+            })
+            if (policies) {
+                const choices = policies.map(policy => { return { name: policy.Name, value: policy.Id } })
+                const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
+                interaction.respond(filtered.slice(0, 24));
+            }
+        }
+    },
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         let match
