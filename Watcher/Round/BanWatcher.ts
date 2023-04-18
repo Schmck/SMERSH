@@ -58,7 +58,7 @@ export class BanWatcher extends Watcher {
         const axios = Api.axios();
 
         for (let ban of bans) {
-            this.log.info(JSON.stringify(ban))
+            //this.log.info(JSON.stringify(ban))
 
 
             if (ban.Action === Action.RoleBan.DisplayName) {

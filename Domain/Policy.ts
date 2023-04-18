@@ -17,7 +17,7 @@ export class Policy extends Domain {
 
     public Action: string;
 
-    public RoleBans: Record<number, Array<RoleBan>>   
+    public RoleBans: Record<number, RoleBan>   
 
     public IsActive: boolean;
 
@@ -35,9 +35,10 @@ export class Policy extends Domain {
     public async applyRoleBan(playerId: string, channelId: string, name: string, reason: string, role: Role, team: Team, side: string, banDate: Date, unbanDate?: Date) {
         //if ((this.Roles && this.Roles.includes(role.Value)) && (this.Teams && this.Teams.includes(team.Value)) && (this.Sides && this.Sides.includes(side))) {
         if (this.RoleBans) {
-            const roleBans = this.RoleBans[role.Value]
-            let roleBan = roleBans && roleBans.find(roleBan => roleBan.Teams.includes(team.Value) || roleBan.Sides.includes(side))
-            if (roleBans && roleBans.find(roleBan => roleBan.Sides.includes(side) && roleBan.Teams.includes(team.Value))) {
+            let roleBan = this.RoleBans[role.Value]
+            //let roleBan = roleBans && roleBans.find(roleBan => roleBan.Teams.includes(team.Value) || roleBan.Sides.includes(side))
+            //if (roleBans && roleBans.find(roleBan => roleBan.Sides.includes(side) && roleBan.Teams.includes(team.Value))) {
+            if (roleBan => roleBan.Sides.includes(side) && roleBan.Teams.includes(team.Value)) {
                 return;
             }
             if (roleBan) {
@@ -53,16 +54,7 @@ export class Policy extends Domain {
                 roleBan.Teams = [team.Value]
                 roleBan.Sides = [side]
 
-                if (roleBans) {
-                    this.RoleBans[role.Value] = [
-                        ...this.RoleBans[role.Value],
-                        roleBan
-                    ]
-                } else {
-                    this.RoleBans[role.Value] = [
-                        roleBan
-                    ]
-                }
+                this.RoleBans[role.Value] = roleBan
                 
             }
 
@@ -72,9 +64,8 @@ export class Policy extends Domain {
             roleBan.Teams = [team.Value]
             roleBan.Sides = [side]
 
-            this.RoleBans[role.Value] = [
-                roleBan
-            ]
+            this.RoleBans[role.Value] = roleBan
+            
         }
 
         this.apply(new RoleBanAppliedEvent(this.Id, playerId, channelId, Action.RoleBan.DisplayName, name, reason, this.RoleBans, banDate, unbanDate));
