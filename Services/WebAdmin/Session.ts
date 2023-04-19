@@ -43,7 +43,7 @@ export class WebAdminSession {
         let baseUrl = JSON.parse(process.argv[process.argv.length - 1])["BASE_URL"];
 
         if (navUrl !== baseUrl) {
-            navUrl = baseUrl + url + '/'
+            navUrl = baseUrl + url
             //this.log.info(url, navUrl)
         }
         //this.log.info(`navigating to: `, navUrl)
