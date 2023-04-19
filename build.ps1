@@ -12,12 +12,15 @@ foreach($folder in $folders) {
     Try {
        $nodeProject = Get-ChildItem -Path ".\node_modules" -Directory -ErrorAction Stop
       Write-Host("building $name")
+      Write-Host("------ Rebuild started: Project: $name ------")
     } Catch {
         Write-Host("$name does not contain a .\node_modules folder")
     }
 
     if($nodeProject) {
+      Write-Host("  >tsc --build --clean")
       tsc --build --clean
+      Write-Host("  >tsc --build")
       tsc --build
       
         

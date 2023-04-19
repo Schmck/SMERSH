@@ -43,7 +43,6 @@ export const LookupCommand: Command = {
                     interaction.respond(filtered.slice(0, 24));
                 }
             }
-            }
         } 
     },
     run: async (client: Client, interaction: CommandInteraction) => {

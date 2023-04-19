@@ -4,7 +4,7 @@ import { Action, Role } from "../../SMERSH/ValueObjects/player"
 import { Team } from "../../SMERSH/ValueObjects";
 
 export class LiftRoleBanCommand extends Command {
-	constructor(actionId: Guid, Role: number) {
+	constructor(actionId: Guid, role: number) {
 		super(actionId)
 
 		this.Role = role;
