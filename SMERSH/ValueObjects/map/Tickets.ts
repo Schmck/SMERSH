@@ -2,7 +2,7 @@
 
 export class Tickets {
     constructor(team: number, attacking: number, defending: number) {
-        this.Team = Team.fromValue(team);
+        this.Team = Team.fromValue<Team>(team);
         this.Attacking = attacking;
         this.Defending = defending;
     }

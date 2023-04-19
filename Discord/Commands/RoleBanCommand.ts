@@ -168,7 +168,7 @@ export const RoleBanCommand: Command = {
                 policyId = Guid.parse(roleBan.Id);
             }
 
-            client.commandBus.execute(new ApplyRoleBanCommand(policyId, player.Id, interaction.channelId, player.Name, reason.value.toString(), Role.fromDisplayName(role.value.toString()), Team.fromDisplayName(team.value.toString()), side.value.toString(), new Date()))
+            client.commandBus.execute(new ApplyRoleBanCommand(policyId, player.Id, interaction.channelId, player.Name, reason.value.toString(), Role.fromDisplayName<Role>(role.value.toString()), Team.fromDisplayName<Team>(team.value.toString()), side.value.toString(), new Date()))
 
             await interaction.followUp({
                 ephemeral: true,

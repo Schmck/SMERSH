@@ -2,7 +2,7 @@
 
 export class ChatMessage {
     constructor(team: number, teamMessage: boolean, name: string, message: string) {
-        this.Team = Team.fromValue(team);
+        this.Team = Team.fromValue<Team>(team);
         this.TeamMessage = teamMessage;
         this.Name = name;
         this.Message = message;

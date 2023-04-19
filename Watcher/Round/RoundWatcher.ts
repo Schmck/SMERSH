@@ -121,8 +121,8 @@ export class RoundWatcher extends Watcher {
                         }
 
                         if (exists && round && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
-                            const team = Team.fromDisplayName(player.Team);
-                            const role = Role.fromDisplayName(player.Role);
+                            const team = Team.fromDisplayName<Team>(player.Team);
+                            const role = Role.fromDisplayName<Role>(player.Role);
                             const id = Guid.parse((round.Id.toString().slice(0, 27) + playerId.slice(9)))
 
                             if (team && role) {

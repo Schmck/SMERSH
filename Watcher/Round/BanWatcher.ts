@@ -64,8 +64,8 @@ export class BanWatcher extends Watcher {
             if (ban.Action === Action.RoleBan.DisplayName) {
                 const player = players.find(player => player.Id && player.Id.toString() === ban.PlayerId.toString())
                 if (player) {
-                    const role : Role = Role.fromDisplayName(player.Role)
-                    const team : Team = Team.fromValue(parseInt(player.Team, 10))
+                    const role : Role = Role.fromDisplayName<Role>(player.Role)
+                    const team : Team = Team.fromValue<Team>(parseInt(player.Team, 10))
                     const side = status.Teams[team.Value].Attacking ? 'attacking': 'defending'
                    
                     Object.keys(ban.RoleBans).forEach(rol => {

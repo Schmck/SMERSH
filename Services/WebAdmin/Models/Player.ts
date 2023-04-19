@@ -2,7 +2,7 @@
 
 export class Player {
     constructor(team: number, playername: string, playerKey: string, ping: number, ip: string, id: string, admin: boolean, spectator: boolean, bot: boolean) {
-        this.Team = Team.fromValue(team)
+        this.Team = Team.fromValue<Team>(team)
         this.Playername = playername;
         this.PlayerKey = playerKey;
         this.Ping = ping;

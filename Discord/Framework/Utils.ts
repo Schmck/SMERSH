@@ -51,8 +51,8 @@ export class Utils {
         const longestPlayerName = roleBans.reduce((longestName, roleban) => longestName >= roleban.Name.length ? longestName : roleban.Name.length, 0)
         const roleBannedPlayers = roleBans.map((roleBan, index) => {
             let name = roleBan.Name;
-            let bannedTeams = roleBan.Teams.map(team => Team.fromValue(team).DisplayName).join(', ')
-            let bannedRole = Role.fromValue(roleBan.Role).DisplayName
+            let bannedTeams = roleBan.Teams.map(team => Team.fromValue<Team>(team).DisplayName).join(', ')
+            let bannedRole = Role.fromValue<Role>(roleBan.Role).DisplayName
             let playerName = `${name}${' '.repeat(longestPlayerName > 16 ? longestPlayerName + 3 - name.length : 16 + 3 - name.length)}`
             let playerId = roleBan && roleBan.Id ? roleBan.Id.slice(9) : ""
             let playerSide = roleBan && roleBan.Sides && roleBan.Sides.length === 1 ? ` ${roleBan.Sides[0]} ` : "   both    "
