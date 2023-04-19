@@ -10,8 +10,7 @@ foreach($folder in $folders) {
     Set-Location $folder
 
     Try {
-       $nodeProject = Get-ChildItem -Path ".\node_modules" -Directory -ErrorAction Stop
-      Write-Host("building $name")
+      $nodeProject = Get-ChildItem -Path ".\node_modules" -Directory -ErrorAction Stop
       Write-Host("------ Rebuild started: Project: $name ------")
     } Catch {
         Write-Host("$name does not contain a .\node_modules folder")
