@@ -8,12 +8,18 @@ import { RoundSearchReport } from '../../Reports/Entities/round'
 import { IndexedClass } from '../../SMERSH/Utilities/types';
 import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
+import { Client } from '../../Discord/Framework';
 let cls: { new(id: Guid): PlayerSearchReport } = PlayerSearchReport;
 
 @EventsHandler(PlayerRegisteredEvent)
 export class PlayerRegisteredEventHandler implements IEventHandler<PlayerRegisteredEvent>
 {
+    public client: Client;
     public constructor(protected readonly commandBus: CommandBus) {
+        const token = JSON.parse(process.argv[process.argv.length - 1])["DISCORD_TOKEN"]
+        this.client = new Client(token, {
+            intents: []
+        }, commandBus)
     }
 
     async handle(event: PlayerRegisteredEvent) {

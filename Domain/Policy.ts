@@ -38,7 +38,7 @@ export class Policy extends Domain {
             let roleBan = this.RoleBans[role.Value]
             //let roleBan = roleBans && roleBans.find(roleBan => roleBan.Teams.includes(team.Value) || roleBan.Sides.includes(side))
             //if (roleBans && roleBans.find(roleBan => roleBan.Sides.includes(side) && roleBan.Teams.includes(team.Value))) {
-            if (roleBan => roleBan.Sides.includes(side) && roleBan.Teams.includes(team.Value)) {
+            if (roleBan.Sides.includes(side) && roleBan.Teams.includes(team.Value)) {
                 return;
             }
             if (roleBan) {
@@ -72,8 +72,8 @@ export class Policy extends Domain {
         return;
     }
 
-    public async liftRoleBan() {
-        this.apply(new RoleBanLiftedEvent(this.Id, this.PlayerId));
+    public async liftRoleBan(role: number) {
+        this.apply(new RoleBanLiftedEvent(this.Id, this.PlayerId, role));
         return;
     }
 

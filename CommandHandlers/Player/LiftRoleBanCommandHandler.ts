@@ -13,11 +13,11 @@ export class LiftRoleBanCommandHandler implements ICommandHandler<LiftRoleBanCom
     }
 
     async execute(command: LiftRoleBanCommand) {
-        const { Id } = command
+        const { Id, Role } = command
         const props = await this.repository.Get<PolicySearchReport, Policy>(Id, PolicySearchReport, Policy)
         const domain = this.publisher.mergeObjectContext(props)
 
-        await domain.liftRoleBan();
+        await domain.liftRoleBan(Role);
         await domain.commit();
         return;
 

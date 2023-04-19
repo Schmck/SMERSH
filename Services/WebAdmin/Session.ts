@@ -51,12 +51,11 @@ export class WebAdminSession {
         if (this.DOMs) {
             let DOM = this.DOMs[navUrl]
 
-            if (!DOM) {
-                this.DOMs[navUrl] = new JSDOM(navUrl) 
-            }
-            //this.log.info(this.CookieJar)
-            //this.log.info('before fromurl', new Date().toISOString(), Object.entries(this.DOMs));
             try {
+                if (!DOM) {
+                    this.DOMs[navUrl] = new JSDOM(navUrl)
+                }
+
                 await this.close(navUrl)
                 this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar, resources: "usable", runScripts: "outside-only" })
 

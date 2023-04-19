@@ -44,7 +44,7 @@ export const ChatLogCommand: Command = {
             const choices = players.map(player => { return { name: player.Name, value: player.Id } })
             const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
             interaction.respond(filtered.slice(0, 24));
-        }
+            }
         }
     },
     run: async (client: Client, interaction: CommandInteraction) => {

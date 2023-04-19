@@ -12,11 +12,11 @@
         return Object.values(this).filter(obj => typeof obj !== 'function')
     }
 
-    public static fromValue(value: number) {
+    public static fromValue<T>(value: number) : T {
         return this.getAll().find(obj => obj.Value === value)
     }
 
-    public static fromDisplayName(displayName: string) {
+    public static fromDisplayName<T>(displayName: string) : T {
         return this.getAll().find(obj => obj.DisplayName === displayName)
     }
 }

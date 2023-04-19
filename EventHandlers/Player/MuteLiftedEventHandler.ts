@@ -7,21 +7,31 @@ import { SearchClient } from '../../Elastic/app'
 import { PolicySearchReport } from '../../Reports/Entities/policy'
 import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
+import { Client } from '../../Discord/Framework';
+import { TextChannel } from 'discord.js';
 let cls: { new(id: Guid): PolicySearchReport } = PolicySearchReport;
 
 @EventsHandler(MuteLiftedEvent)
 export class MuteLiftedEventHandler implements IEventHandler<MuteLiftedEvent>
 {
+    public client: Client;
     public constructor(protected readonly commandBus: CommandBus) {
+        const token = JSON.parse(process.argv[process.argv.length - 1])["DISCORD_TOKEN"]
+        this.client = new Client(token, {
+            intents: []
+        }, commandBus)
     }
 
     async handle(event: MuteLiftedEvent) {
-        let policy: Partial<PolicySearchReport> = new cls(event.Id);
+        let policy: PolicySearchReport = await SearchClient.Get(event.Id, PolicySearchReport)
 
         policy.IsActive = false;
 
 
         await SearchClient.Update(policy);
+
+        const channel = await this.client.channels.cache.get(policy.ChannelId) as TextChannel
+        await channel.send(`mute lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString()} for ${policy.Reason}`)
         return;
     }
 }

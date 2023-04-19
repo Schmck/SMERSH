@@ -8,13 +8,19 @@ import { RoundSearchReport } from '../../Reports/Entities/round'
 import { IndexedClass } from '../../SMERSH/Utilities/types';
 import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
+import { Client } from '../../Discord/Framework';
 let cls: { new( id: Guid): MapSearchReport } = MapSearchReport;
 let rnd: { new(id?: Guid, mapId?: Guid): RoundSearchReport } = RoundSearchReport;
 
 @EventsHandler(MapChangedEvent)
 export class MapChangedEventHandler implements IEventHandler<MapChangedEvent>
 {
+    public client: Client;
     public constructor(protected readonly commandBus: CommandBus) {
+        const token = JSON.parse(process.argv[process.argv.length - 1])["DISCORD_TOKEN"]
+        this.client = new Client(token, {
+            intents: []
+        }, commandBus)
     }
 
     async handle(event: MapChangedEvent) {

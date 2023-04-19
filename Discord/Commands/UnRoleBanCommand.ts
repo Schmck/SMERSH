@@ -23,6 +23,15 @@ export const UnRoleBanCommand: Command = {
             required: true,
             autocomplete: true,
         },
+        {
+            name: 'role',
+            'description': 'pick a role, any role',
+            type: ApplicationCommandOptionType.String,
+            required: true,
+            choices: Role.getAll().map(role => {
+                return { name: role.DisplayName, value: role.DisplayName }
+            }),
+        },
     ],
     autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
         const focusedValue = interaction.options.getFocused(true);
@@ -63,6 +72,7 @@ export const UnRoleBanCommand: Command = {
     },
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
+        const role = interaction.options.get('role');
         let match
         let regexp
 
@@ -107,7 +117,7 @@ export const UnRoleBanCommand: Command = {
             const player = players.shift();
             let policyId = Guid.create()
 
-            const roleBan = (await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
+            const policy = (await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
                 "query": {
                     "bool": {
                         "must": [
@@ -131,11 +141,11 @@ export const UnRoleBanCommand: Command = {
                 },
             })).shift()
 
-            if (roleBan) {
-                policyId = Guid.parse(roleBan.Id);
+            if (policy) {
+                policyId = Guid.parse(policy.Id);
             }
 
-            client.commandBus.execute(new LiftRoleBanCommand(policyId))
+            client.commandBus.execute(new LiftRoleBanCommand(policyId, Role.fromDisplayName<Role>(role.value.toString()).Value))
 
             await interaction.followUp({
                 ephemeral: true,

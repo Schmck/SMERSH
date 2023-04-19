@@ -116,7 +116,7 @@ export const KickCommand: Command = {
         } else {
             await interaction.followUp({
                 ephemeral: true,
-                content: `could not find ${input.value} in the database}`
+                content: `could not find ${input.value} in the database`
             });
         }
         
