@@ -43,7 +43,7 @@ export class WebAdminSession {
         let baseUrl = JSON.parse(process.argv[process.argv.length - 1])["BASE_URL"];
 
         if (navUrl !== baseUrl) {
-            navUrl = baseUrl + url
+            navUrl = baseUrl + url + '/'
             //this.log.info(url, navUrl)
         }
         //this.log.info(`navigating to: `, navUrl)
@@ -51,17 +51,13 @@ export class WebAdminSession {
         if (this.DOMs) {
             let DOM = this.DOMs[navUrl]
 
-            try {
-                if (!DOM) {
-                    this.DOMs[navUrl] = new JSDOM(navUrl)
-                }
+            if (!DOM) {
+                this.DOMs[navUrl] = new JSDOM(navUrl)
+            }
 
+            try {
                 await this.close(navUrl)
                 this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar, resources: "usable", runScripts: "outside-only" })
-
-                if (navUrl.includes('/ServerAdmin/policy/bans')) {
-                    this.log.info('/ServerAdmin/policy/bans', this.DOMs[navUrl].window.document)
-                }
             }
             catch (error) {
             }
