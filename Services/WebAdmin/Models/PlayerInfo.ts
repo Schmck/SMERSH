@@ -5,7 +5,7 @@ export class PlayerInfo {
 
         this.Id = id;
         this.PlayerKey = playerKey;
-        this.Team = Team.fromValue<Team>(team).DisplayName
+        this.Team = team
         this.Playername = playerName;
         this.Role = typeof role === "number" ? Role.fromValue<Role>(role).DisplayName : Role.fromDisplayName<Role>(role).DisplayName;
         this.Score = score;
@@ -22,7 +22,7 @@ export class PlayerInfo {
 
     public PlayerKey: string;
 
-    public Team: string;
+    public Team: number;
 
     public Playername: string;
 
