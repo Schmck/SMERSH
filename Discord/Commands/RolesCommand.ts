@@ -91,7 +91,7 @@ export const RolesCommand: Command = {
                 if (stat === 'Roles') {
                    return Object.keys(field).map(r => {
                         const role = Role.fromValue<Role>(parseInt(r))
-                        const value = `${field[r]}%`
+                       const value = `${Math.round(field[r]) }%`
                         return { name: role.DisplayName, value, inline: true }
                     })
                 }
@@ -99,7 +99,7 @@ export const RolesCommand: Command = {
                 if (stat === 'Teams') {
                    return Object.keys(field).map(r => {
                         const team = Team.fromValue<Team>(parseInt(r))
-                        const value = `${field[r]}%`
+                        const value = `${Math.round(field[r])}%`
                         return { name: team.DisplayName, value }
                     })
                 }
@@ -107,7 +107,7 @@ export const RolesCommand: Command = {
                 if (stat === 'Sides') {
                    return Object.keys(field).map(r => {
                         const side = r
-                        const value = `${field[r]}%`
+                       const value = `${Math.round(field[r])}%`
                         return { name: side, value }
                     })
                 }
