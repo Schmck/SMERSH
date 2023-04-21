@@ -3,13 +3,12 @@ import { LiftBanCommand } from '../../Commands/Player'
 import { Guid } from 'guid-typescript'
 import { SearchClient } from '../../Elastic'
 import { PolicySearchReport } from '../../Reports/Entities/policy';
-import { Action, Role } from '../../SMERSH/ValueObjects/player';
 import { Api } from '../../Web/Framework'
 import { PlayersRoute, PolicyRoute } from '../../Services/WebAdmin/Routes';
 import { AxiosRequestConfig } from 'axios';
 import qs from 'qs'
 import { StatusQuery } from '../../Services/WebAdmin/Queries';
-import { Team } from '../../SMERSH/ValueObjects';
+import { Team, Role, Action} from '../../SMERSH/ValueObjects';
 
 export class BanWatcher extends Watcher {
 
@@ -65,34 +64,37 @@ export class BanWatcher extends Watcher {
                 const player = players.find(player => player.Id && player.Id.toString() === ban.PlayerId.toString())
                 if (player) {
                     const role : Role = Role.fromDisplayName<Role>(player.Role)
-                    const team : Team = Team.fromValue<Team>(parseInt(player.Team, 10))
-                    const side = status.Teams[team.Value].Attacking ? 'attacking': 'defending'
-                   
-                    Object.keys(ban.RoleBans).forEach(rol => {
-                        const playerRole = parseInt(rol, 10)
-                        const roleBan = ban.RoleBans[playerRole]
+                    const team: Team = Team.fromValue<Team>(player.Team)
 
-                        if (role.Value === playerRole && roleBan.Teams && roleBan.Teams.includes(team.Value)) {
-                            if ((roleBan.Sides && roleBan.Sides.includes(side)) || (!roleBan.Sides || !roleBan.Sides.length)) {
-                                if(player.Kills || player.Deaths) {
-                                    const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
-                                    const config: AxiosRequestConfig =
-                                    {
-                                        headers: {
-                                            "Content-type": "application/x-www-form-urlencoded",
-                                            "Cookie": `authcred="${argv["AUTHCRED"]}"`
-                                        },
+                    if (role && team) {
+                        const side = status.Teams[team.Value].Attacking ? 'attacking' : 'defending'
+
+                        Object.keys(ban.RoleBans).forEach(rol => {
+                            const playerRole = parseInt(rol, 10)
+                            const roleBan = ban.RoleBans[playerRole]
+
+                            if (role.Value === playerRole && roleBan.Teams && roleBan.Teams.includes(team.Value)) {
+                                if ((roleBan.Sides && roleBan.Sides.includes(side)) || (!roleBan.Sides || !roleBan.Sides.length)) {
+                                    if (player.Kills || player.Deaths) {
+                                        const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
+                                        const config: AxiosRequestConfig =
+                                        {
+                                            headers: {
+                                                "Content-type": "application/x-www-form-urlencoded",
+                                                "Cookie": `authcred="${argv["AUTHCRED"]}"`
+                                            },
+                                        }
+
+                                        const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
+
+                                        axios.post(url, urlencoded, config).then(result => {
+                                            this.log.info(JSON.stringify(result.data))
+                                        });
                                     }
-
-                                    const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
-
-                                    axios.post(url, urlencoded, config).then(result => {
-                                        this.log.info(JSON.stringify(result.data))
-                                    });
                                 }
                             }
-                        }
-                    })
+                        })
+                    }
                 }
                
             }
