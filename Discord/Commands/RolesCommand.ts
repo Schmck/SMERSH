@@ -101,7 +101,7 @@ export const RolesCommand: Command = {
                         const team = Team.fromValue<Team>(parseInt(r))
                         const value = `${Math.round(field[r])}%`
 
-                        if (i + 1 === self.length) {
+                       if (i + 1 !== self.length && self.length > 1) {
                             return { name: team.DisplayName, value, inline: true }
                         }
                         return { name: team.DisplayName, value }
@@ -113,7 +113,7 @@ export const RolesCommand: Command = {
                        const side = r.charAt(0).toUpperCase() + r.slice(1);
                        const value = `${Math.round(field[r])}%`
 
-                       if (i + 1 === self.length) {
+                       if (i + 1 !== self.length && self.length > 1) {
                            return { name: side, value, inline: true }
                        }
                         return { name: side, value }
@@ -121,7 +121,7 @@ export const RolesCommand: Command = {
                 }
 
                 if (stat === 'KD') {
-                    return { name: 'K/D', value: Math.round(field).toString() }
+                    return { name: 'K/D', value: field.toFixed(2).toString() }
                 }
                 return;
             }).flat().filter(f => f);
@@ -157,7 +157,6 @@ function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: str
         let fields = {
             ...stats,
             PlayerId: round.PlayerId,
-            KD: stats.KD ? stats.KD + (percentage(round.Kills, round.Deaths) / 100) : percentage(round.Kills, round.Deaths) / 100,
             Roles: {
                 ...stats.Roles,
                 [round.Role]: stats.Roles[round.Role] ? stats.Roles[round.Role] + 1 : 1,
@@ -169,7 +168,9 @@ function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: str
             Sides: {
                 ...stats.Sides,
                 [side]: stats.Sides[side] ? stats.Sides[side] + 1 : 1
-            }
+            },
+            KD: stats.KD ? stats.KD + (percentage(round.Kills, round.Deaths) / 100) : percentage(round.Kills, round.Deaths) / 100,
+
         }
 
         if (i + 1 === self.length) {
@@ -195,20 +196,20 @@ function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: str
             const kd = fields.KD / playerRounds.length
             return {
                 ...stats,
-                KD: kd,
                 Roles: roles,
                 Teams: teams,
                 Sides: sides,
+                KD: kd,
             }
         }
 
         return fields
     }, {
         PlayerId: "",
-        KD: 0,
         Roles: {},
         Teams: {},
         Sides: {},
+        KD: 0,
     })
 }
 
