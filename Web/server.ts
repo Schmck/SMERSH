@@ -17,7 +17,7 @@ const config = process.env;
 const args = process.argv;
 
 
-async function start(baseUrl: string, elasticUrl, authcred: string, token: string, port: number) {
+async function start(baseUrl: string, elasticUrl, authcred: string, discordToken: string, steamToken: string, port: number) {
 
     const app = await NestFactory.create(AppModule)
     await app.listen(port, () => { console.log(`cqrs module running on port ${port}`) })
@@ -27,12 +27,12 @@ async function start(baseUrl: string, elasticUrl, authcred: string, token: strin
     WebAdminSession.set(baseUrl, authcred)
 
     const bus = app.get(CommandBus);
-    const bot : Bot = new Bot(token, bus);
+    const discord: Bot = new Bot(discordToken, bus);
 
 
-    const chat = new ChatWatcher(bus, bot.client);
-    const round = new RoundWatcher(bus, bot.client);
-    const ban = new BanWatcher(bus, bot.client);
+    const chat = new ChatWatcher(bus, discord.client, steamToken);
+    const round = new RoundWatcher(bus, discord.client, steamToken);
+    const ban = new BanWatcher(bus, discord.client, steamToken);
 
 
     chat.Watch();
@@ -52,7 +52,7 @@ function boot() {
 }*/
 function boot() {
     const webAdmin = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
-    start(webAdmin.BASE_URL.toString(), webAdmin.ELASTIC_URL.toString(), webAdmin.AUTHCRED.toString(), webAdmin.DISCORD_TOKEN.toString(), parseInt(webAdmin.PORT.toString()))
+    start(webAdmin.BASE_URL.toString(), webAdmin.ELASTIC_URL.toString(), webAdmin.AUTHCRED.toString(), webAdmin.DISCORD_TOKEN.toString(), webAdmin.STEAM_TOKEN.toString(), parseInt(webAdmin.PORT.toString()))
 }
 
 boot();

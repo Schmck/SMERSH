@@ -34,11 +34,11 @@ export class WebAdminSession {
     private CookieJar: CookieJar;
 
 
-    public static get Instance() {
+    public static get Instance(): WebAdminSession {
         return this._instance
     }
 
-    public async navigate(url: string) {
+    public async navigate(url: string) : Promise<JSDOM> {
         let navUrl = url;
         let baseUrl = JSON.parse(process.argv[process.argv.length - 1])["BASE_URL"];
 
@@ -46,7 +46,7 @@ export class WebAdminSession {
             navUrl = baseUrl + url
             //this.log.info(url, navUrl)
         }
-        //this.log.info(`navigating to: `, navUrl)
+        this.log.info(`navigating to: `, navUrl)
 
         if (this.DOMs) {
             let DOM = this.DOMs[navUrl]
@@ -57,7 +57,7 @@ export class WebAdminSession {
 
             try {
                 await this.close(navUrl)
-                this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar, resources: "usable", runScripts: "outside-only" })
+                this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
             }
             catch (error) {
             }
@@ -71,7 +71,7 @@ export class WebAdminSession {
         return this.DOMs[navUrl];
     }
 
-    public async close(url: string) {
+    public async close(url: string) : Promise<void> {
        // this.log.info(`closing: `, url)
 
         if (this.DOMs) {
@@ -84,12 +84,12 @@ export class WebAdminSession {
             this.log.error('DOMs were not initialized properly')
         }
 
-        return this.DOMs[url];
+        return; //this.DOMs[url];
     }
 
 
 
-    public static set(url: string, authcred: string) {
+    public static set(url: string, authcred: string) : WebAdminSession {
         if (!this._instance) {
             this._instance = new WebAdminSession(url, authcred)
             this._instance.navigate(url);
@@ -98,7 +98,7 @@ export class WebAdminSession {
         return this._instance
     }
 
-    public static get() {
+    public static get() : WebAdminSession {
         if (!this.Instance) {
             return null;
         }

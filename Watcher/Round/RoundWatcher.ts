@@ -19,8 +19,6 @@ import { Role, Team } from '../../SMERSH/ValueObjects';
 export class RoundWatcher extends Watcher {
 
     public override async Watch(timeout = 1000, ...args: Array<{status: Status, mapTime: number}>) {
-        const env = JSON.parse(process.argv[process.argv.length - 1]);
-        const steam: SteamApi = new SteamApi(env["STEAM_TOKEN"])
         const status = await StatusQuery.Get();
         const prevStatus = args[0] && args[0].status;
         let prevMapTime = args[0] && args[0].mapTime
@@ -98,7 +96,7 @@ export class RoundWatcher extends Watcher {
                         if (!exists) {
                             if (player && player.Id) {
                                 const decId = hexToDec(player.Id)
-                                const playa = decId && await steam.getUserSummary(decId)
+                                const playa = decId && await this.steam.getUserSummary(decId)
 
                                 if (player.Playername !== playa.nickname) {
                                     this.log.info(player.Id, player.Playername, playa.nickname, playa.steamID)
@@ -113,7 +111,7 @@ export class RoundWatcher extends Watcher {
                             }
                         } else if (player && exists.Name !== player.Playername) {
                             const decId = hexToDec(player.Id)
-                            const playa = decId && await steam.getUserSummary(decId)
+                            const playa = decId && await this.steam.getUserSummary(decId)
 
                             if(player.Playername === playa.nickname) {
                                 await this.commandBus.execute(new ChangePlayerNameCommand(player.Id, player.Playername))
