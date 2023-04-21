@@ -92,7 +92,7 @@ export const RolesCommand: Command = {
                    return Object.keys(field).map(r => {
                         const role = Role.fromValue<Role>(parseInt(r))
                         const value = `${field[r]}%`
-                        return { name: role.DisplayName, value }
+                        return { name: role.DisplayName, value, inline: true }
                     })
                 }
 
@@ -111,11 +111,11 @@ export const RolesCommand: Command = {
                         return { name: side, value }
                     })
                 }
-            }).flat()
+            }).flat().flat().filter(f => f);
             await interaction.followUp({
                 ephemeral: true,
                 embeds: [{
-                    title: `${player.Name}|${player.Id}`,
+                    title: `[${player.Id}]  ${player.Name}`,
                     type: EmbedType.Rich,
                     color: 12370112,
                     fields,
