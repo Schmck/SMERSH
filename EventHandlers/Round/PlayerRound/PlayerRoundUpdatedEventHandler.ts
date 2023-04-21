@@ -23,6 +23,7 @@ export class PlayerRoundUpdatedEventHandler implements IEventHandler<PlayerRound
         partial.RoundId = event.RoundId.toString();
         partial.Team = event.Team;
         partial.Role = event.Role;
+        partial.Attacking = event.Attacking;
         partial.Score = event.Score;
         partial.Kills = event.Kills;
         partial.Deaths = event.Deaths;

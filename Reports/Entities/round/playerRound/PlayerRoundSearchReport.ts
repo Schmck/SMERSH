@@ -26,6 +26,9 @@ export class PlayerRoundSearchReport extends SearchReport {
     @Field('integer')
     public Role: number;
 
+    @Field('boolean')
+    public Attacking: boolean;
+
     @Field('integer')
     public Score: number;
 

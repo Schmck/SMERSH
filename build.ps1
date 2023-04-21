@@ -2,7 +2,7 @@ $location = Get-Location
 $directory = "$(Split-Path "$($location)" -Leaf)"
 $folders = Get-ChildItem -Path $location -Directory 
 
-Write-Host($directory)
+Write-Host("------ Solution: $directory ------")
 
 foreach($folder in $folders) {
     $name = "$(Split-Path "$($folder)" -Leaf)"
@@ -13,7 +13,7 @@ foreach($folder in $folders) {
       $nodeProject = Get-ChildItem -Path ".\node_modules" -Directory -ErrorAction Stop
       Write-Host("------ Rebuild started: Project: $name ------")
     } Catch {
-        Write-Host("$name does not contain a .\node_modules folder")
+        Write-Host("------ Skipping folder:  Folder: $name ------")
     }
 
     if($nodeProject) {

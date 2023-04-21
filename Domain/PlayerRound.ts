@@ -12,6 +12,8 @@ export class PlayerRound extends Domain {
 
     public Role: number;
 
+    public Attacking: boolean;
+
     public Score: number;
 
     public Kills: number;
@@ -22,12 +24,12 @@ export class PlayerRound extends Domain {
         super(id)
     }
 
-    public async update(playerId: string, roundId: Guid, team: number, role: number, score: number, kills: number, deaths: number) {
+    public async update(playerId: string, roundId: Guid, team: number, role: number, attacking: boolean, score: number, kills: number, deaths: number) {
         if (this.RoundId && roundId !== this.RoundId) {
             return;
         }
 
-        if (this.Team === team && this.Role === role && this.Score === score && this.Kills === kills && this.Deaths === deaths) {
+        if (this.Team === team && this.Role === role && this.Score === score && this.Kills === kills && this.Deaths === deaths && this.Attacking === attacking) {
             return;
         }
 
@@ -35,11 +37,12 @@ export class PlayerRound extends Domain {
         this.RoundId = roundId;
         this.Team = team;
         this.Role = role;
+        this.Attacking = attacking;
         this.Score = score;
         this.Kills = kills;
         this.Deaths = deaths;
 
-        await this.apply(new PlayerRoundUpdatedEvent(this.Id, playerId, roundId, team, role, score, kills, deaths))
+        await this.apply(new PlayerRoundUpdatedEvent(this.Id, playerId, roundId, team, role, attacking, score, kills, deaths))
         return;
     }
 }

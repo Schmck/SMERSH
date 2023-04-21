@@ -122,9 +122,10 @@ export class RoundWatcher extends Watcher {
                             const team = Team.fromValue<Team>(player.Team);
                             const role = Role.fromDisplayName<Role>(player.Role);
                             const id = Guid.parse((round.Id.toString().slice(0, 27) + playerId.slice(9)))
+                            const attacking = status.Teams[team.Value].Attacking
 
                             if (team && role) {
-                                await this.commandBus.execute(new UpdatePlayerRoundCommand(id, player.Id, Guid.parse(round.Id), team.Value, role.Value, player.Score, player.Kills, player.Deaths))
+                                await this.commandBus.execute(new UpdatePlayerRoundCommand(id, player.Id, Guid.parse(round.Id), team.Value, role.Value, attacking, player.Score, player.Kills, player.Deaths))
                             }
                         }
                     }
