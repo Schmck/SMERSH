@@ -15,7 +15,7 @@ import { stat } from "fs";
 
 
 export const RolesCommand: Command = {
-    name: "Roles",
+    name: "roles",
     description: "get an overview of which roles/teams/sides a player favours",
     type: ApplicationCommandType.ChatInput,
     options: [
