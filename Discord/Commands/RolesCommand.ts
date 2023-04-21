@@ -97,21 +97,34 @@ export const RolesCommand: Command = {
                 }
 
                 if (stat === 'Teams') {
-                   return Object.keys(field).map(r => {
+                   return Object.keys(field).map((r, i, self) => {
                         const team = Team.fromValue<Team>(parseInt(r))
                         const value = `${Math.round(field[r])}%`
+
+                        if (i + 1 === self.length) {
+                            return { name: team.DisplayName, value, inline: true }
+                        }
                         return { name: team.DisplayName, value }
                     })
                 }
 
                 if (stat === 'Sides') {
-                   return Object.keys(field).map(r => {
-                        const side = r
+                   return Object.keys(field).map((r, i, self) => {
+                       const side = r.charAt(0).toUpperCase() + r.slice(1);
                        const value = `${Math.round(field[r])}%`
+
+                       if (i + 1 === self.length) {
+                           return { name: side, value, inline: true }
+                       }
                         return { name: side, value }
                     })
                 }
-            }).flat().flat().filter(f => f);
+
+                if (stat === 'KD') {
+                    return { name: 'K/D', value: Math.round(field).toString() }
+                }
+                return;
+            }).flat().filter(f => f);
             await interaction.followUp({
                 ephemeral: true,
                 embeds: [{
@@ -138,12 +151,13 @@ export const RolesCommand: Command = {
     }
 };
 
-function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: string, Roles: Record<number, number>, Sides: Record<string, number>, Teams: Record<number, number> } {
+function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: string, KD: number, Roles: Record<number, number>, Sides: Record<string, number>, Teams: Record<number, number> } {
     return playerRounds.reduce((stats, round, i, self) => {
         let side = round.Attacking ? 'attacking' : 'defending';
         let fields = {
             ...stats,
             PlayerId: round.PlayerId,
+            KD: stats.KD ? stats.KD + (percentage(round.Kills, round.Deaths) / 100) : percentage(round.Kills, round.Deaths) / 100,
             Roles: {
                 ...stats.Roles,
                 [round.Role]: stats.Roles[round.Role] ? stats.Roles[round.Role] + 1 : 1,
@@ -177,8 +191,11 @@ function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: str
                     [side]: percentage(fields.Sides[side], playerRounds.length)
                 }
             }, {})
+
+            const kd = fields.KD / playerRounds.length
             return {
                 ...stats,
+                KD: kd,
                 Roles: roles,
                 Teams: teams,
                 Sides: sides,
@@ -188,6 +205,7 @@ function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: str
         return fields
     }, {
         PlayerId: "",
+        KD: 0,
         Roles: {},
         Teams: {},
         Sides: {},

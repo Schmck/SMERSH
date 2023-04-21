@@ -15,6 +15,7 @@ import { stringify } from 'querystring';
 import SteamApi from 'steamapi'
 import { hexToDec } from 'hex2dec'
 import { Role, Team } from '../../SMERSH/ValueObjects';
+import { stat } from 'fs';
 
 export class RoundWatcher extends Watcher {
 
@@ -118,7 +119,7 @@ export class RoundWatcher extends Watcher {
                             }
                         }
 
-                        if (exists && round && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
+                        if (exists && status && status.Teams && status.Teams.length && round && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
                             const team = Team.fromValue<Team>(player.Team);
                             const role = Role.fromDisplayName<Role>(player.Role);
                             const id = Guid.parse((round.Id.toString().slice(0, 27) + playerId.slice(9)))
