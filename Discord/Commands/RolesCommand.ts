@@ -1,5 +1,4 @@
 import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteFocusedOption, AutocompleteInteraction, EmbedType } from "discord.js";
-import { ApiEmbed } from 'discord-api-types'
 import { Command } from "../Framework/Command"
 import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
@@ -15,7 +14,7 @@ import { PlayerRoundSearchReport } from "../../Reports/Entities/round/playerRoun
 import { stat } from "fs";
 
 
-export const RoleBanCommand: Command = {
+export const RolesCommand: Command = {
     name: "Roles",
     description: "get an overview of which roles/teams/sides a player favours",
     type: ApplicationCommandType.ChatInput,
