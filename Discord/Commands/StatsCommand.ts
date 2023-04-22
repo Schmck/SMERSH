@@ -72,6 +72,7 @@ export const StatsCommand: Command = {
                     ephemeral: true,
                     content: `Please use the autocomplete instead`
                 });
+                return;
             }
         }
 
@@ -221,5 +222,8 @@ function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: str
 }
 
 function percentage(partialValue, totalValue) {
+    if (!partialValue && !totalValue) {
+        return 0
+    }
     return (100 / totalValue) * partialValue;
 }
