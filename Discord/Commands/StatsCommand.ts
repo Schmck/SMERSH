@@ -129,7 +129,7 @@ export const StatsCommand: Command = {
                     });
                 }
                 if (stat === 'KD') {
-                    return { name: 'K/D', value: field.toFixed(2).toString() as string };
+                    return [{ name: 'K/D', value: field.toFixed(2).toString() as string }, {name: 'Rounds played', value: playerRounds.length.toString()}];
                 }
                 return;
             }).flat().flat().filter(f => f);
@@ -148,7 +148,7 @@ export const StatsCommand: Command = {
             await interaction.followUp({
                 ephemeral: true,
                 embeds: [],
-                content: `could not find ${player.Name} in the database`
+                content: `could not find any rounds that ${player.Name} has played in`
             });
         } else {
             await interaction.followUp({
