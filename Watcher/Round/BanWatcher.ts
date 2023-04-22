@@ -111,8 +111,8 @@ export class BanWatcher extends Watcher {
                         },
                     }
 
-                    const urlencoded = `ajax=1&action=mute&playerkey=${player.PlayerKey}`
-
+                    const urlencoded = `ajax=1&action=mutevoice&playerkey=${player.PlayerKey}`
+                    this.log.info(player, urlencoded)
                     axios.post(url, urlencoded, config).then(result => {
                         this.log.info(JSON.stringify(result.data))
                     });
@@ -131,7 +131,7 @@ export class BanWatcher extends Watcher {
                         },
                     }
 
-                    const urlencoded = `ajax=1&action=unmute&playerkey=${player.PlayerKey}`
+                    const urlencoded = `ajax=1&action=unmutevoice&playerkey=${player.PlayerKey}`
 
                     axios.post(url, urlencoded, config).then(result => {
                         this.log.info(JSON.stringify(result.data))
