@@ -129,7 +129,7 @@ export const StatsCommand: Command = {
                     });
                 }
                 if (stat === 'KD') {
-                    return [{ name: 'K/D', value: field.toFixed(2).toString() as string }, {name: 'Rounds played', value: playerRounds.length.toString()}];
+                    return [{ name: 'K/D', value: field.toFixed(2).toString() as string, inline: true }, {name: 'Rounds played', value: playerRounds.length.toString()}];
                 }
                 return;
             }).flat().flat().filter(f => f);
