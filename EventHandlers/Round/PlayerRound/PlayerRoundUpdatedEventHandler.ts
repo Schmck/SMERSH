@@ -28,7 +28,7 @@ export class PlayerRoundUpdatedEventHandler implements IEventHandler<PlayerRound
         partial.Kills = event.Kills;
         partial.Deaths = event.Deaths;
 
-        await SearchClient.Put(partial);
+        await SearchClient.Update(partial);
         return;
     }
 }

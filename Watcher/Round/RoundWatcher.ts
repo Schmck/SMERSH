@@ -74,7 +74,7 @@ export class RoundWatcher extends Watcher {
                 };
 
                 const round = (await SearchClient.Search(RoundSearchReport, roundQuery)).shift()
-                const playerIds: string[] = status.Players ? status.Players.map(player => player.Id) : []
+                const playerIds: string[] = status.Players ? status.Players.map(player => player.Id).filter(id => id) : []
                 const timeLimit = status.Rules && status.Rules.TimeLimit ? status.Rules.TimeLimit : 0
                 const newMapTime = status.Rules && status.Rules.TimeLeft ? status.Rules.TimeLeft : 0
 

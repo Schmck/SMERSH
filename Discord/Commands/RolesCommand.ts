@@ -93,6 +93,10 @@ export const RolesCommand: Command = {
                         const role = Role.fromValue<Role>(parseInt(r));
                         const value = `${Math.round(field[r])}%`;
 
+                        if (i + 1 === self.length) {
+                            return [{ name: role.DisplayName, value, inline: true }, { name: '\u200B', value: '\u200B', inline: false }]
+                        }
+
                         return { name: role.DisplayName, value, inline: true };
                     });
                 }
@@ -101,29 +105,33 @@ export const RolesCommand: Command = {
                         const team = Team.fromValue<Team>(parseInt(r));
                         const value = `${Math.round(field[r])}%`;
 
-                        if (i === 0) {
-                            return { name: team.DisplayName, value, inline: false };
-
+                        if (i + 1 === self.length) {
+                            return [{ name: team.DisplayName, value, inline: true }, { name: '\u200B', value: '\u200B', inline: false }]
                         }
 
                         return { name: team.DisplayName, value, inline: true };
                     });
                 }
                 if (stat === 'Sides') {
-                    return Object.keys(field).map((r, i, self) => {
+                    return Object.keys(field).sort((a, b) => {
+                        const charA = a.charCodeAt(0)
+                        const charB = b.charCodeAt(0)
+
+                        return charA - charB
+                    }).map((r, i, self) => {
                         const side = r.charAt(0).toUpperCase() + r.slice(1);
                         const value = `${Math.round(field[r])}%`;
-                        if (i === 0) {
-                            return { name: side, value, inline: false };
+                        if (i + 1 === self.length) {
+                            return [{ name: side, value, inline: true }, { name: '\u200B', value: '\u200B', inline: false }]
                         }
                         return { name: side, value, inline: true };
                     });
                 }
                 if (stat === 'KD') {
-                    return { name: 'K/D', value: field.toFixed(2).toString() };
+                    return { name: 'K/D', value: field.toFixed(2).toString() as string };
                 }
                 return;
-            }).flat().filter(f => f);
+            }).flat().flat().filter(f => f);
             await interaction.followUp({
                 ephemeral: true,
                 embeds: [{
