@@ -14,8 +14,8 @@ import { PlayerRoundSearchReport } from "../../Reports/Entities/round/playerRoun
 import { stat } from "fs";
 
 
-export const RolesCommand: Command = {
-    name: "roles",
+export const StatsCommand: Command = {
+    name: "stats",
     description: "get an overview of which roles/teams/sides a player favours",
     type: ApplicationCommandType.ChatInput,
     options: [
