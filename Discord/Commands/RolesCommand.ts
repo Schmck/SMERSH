@@ -89,39 +89,38 @@ export const RolesCommand: Command = {
                 const field = stats[stat]
 
                 if (stat === 'Roles') {
-                   return Object.keys(field).map(r => {
-                        const role = Role.fromValue<Role>(parseInt(r))
-                       const value = `${Math.round(field[r]) }%`
-                        return { name: role.DisplayName, value, inline: true }
-                    })
-                }
+                    return Object.keys(field).map((r, i, self) => {
+                        const role = Role.fromValue<Role>(parseInt(r));
+                        const value = `${Math.round(field[r])}%`;
 
+                        return { name: role.DisplayName, value, inline: true };
+                    });
+                }
                 if (stat === 'Teams') {
-                   return Object.keys(field).map((r, i, self) => {
-                        const team = Team.fromValue<Team>(parseInt(r))
-                        const value = `${Math.round(field[r])}%`
+                    return Object.keys(field).map((r, i, self) => {
+                        const team = Team.fromValue<Team>(parseInt(r));
+                        const value = `${Math.round(field[r])}%`;
 
-                       if (i + 1 !== self.length && self.length > 1) {
-                            return { name: team.DisplayName, value, inline: true }
+                        if (i === 0) {
+                            return { name: team.DisplayName, value, inline: false };
+
                         }
-                        return { name: team.DisplayName, value }
-                    })
-                }
 
+                        return { name: team.DisplayName, value, inline: true };
+                    });
+                }
                 if (stat === 'Sides') {
-                   return Object.keys(field).map((r, i, self) => {
-                       const side = r.charAt(0).toUpperCase() + r.slice(1);
-                       const value = `${Math.round(field[r])}%`
-
-                       if (i + 1 !== self.length && self.length > 1) {
-                           return { name: side, value, inline: true }
-                       }
-                        return { name: side, value }
-                    })
+                    return Object.keys(field).map((r, i, self) => {
+                        const side = r.charAt(0).toUpperCase() + r.slice(1);
+                        const value = `${Math.round(field[r])}%`;
+                        if (i === 0) {
+                            return { name: side, value, inline: false };
+                        }
+                        return { name: side, value, inline: true };
+                    });
                 }
-
                 if (stat === 'KD') {
-                    return { name: 'K/D', value: field.toFixed(2).toString() }
+                    return { name: 'K/D', value: field.toFixed(2).toString() };
                 }
                 return;
             }).flat().filter(f => f);

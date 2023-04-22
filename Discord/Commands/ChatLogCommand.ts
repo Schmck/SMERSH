@@ -112,7 +112,8 @@ export const ChatLogCommand: Command = {
                             "order": "desc"
                         }
                     }
-                ]
+                ],
+                "size": 1000,
             })
 
             const lines = rounds.map(round => {
