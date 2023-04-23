@@ -29,7 +29,9 @@ export class MuteLiftedEventHandler implements IEventHandler<MuteLiftedEvent>
         policy.IsActive = false;
 
         await SearchClient.Update(policy);
-        await channel.send(`mute lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
+        if (channel) {
+            await channel.send(`mute lifted from ${policy.Name}, originally muted on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
+        }
 
         return;
     }

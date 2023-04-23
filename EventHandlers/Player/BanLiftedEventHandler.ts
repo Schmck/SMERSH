@@ -29,7 +29,10 @@ export class BanLiftedEventHandler implements IEventHandler<BanLiftedEvent>
         policy.IsActive = false;        
 
         await SearchClient.Update(policy);
-        await channel.send(`ban lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
+
+        if (channel) {
+            await channel.send(`ban lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
+        }
 
         return;
     }

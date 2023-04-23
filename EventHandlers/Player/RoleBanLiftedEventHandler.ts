@@ -31,7 +31,9 @@ export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEve
         policy.IsActive = false;
 
         await SearchClient.Update(policy);
-        await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
+        if (channel) {
+            await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
+        }
 
         return;
     }
