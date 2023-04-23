@@ -32,7 +32,7 @@ export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEve
         this.client.on('ready', async (client) => {
             const channel = await client.channels.fetch(policy.ChannelId) as TextChannel;
             if (channel) {
-                await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned on ${new Date(policy.BanDate).toString().split(' GMT')[0]} for ${policy.Reason}`)
+                await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`)
             } 
         });
 

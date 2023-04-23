@@ -31,7 +31,7 @@ export class MuteLiftedEventHandler implements IEventHandler<MuteLiftedEvent>
         this.client.on('ready', async (client) => {
             const channel = await client.channels.fetch(policy.ChannelId) as TextChannel;
             if (channel) {
-                await channel.send(`mute lifted from ${policy.Name}, originally muted on ${new Date(policy.BanDate).toString().split(' GMT')[0]} for ${policy.Reason}`)
+                await channel.send(`mute lifted from ${policy.Name}, originally muted for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`)
 }
         });
 

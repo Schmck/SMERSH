@@ -81,7 +81,8 @@ export const StatsCommand: Command = {
         const playerRounds = await SearchClient.Search<PlayerRoundSearchReport>(PlayerRoundSearchReport, {
             "query": {
                 match
-            }
+            },
+            size: 256,
         })
 
         if (playerRounds.length) {
