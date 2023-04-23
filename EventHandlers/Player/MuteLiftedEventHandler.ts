@@ -9,7 +9,6 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
 import { Client } from '../../Discord/Framework';
 import { TextChannel } from 'discord.js';
-let cls: { new(id: Guid): PolicySearchReport } = PolicySearchReport;
 
 @EventsHandler(MuteLiftedEvent)
 export class MuteLiftedEventHandler implements IEventHandler<MuteLiftedEvent>
@@ -24,14 +23,17 @@ export class MuteLiftedEventHandler implements IEventHandler<MuteLiftedEvent>
 
     async handle(event: MuteLiftedEvent) {
         let policy: PolicySearchReport = await SearchClient.Get(event.Id, PolicySearchReport)
-        const channel = await this.client.channels.fetch(policy.ChannelId) as TextChannel
-
+     
         policy.IsActive = false;
 
         await SearchClient.Update(policy);
-        if (channel) {
-            await channel.send(`mute lifted from ${policy.Name}, originally muted on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
-        }
+      
+        this.client.on('ready', async (client) => {
+            const channel = await client.channels.fetch(policy.ChannelId) as TextChannel;
+            if (channel) {
+                await channel.send(`mute lifted from ${policy.Name}, originally muted on ${new Date(policy.BanDate).toString().split(' GMT')[0]} for ${policy.Reason}`)
+}
+        });
 
         return;
     }

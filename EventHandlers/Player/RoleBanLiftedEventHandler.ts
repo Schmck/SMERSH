@@ -10,7 +10,6 @@ import { Guid } from 'guid-typescript';
 import { Client } from '../../Discord/Framework';
 import { TextChannel } from 'discord.js';
 import { Role } from '../../SMERSH/ValueObjects';
-let cls: { new(id: Guid): PolicySearchReport } = PolicySearchReport;
 
 @EventsHandler(RoleBanLiftedEvent)
 export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEvent>
@@ -25,15 +24,17 @@ export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEve
 
     async handle(event: RoleBanLiftedEvent) {
         let policy: PolicySearchReport = await SearchClient.Get(event.Id, PolicySearchReport)
-        const channel = await this.client.channels.fetch(policy.ChannelId) as TextChannel
         let role = Role.fromValue<Role>(event.Role)
 
         policy.IsActive = false;
 
         await SearchClient.Update(policy);
-        if (channel) {
-            await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
-        }
+        this.client.on('ready', async (client) => {
+            const channel = await client.channels.fetch(policy.ChannelId) as TextChannel;
+            if (channel) {
+                await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned on ${new Date(policy.BanDate).toString().split(' GMT')[0]} for ${policy.Reason}`)
+            } 
+        });
 
         return;
     }
