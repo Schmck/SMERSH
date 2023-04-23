@@ -222,6 +222,10 @@ function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: str
 }
 
 function percentage(partialValue, totalValue) {
+    if (!totalValue) {
+        return partialValue * 100
+    }
+
     if (!partialValue && !totalValue) {
         return 0
     }

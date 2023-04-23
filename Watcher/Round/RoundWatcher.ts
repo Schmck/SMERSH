@@ -97,9 +97,14 @@ export class RoundWatcher extends Watcher {
                         if (!exists) {
                             if (player && player.Id) {
                                 const decId = hexToDec(player.Id)
-                                const playa = decId && await this.steam.getUserSummary(decId)
+                                let playa 
+                                try {
+                                    playa = decId && await this.steam.getUserSummary(decId)
+                                } catch (error) {
+                                    console.log(error)
+                                }
 
-                                if (player.Playername !== playa.nickname) {
+                                if (playa && player.Playername !== playa.nickname) {
                                     this.log.info(player.Id, player.Playername, playa.nickname, playa.steamID)
                                     await this.commandBus.execute(new RegisterPlayerCommand(player.Id, playa.nickname))
 
@@ -112,9 +117,14 @@ export class RoundWatcher extends Watcher {
                             }
                         } else if (player && exists.Name !== player.Playername) {
                             const decId = hexToDec(player.Id)
-                            const playa = decId && await this.steam.getUserSummary(decId)
+                            let playa
+                            try {
+                                playa = decId && await this.steam.getUserSummary(decId)
+                            } catch (error) {
+                                console.log(error)
+                            }
 
-                            if(player.Playername === playa.nickname) {
+                            if(playa && player.Playername === playa.nickname) {
                                 await this.commandBus.execute(new ChangePlayerNameCommand(player.Id, player.Playername))
                             }
                         }
