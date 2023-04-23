@@ -31,7 +31,7 @@ export class BanLiftedEventHandler implements IEventHandler<BanLiftedEvent>
         await SearchClient.Update(policy);
 
         const channel = await this.client.channels.cache.get(policy.ChannelId) as TextChannel
-        await channel.send(`ban lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString()} for ${policy.Reason}`)
+        await channel.send(`ban lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
         return;
     }
 }

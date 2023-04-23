@@ -33,7 +33,7 @@ export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEve
         await SearchClient.Update(policy);
 
         const channel = await this.client.channels.cache.get(policy.ChannelId) as TextChannel
-        await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString()} for ${policy.Reason}`)
+        await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
         return;
     }
 }

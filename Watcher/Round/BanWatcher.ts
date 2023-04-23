@@ -8,7 +8,7 @@ import { PlayersRoute, PolicyRoute } from '../../Services/WebAdmin/Routes';
 import { AxiosRequestConfig } from 'axios';
 import qs from 'qs'
 import { StatusQuery } from '../../Services/WebAdmin/Queries';
-import { Team, Role, Action} from '../../SMERSH/ValueObjects';
+import { Team, Role, Action } from '../../SMERSH/ValueObjects';
 
 export class BanWatcher extends Watcher {
 
@@ -119,7 +119,7 @@ export class BanWatcher extends Watcher {
                 }
             }
 
-            if (ban.Action === Action.Mute.DisplayName && ban.UnbanDate && new Date(ban.UnbanDate) > new Date()) {
+            if (ban.Action === Action.Mute.DisplayName && ban.UnbanDate && new Date(ban.UnbanDate) <= new Date()) {
                 const player = players.find(player => player.Id && player.Id.toString() === ban.PlayerId.toString())
                 if (player) {
                     const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
