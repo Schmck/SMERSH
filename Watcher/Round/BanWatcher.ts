@@ -132,13 +132,12 @@ export class BanWatcher extends Watcher {
                     }
 
                     const urlencoded = `ajax=1&action=unmutevoice&playerkey=${player.PlayerKey}`
-
-                    await this.commandBus.execute(new LiftMuteCommand(Guid.parse(ban.Id)))
-
                     await axios.post(url, urlencoded, config).then(result => {
                         this.log.info(JSON.stringify(result.data))
                     });
                 }
+
+                await this.commandBus.execute(new LiftMuteCommand(Guid.parse(ban.Id)))
             }
 
             if (ban.Action === Action.Ban.DisplayName && ban.UnbanDate && new Date(ban.UnbanDate) <= new Date()) {
