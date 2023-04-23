@@ -1,5 +1,5 @@
 import { Watcher } from '../Watcher'
-import { LiftBanCommand } from '../../Commands/Player'
+import { LiftBanCommand, LiftMuteCommand } from '../../Commands/Player'
 import { Guid } from 'guid-typescript'
 import { SearchClient } from '../../Elastic'
 import { PolicySearchReport } from '../../Reports/Entities/policy';
@@ -133,7 +133,9 @@ export class BanWatcher extends Watcher {
 
                     const urlencoded = `ajax=1&action=unmutevoice&playerkey=${player.PlayerKey}`
 
-                    axios.post(url, urlencoded, config).then(result => {
+                    await this.commandBus.execute(new LiftMuteCommand(Guid.parse(ban.Id)))
+
+                    await axios.post(url, urlencoded, config).then(result => {
                         this.log.info(JSON.stringify(result.data))
                     });
                 }
@@ -152,10 +154,11 @@ export class BanWatcher extends Watcher {
                     },
                 }
 
+                await this.commandBus.execute(new LiftBanCommand(Guid.parse(ban.Id), ban.PlayerId as any))
+
                 await axios.post(url, urlencoded, config).then(result => {
                     this.log.info(result)
                     //return result
-                    this.commandBus.execute(new LiftBanCommand(Guid.parse(ban.Id), ban.PlayerId as any))
 
                 });
 
