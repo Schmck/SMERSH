@@ -24,19 +24,13 @@ export class MuteLiftedEventHandler implements IEventHandler<MuteLiftedEvent>
 
     async handle(event: MuteLiftedEvent) {
         let policy: PolicySearchReport = await SearchClient.Get(event.Id, PolicySearchReport)
+        const channel = await this.client.channels.fetch(policy.ChannelId) as TextChannel
 
         policy.IsActive = false;
 
-
         await SearchClient.Update(policy);
+        await channel.send(`mute lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
 
-
-        this.client.on('ready', async client => {
-            const channel = client.channels.cache.get(policy.ChannelId) as TextChannel
-            if (channel) {
-                await channel.send(`mute lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
-            }
-        })
         return;
     }
 }

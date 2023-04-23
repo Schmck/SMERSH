@@ -25,20 +25,13 @@ export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEve
 
     async handle(event: RoleBanLiftedEvent) {
         let policy: PolicySearchReport = await SearchClient.Get(event.Id, PolicySearchReport)
+        const channel = await this.client.channels.fetch(policy.ChannelId) as TextChannel
         let role = Role.fromValue<Role>(event.Role)
 
         policy.IsActive = false;
 
-
         await SearchClient.Update(policy);
-
-        this.client.on('ready', async client => {
-            const channel = client.channels.cache.get(policy.ChannelId) as TextChannel
-            if (channel) {
-                await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
-            }
-
-        })
+        await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned on ${policy.BanDate.toString().split(' GMT')[0]} for ${policy.Reason}`)
 
         return;
     }
