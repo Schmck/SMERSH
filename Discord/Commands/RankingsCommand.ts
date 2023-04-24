@@ -38,26 +38,28 @@ export const RankingsCommand: Command = {
             const thebest = Object.keys(players).reduce((leaderboard, playerId) => {
                 const player = players[playerId]
 
-
-                if (leaderboard.attacking.KD) {
-                    if (leaderboard.attacking.KD < player.KD.attacking) {
+                if (player.rounds > 10) {
+                    if (leaderboard.attacking.KD) {
+                        if (leaderboard.attacking.KD < player.KD.attacking) {
+                            leaderboard.attacking.KD = player.KD.attacking
+                            leaderboard.attacking.playerId = player.PlayerId
+                        }
+                    } else {
                         leaderboard.attacking.KD = player.KD.attacking
                         leaderboard.attacking.playerId = player.PlayerId
                     }
-                } else {
-                    leaderboard.attacking.KD = player.KD.attacking
-                    leaderboard.attacking.playerId = player.PlayerId
-                }
 
-                if (leaderboard.defending.KD) {
-                    if (leaderboard.defending.KD < player.KD.defending) {
+                    if (leaderboard.defending.KD) {
+                        if (leaderboard.defending.KD < player.KD.defending) {
+                            leaderboard.defending.KD = player.KD.defending
+                            leaderboard.defending.playerId = player.PlayerId
+                        }
+                    } else {
                         leaderboard.defending.KD = player.KD.defending
                         leaderboard.defending.playerId = player.PlayerId
                     }
-                } else {
-                    leaderboard.defending.KD = player.KD.defending
-                    leaderboard.defending.playerId = player.PlayerId
                 }
+
 
                 return leaderboard
 
@@ -89,7 +91,6 @@ export const RankingsCommand: Command = {
                 row.push(
                     { name: 'Attacking', value: `${player.Name}`, inline: true },
                     { name: 'K/D', value: ranking.attacking.KD.toFixed(2).toString() as string, inline: true },
-                    { name: '\u200B', value: '\u200B', inline: false }
                 )
             }
             if (ranking.defending && ranking.defending.KD) {
