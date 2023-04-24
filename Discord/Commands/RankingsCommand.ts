@@ -122,7 +122,7 @@ export const RankingsCommand: Command = {
                     title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
                     type: EmbedType.Rich,
                     color: 12370112,
-                    fields: fields.slice(0, fields.slice(0, 25).findIndex(f => f.name === '\u200B')),
+                    fields: fields.slice(0, fields.findIndex((f, i) => f.name === '\u200B' && i >= 20)),
 
                 }]
             });
@@ -133,7 +133,7 @@ export const RankingsCommand: Command = {
                     title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
                     type: EmbedType.Rich,
                     color: 12370112,
-                    fields: fields.slice(fields.slice(0, 25).findIndex(f => f.name === '\u200B')),
+                    fields: fields.slice(fields.findIndex((f, i) => f.name === '\u200B' && i >= 20)),
 
                 }]
             });
