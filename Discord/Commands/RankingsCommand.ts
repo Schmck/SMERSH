@@ -91,44 +91,66 @@ export const RankingsCommand: Command = {
             }
 
             if (ranking.attacking && ranking.attacking.KD) {
-                const player = players.find(player => player.Id === ranking.attacking.playerId)
+                const player = players.find(player => player.Id === ranking.attacking.playerId);
                 if (player) {
-                    row.push({ name: 'Attacking', value: `${player.Name}`, inline: true })
+                    row.push({ name: 'Attacking', value: `${player.Name}`, inline: true });
                 }
-              
             }
-            if (ranking.defending && ranking.defending.KD) {
-                const player = players.find(player => player.Id === ranking.defending.playerId)
 
+            if (ranking.defending && ranking.defending.KD) {
+                const player = players.find(player => player.Id === ranking.defending.playerId);
                 if (player) {
-                    row.push({ name: 'Defending', value: `${player.Name}`, inline: true })
+                    row.push({ name: '\u200B', value: '\u200B', inline: true }, { name: 'Defending', value: `${player.Name}`, inline: true });
                 }
-                
             }
 
             if (ranking.attacking && ranking.attacking.KD) {
-                row.push({ name: 'K/D', value: ranking.attacking.KD.toFixed(2).toString() as string, inline: true })
+                row.push({ name: 'K/D', value: ranking.attacking.KD.toFixed(2).toString(), inline: true }, { name: '\u200B', value: '\u200B', inline: true });
             }
 
             if (ranking.defending && ranking.defending.KD) {
-                row.push(
-                    { name: 'K/D', value: ranking.defending.KD.toFixed(2).toString() as string, inline: true },
-                    { name: '\u200B', value: '\u200B', inline: false }
-                )
+                row.push({ name: 'K/D', value: ranking.defending.KD.toFixed(2).toString(), inline: true }, { name: '\u200B', value: '\u200B', inline: false });
             }
             return row
         }).flat().filter(f => f)
 
-        await interaction.followUp({
-            ephemeral: true,
-            embeds: [{
-                title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
-                type: EmbedType.Rich,
-                color: 12370112,
-                fields,
 
-            }]
-        });
+        if (fields.length > 25) {
+            await interaction.followUp({
+                ephemeral: true,
+                embeds: [{
+                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
+                    type: EmbedType.Rich,
+                    color: 12370112,
+                    fields: fields.slice(0, fields.slice(0, 25).findIndex(f => f.name === '\u200B')),
+
+                }]
+            });
+
+            await interaction.followUp({
+                ephemeral: true,
+                embeds: [{
+                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
+                    type: EmbedType.Rich,
+                    color: 12370112,
+                    fields: fields.slice(fields.slice(0, 25).findIndex(f => f.name === '\u200B')),
+
+                }]
+            });
+        } else {
+            await interaction.followUp({
+                ephemeral: true,
+                embeds: [{
+                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
+                    type: EmbedType.Rich,
+                    color: 12370112,
+                    fields,
+
+                }]
+            });
+        }
+
+        
 
     }
 }
