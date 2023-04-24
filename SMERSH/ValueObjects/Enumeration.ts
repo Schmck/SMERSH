@@ -9,7 +9,7 @@
 
 
     public static getAll<T extends Enumeration>(): T[] {
-        const enums: T[] = Object.values(this).filter(obj => typeof obj !== 'function')
+        const enums: T[] = Object.getOwnPropertyNames(this).slice(3).map(role => this[role])
         return enums
     }
 
