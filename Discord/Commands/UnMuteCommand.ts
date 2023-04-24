@@ -45,15 +45,17 @@ export const UnMuteCommand: Command = {
                                 "match": {
                                     "IsActive": true
                                 }
+                            },
+                            {
+                                "regexp": {
+                                    "Name": {
+                                        "value": `.*${focusedValue.value}.*`,
+                                        "flags": "ALL",
+                                        "case_insensitive": true
+                                    }
+                                }
                             }
                         ]
-                    },
-                    "regexp": {
-                        "Name": {
-                            "value": `.*${focusedValue.value}.*`,
-                            "flags": "ALL",
-                            "case_insensitive": true
-                        }
                     }
                 },
                 "size": 24,
