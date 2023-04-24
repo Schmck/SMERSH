@@ -33,31 +33,30 @@ export const UnMuteCommand: Command = {
         const focusedValue = interaction.options.getFocused(true);
         if (focusedValue.value) {
             const policies = await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
-                query: {
-                    bool: {
-                        must: [
+                "query": {
+                    "bool": {
+                        "must": [
                             {
-                                match: {
-                                    IsActive: true
+                                "match": {
+                                    "Action": Action.Mute.DisplayName,
                                 }
                             },
                             {
-                                match: {
-                                    Action: Action.Mute.DisplayName
+                                "match": {
+                                    "IsActive": true
                                 }
                             }
                         ]
-
                     },
-                    regexp: {
-                        Name: {
-                            value: `.*${focusedValue.value}.*`,
-                            flags: "ALL",
-                            case_insensitive: true
+                    "regexp": {
+                        "Name": {
+                            "value": `.*${focusedValue.value}.*`,
+                            "flags": "ALL",
+                            "case_insensitive": true
                         }
                     }
                 },
-                size: 24,
+                "size": 24,
             })
             if (policies) {
                 const choices = policies.map(policy => { return { name: policy.Name, value: policy.Id } })
@@ -91,10 +90,6 @@ export const UnMuteCommand: Command = {
                 }
             }
         }
-
-        let num;
-
-        num = '0'
 
         const policy = (await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
             "query": {

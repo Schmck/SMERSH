@@ -37,31 +37,30 @@ export const UnRoleBanCommand: Command = {
         const focusedValue = interaction.options.getFocused(true);
         if (focusedValue.value) {
             const policies = await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
-                query: {
-                    bool: {
-                        must: [
+                "query": {
+                    "bool": {
+                        "must": [
                             {
-                                match: {
-                                    IsActive: true
+                                "match": {
+                                    "Action": Action.RoleBan.DisplayName,
                                 }
                             },
                             {
-                                match: {
-                                    Action: Action.RoleBan.DisplayName
+                                "match": {
+                                    "IsActive": true
                                 }
                             }
                         ]
-
                     },
-                    regexp: {
-                        Name: {
-                            value: `.*${focusedValue.value}.*`,
-                            flags: "ALL",
-                            case_insensitive: true
+                    "regexp": {
+                        "Name": {
+                            "value": `.*${focusedValue.value}.*`,
+                            "flags": "ALL",
+                            "case_insensitive": true
                         }
                     }
                 },
-                size: 24,
+                "size": 24,
             })
             if (policies) {
                 const choices = policies.map(policy => { return { name: policy.Name, value: policy.Id } })
