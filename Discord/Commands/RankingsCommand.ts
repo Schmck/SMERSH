@@ -80,23 +80,38 @@ export const RankingsCommand: Command = {
             return players
         }).flat()
 
-        const players = await Promise.all(playerIds.map(playerId => SearchClient.Get(playerId as any as Guid, PlayerSearchReport)))
+        const players = (await Promise.all(playerIds.map(playerId => SearchClient.Get(playerId as any as Guid, PlayerSearchReport)))).filter(f => f)
         const fields = Object.keys(statistics).map(r => {
             const role = Role.fromValue(parseInt(r))
             const ranking = statistics[role.Value]
-            const row = [{ name: role.DisplayName, value: '', inline: false }]
+            const row = []
+
+            if ((ranking.attacking && ranking.attacking.KD) || (ranking.defending && ranking.defending.KD)) {
+                row.push({ name: role.DisplayName, value: '', inline: false })
+            }
 
             if (ranking.attacking && ranking.attacking.KD) {
                 const player = players.find(player => player.Id === ranking.attacking.playerId)
-                row.push(
-                    { name: 'Attacking', value: `${player.Name}`, inline: true },
-                    { name: 'K/D', value: ranking.attacking.KD.toFixed(2).toString() as string, inline: true },
-                )
+                if (player) {
+                    row.push({ name: 'Attacking', value: `${player.Name}`, inline: true })
+                }
+              
             }
             if (ranking.defending && ranking.defending.KD) {
                 const player = players.find(player => player.Id === ranking.defending.playerId)
+
+                if (player) {
+                    row.push({ name: 'Defending', value: `${player.Name}`, inline: true })
+                }
+                
+            }
+
+            if (ranking.attacking && ranking.attacking.KD) {
+                row.push({ name: 'K/D', value: ranking.attacking.KD.toFixed(2).toString() as string, inline: true })
+            }
+
+            if (ranking.defending && ranking.defending.KD) {
                 row.push(
-                    { name: 'Defending', value: `${player.Name}`, inline: true },
                     { name: 'K/D', value: ranking.defending.KD.toFixed(2).toString() as string, inline: true },
                     { name: '\u200B', value: '\u200B', inline: false }
                 )
