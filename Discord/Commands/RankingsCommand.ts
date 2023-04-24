@@ -117,29 +117,26 @@ export const RankingsCommand: Command = {
 
         if (fields.length > 25) {
             await interaction.followUp({
-                ephemeral: true,
                 embeds: [{
                     title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
                     type: EmbedType.Rich,
                     color: 12370112,
-                    fields: fields.slice(0, fields.findIndex((f, i) => f.name === '\u200B' && i >= 20)),
+                    fields: fields.slice(0, fields.findIndex((f, i) => f.name === '\u200B' && i >= 20) + 2),
 
                 }]
             });
 
             await interaction.followUp({
-                ephemeral: true,
                 embeds: [{
                     title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
                     type: EmbedType.Rich,
                     color: 12370112,
-                    fields: fields.slice(fields.findIndex((f, i) => f.name === '\u200B' && i >= 20)),
+                    fields: fields.slice(fields.findIndex((f, i) => f.name === '\u200B' && i >= 20) + 3),
 
                 }]
             });
         } else {
             await interaction.followUp({
-                ephemeral: true,
                 embeds: [{
                     title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
                     type: EmbedType.Rich,
