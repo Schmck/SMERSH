@@ -28,48 +28,52 @@ export const UnRoleBanCommand: Command = {
             'description': 'pick a role, any role',
             type: ApplicationCommandOptionType.String,
             required: true,
-            choices: Role.getAll().map(role => {
+            choices: Role.getAll<Role>().map(role => {
                 return { name: role.DisplayName, value: role.DisplayName }
             }),
         },
     ],
     autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
         const focusedValue = interaction.options.getFocused(true);
-        if (focusedValue.value) {
-            const policies = await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
-                "query": {
-                    "bool": {
-                        "must": [
-                            {
-                                "match": {
-                                    "Action": Action.RoleBan.DisplayName,
-                                }
-                            },
-                            {
-                                "match": {
-                                    "IsActive": true
-                                }
-                            },
-                            {
-                                "regexp": {
-                                    "Name": {
-                                        "value": `.*${focusedValue.value}.*`,
-                                        "flags": "ALL",
-                                        "case_insensitive": true
-                                    }
-                                }
-                            }
-                        ]
+        const query = {
+            "bool": {
+                "must": [
+                    {
+                        "match": {
+                            "Action": Action.RoleBan.DisplayName,
+                        }
+                    },
+                    {
+                        "match": {
+                            "IsActive": true
+                        }
+                    },
+                    {
+                        "regexp": {}
                     }
-                    
-                },
-                "size": 24,
-            })
-            if (policies) {
-                const choices = policies.map(policy => { return { name: policy.Name, value: policy.Id } })
-                const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
-                interaction.respond(filtered.slice(0, 24));
+                ]
             }
+
+        }
+        if (focusedValue.value) {
+            query.bool.must.push({
+                "regexp": {
+                    "Name": {
+                        "value": `.*${focusedValue.value}.*`,
+                        "flags": "ALL",
+                        "case_insensitive": true
+                    }
+                }
+            })
+        }
+        const policies = await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
+            query,
+            "size": 24,
+        })
+        if (policies) {
+            const choices = policies.map(policy => { return { name: policy.Name, value: policy.Id } })
+            const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
+            interaction.respond(filtered.slice(0, 24));
         }
     },
     run: async (client: Client, interaction: CommandInteraction) => {

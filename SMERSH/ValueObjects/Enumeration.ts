@@ -8,15 +8,16 @@
     public DisplayName: string;
 
 
-    public static getAll() {
-        return Object.values(this).filter(obj => typeof obj !== 'function')
+    public static getAll<T extends Enumeration>(): T[] {
+        const enums: T[] = Object.values(this).filter(obj => typeof obj !== 'function')
+        return enums
     }
 
-    public static fromValue<T>(value: number) : T {
-        return this.getAll().find(obj => obj.Value === value)
+    public static fromValue<T extends Enumeration>(value: number) : T {
+        return this.getAll<T>().find(obj => obj.Value === value)
     }
 
-    public static fromDisplayName<T>(displayName: string) : T {
-        return this.getAll().find(obj => obj.DisplayName === displayName)
+    public static fromDisplayName<T extends Enumeration>(displayName: string) : T {
+        return this.getAll<T>().find(obj => obj.DisplayName === displayName)
     }
 }

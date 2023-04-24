@@ -35,7 +35,7 @@ export const RoleBanCommand: Command = {
             'description': 'pick a role, any role', 
             type: ApplicationCommandOptionType.String,
             required: true,
-            choices: Role.getAll().map(role => {
+            choices: Role.getAll<Role>().map(role => {
                 return { name: role.DisplayName, value: role.DisplayName }
             }),
         },
@@ -44,7 +44,7 @@ export const RoleBanCommand: Command = {
             description: 'pick a team, any team',
             type: ApplicationCommandOptionType.String,
             required: true,
-            choices: Team.getAll().map(team => {
+            choices: Team.getAll<Team>().map(team => {
                 return { name: team.DisplayName, value: team.DisplayName }
             }),
 
