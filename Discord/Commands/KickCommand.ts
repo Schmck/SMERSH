@@ -13,7 +13,7 @@ import { PlayerQuery } from '../../Services/WebAdmin/Queries'
 
 export const KickCommand: Command = {
     name: "kick",
-    description: "search the SMERSH database for players",
+    description: "kick a player from the server",
     permissions: [DiscordRole.SmershAgent, DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     options: [
