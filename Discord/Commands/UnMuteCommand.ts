@@ -9,7 +9,7 @@ import { PlayerQuery, PolicyQuery } from '../../Services/WebAdmin/Queries';
 import { ApplyPolicyCommand, LiftMuteCommand } from '../../Commands/Player'
 import axios, { isCancel, AxiosError, AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
 import { Utils } from '../Framework'
-import { Action } from "../../SMERSH/ValueObjects/player";
+import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 import { Guid } from "guid-typescript";
 import { stringify } from 'querystring'
 import qs from 'qs'
@@ -19,6 +19,7 @@ import { PolicySearchReport } from "../../Reports/Entities/policy";
 export const UnMuteCommand: Command = {
     name: "unmute",
     description: "unmute a player",
+    permissions: [DiscordRole.SmershAgent, DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     options: [
         {

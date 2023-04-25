@@ -9,7 +9,7 @@ import { PlayerQuery, PolicyQuery } from '../../Services/WebAdmin/Queries';
 import { ApplyPolicyCommand } from '../../Commands/Player'
 import axios, { isCancel, AxiosError, AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
 import { Utils } from '../Framework'
-import { Action } from "../../SMERSH/ValueObjects/player";
+import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 import { Guid } from "guid-typescript";
 import { stringify } from 'querystring'
 import qs from 'qs'
@@ -18,6 +18,7 @@ import qs from 'qs'
 export const TempbanCommand: Command = {
     name: "tempban",
     description: "temporarily ban a player from the server",
+    permissions: [DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     options: [
         {

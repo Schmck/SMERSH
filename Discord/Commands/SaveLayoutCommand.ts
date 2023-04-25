@@ -5,7 +5,7 @@ import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { ChangeLayoutCommand } from '../../Commands/Layout'
 import { Guid } from "guid-typescript";
-import { Action } from "../../SMERSH/ValueObjects/player";
+import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 import { Api } from '../..//Web/Framework';
 import { AxiosRequestConfig } from 'axios';
 import { PlayersRoute } from '../../Services/WebAdmin/Routes';
@@ -15,6 +15,7 @@ import { LayoutSearchReport } from "../../Reports/Entities/layout";
 export const SaveLayoutCommand: Command = {
     name: "save",
     description: "saves the layout that is currently on the server",
+    permissions: [DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     options: [
         {

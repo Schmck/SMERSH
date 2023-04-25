@@ -4,10 +4,12 @@ import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { Utils } from '../Framework'
 import { PlayerQuery } from "../../Services/WebAdmin/Queries";
+import { DiscordRole } from "../../SMERSH/ValueObjects/player";
 
 export const LookupCommand: Command = {
     name: "lookup",
     description: "search the SMERSH database for players",
+    permissions: [DiscordRole.SmershAgent, DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     options: [{
         name: 'input',

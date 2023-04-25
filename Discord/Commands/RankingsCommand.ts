@@ -8,7 +8,7 @@ import { PlayerQuery } from "../../Services/WebAdmin/Queries";
 import { ApplyRoleBanCommand } from "../../Commands/Player";
 import { Guid } from "guid-typescript";
 import { PolicySearchReport } from "../../Reports/Entities/policy";
-import { Action } from "../../SMERSH/ValueObjects/player";
+import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 import { PlayerInfo } from "../../Services/WebAdmin/Models";
 import { PlayerRoundSearchReport } from "../../Reports/Entities/round/playerRound";
 import { stat } from "fs";
@@ -17,6 +17,7 @@ import { stat } from "fs";
 export const RankingsCommand: Command = {
     name: "rankings",
     description: "shows an overview of the best player of the last month for each role",
+    permissions: [DiscordRole.Veteran, DiscordRole.SmershAgent, DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     options: [],
     

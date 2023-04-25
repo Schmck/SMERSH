@@ -4,6 +4,7 @@ import {
     AutocompleteInteraction,
     Client,
 } from "discord.js";
+import { DiscordRole } from "../../SMERSH/ValueObjects/player";
 
 export interface Command extends ChatInputApplicationCommandData {
     run: (client: Client, interaction: CommandInteraction) => void;
@@ -13,4 +14,6 @@ export interface Command extends ChatInputApplicationCommandData {
     name: string;
 
     description: string;
+
+    permissions: Array<DiscordRole>
 }

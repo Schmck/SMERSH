@@ -4,11 +4,12 @@ import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { PolicySearchReport } from '../../Reports/Entities/policy';
 import { Utils } from '../Framework'
-import { Action } from "../../SMERSH/ValueObjects/player";
+import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 
 export const RoleBansCommand: Command = {
     name: "rolebans",
     description: "show an overview of all rolebanned players",
+    permissions: [DiscordRole.SmershAgent, DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     run: async (client: Client, interaction: CommandInteraction) => {
         const count = await SearchClient.Count<PolicySearchReport>(PolicySearchReport)

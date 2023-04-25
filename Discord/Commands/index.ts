@@ -12,4 +12,20 @@ import { UnMuteCommand } from './UnMuteCommand'
 import { StatsCommand } from './StatsCommand'
 import { RankingsCommand } from './RankingsCommand'
 import { RoleCommand } from './RoleCommand'
-export const Commands: Command[] = [LookupCommand, TempbanCommand, KickCommand, ChatLogCommand, SaveLayoutCommand, RoleBanCommand, UnRoleBanCommand, RoleBansCommand, MuteCommand, UnMuteCommand, StatsCommand, RankingsCommand, RoleCommand];
+import { HelpCommand } from './HelpCommand'
+export const Commands: Command[] = [
+    LookupCommand,
+    TempbanCommand,
+    KickCommand,
+    ChatLogCommand,
+    SaveLayoutCommand,
+    RoleBanCommand,
+    UnRoleBanCommand,
+    RoleBansCommand,
+    MuteCommand,
+    UnMuteCommand,
+    StatsCommand,
+    RankingsCommand,
+    RoleCommand,
+    HelpCommand
+];

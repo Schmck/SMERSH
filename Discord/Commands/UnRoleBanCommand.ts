@@ -8,12 +8,13 @@ import { PlayerQuery } from "../../Services/WebAdmin/Queries";
 import { ApplyRoleBanCommand, LiftRoleBanCommand } from "../../Commands/Player";
 import { Guid } from "guid-typescript";
 import { PolicySearchReport } from "../../Reports/Entities/policy";
-import { Action } from "../../SMERSH/ValueObjects/player";
+import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 
 
 export const UnRoleBanCommand: Command = {
     name: "unroleban",
     description: "remove role ban from player",
+    permissions: [DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     options: [
         {

@@ -8,13 +8,14 @@ import { PlayerQuery } from "../../Services/WebAdmin/Queries";
 import { ApplyRoleBanCommand } from "../../Commands/Player";
 import { Guid } from "guid-typescript";
 import { PolicySearchReport } from "../../Reports/Entities/policy";
-import { Action } from "../../SMERSH/ValueObjects/player";
+import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 import { PlayerInfo } from "../../Services/WebAdmin/Models";
 
 
 export const RoleBanCommand: Command = {
     name: "roleban",
     description: "dole out justice",
+    permissions: [DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     options: [
         {
