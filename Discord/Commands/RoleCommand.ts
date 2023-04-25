@@ -15,6 +15,7 @@ import { PlayerInfo } from "../../Services/WebAdmin/Models";
 export const RoleCommand: Command = {
     name: "role",
     description: "add a role to a player",
+    permissions: [DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     options: [
         {

@@ -5,7 +5,7 @@ import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { ApplyPolicyCommand } from '../../Commands/Player'
 import { Guid } from "guid-typescript";
-import { Action } from "../../SMERSH/ValueObjects/player";
+import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 import { Api } from '../..//Web/Framework';
 import { AxiosRequestConfig } from 'axios';
 import { PlayersRoute } from '../../Services/WebAdmin/Routes';
@@ -15,6 +15,7 @@ import { RoundSearchReport } from "../../Reports/Entities/round";
 export const ChatLogCommand: Command = {
     name: "chatlog",
     description: "search the SMERSH database for chatlogs",
+    permissions: [DiscordRole.SmershAgent, DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     options: [
         {
