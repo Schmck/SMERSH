@@ -26,7 +26,7 @@ export class DiscordRoleAppliedEventHandler implements IEventHandler<DiscordRole
     async handle(event: DiscordRoleAppliedEvent) {
         let player = new cls(event.Id);
         player.Role = event.Role;
-        await SearchClient.Put(player)
+        await SearchClient.Update(player)
 
         return;
     }
