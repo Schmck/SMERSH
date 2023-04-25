@@ -10,7 +10,7 @@ export class Player extends Domain {
 
     public Ip: string;
 
-    public Role: number,
+    public Role: number;
 
     public constructor(id: Guid) {
         super(id)
