@@ -17,7 +17,7 @@ import { PlayerSearchReport } from '../../Reports/Entities/player';
 
 export class ChatWatcher extends Watcher {
 
-    public override async Watch(timeout: number = 1000, ...args: any[]) {
+    public override async Watch(timeout: number = 100, ...args: any[]) {
         const commandNames = Commands.map(command => [command.name, ...command.aliases]).flat()
         const messages = await ChatQuery.Get();
         const lastMessage = messages[messages.length - 1];
@@ -77,6 +77,15 @@ export class ChatWatcher extends Watcher {
         let id
 
         command.forEach((comm, i) => {
+            if (comm.match(/^\d+[A-Za-z]$/) && formats.some(f => comm.endsWith(f))) {
+                duration = comm
+                if (!reason && (name || id)) {
+                    reason = command.slice(i + 1).join(' ')
+                }
+            } else if (!reason && (name || id)) {
+                reason = command.slice(i).join(' ')
+            }
+
             if (comm && comm.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
                 id = comm
             } else if (comm && comm.match(/[A-Z0-9]{9,10}/)) {
@@ -85,20 +94,16 @@ export class ChatWatcher extends Watcher {
                 name = comm
             }
 
-            if (comm.match(/^\d+[A-Za-z]$/) && formats.some(f => comm.endsWith(f))) {
-                duration = comm
-            }
 
-            if (name || id) {
-                reason = command.slice(i - 1).join(' ')
-            }
+
         })
 
         return {
             name,
             id,
-            reason,
             duration,
+            reason,
+
         }
 
     }
