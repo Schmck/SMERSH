@@ -87,9 +87,7 @@ export const KickCommand: Command = {
         }
 
         if (player) {
-            const playa = await PlayerQuery.GetByName(player.Name)
-
-
+            const playa = await PlayerQuery.GetById(player.Id)
 
             await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Kick, player.Name, reason.value.toString(), new Date()))
 
