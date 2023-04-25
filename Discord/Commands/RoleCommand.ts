@@ -12,9 +12,9 @@ import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 import { PlayerInfo } from "../../Services/WebAdmin/Models";
 
 
-export const RoleBanCommand: Command = {
-    name: "roleban",
-    description: "dole out justice",
+export const RoleCommand: Command = {
+    name: "role",
+    description: "add a role to a player",
     type: ApplicationCommandType.ChatInput,
     options: [
         {
@@ -29,7 +29,7 @@ export const RoleBanCommand: Command = {
             'description': 'pick a role, any role',
             type: ApplicationCommandOptionType.String,
             required: true,
-            choices: DiscordRole.getAll<Role>().map(role => {
+            choices: DiscordRole.getAll<DiscordRole>().map(role => {
                 return { name: role.DisplayName, value: role.DisplayName }
             }),
         },
