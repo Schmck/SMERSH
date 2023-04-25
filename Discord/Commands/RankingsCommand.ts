@@ -149,9 +149,6 @@ export const RankingsCommand: Command = {
                 }]
             });
         }
-
-        
-
     }
 }
 

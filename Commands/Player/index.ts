@@ -5,6 +5,7 @@ import { LiftBanCommand } from './LiftBanCommand'
 import { ApplyRoleBanCommand } from './ApplyRoleBanCommand'
 import { LiftRoleBanCommand } from './LiftRoleBanCommand'
 import { LiftMuteCommand } from './LiftMuteCommand'
+import { ApplyDiscordRoleCommand } from './ApplyDiscordRoleCommand'
 
 
 export {
@@ -14,5 +15,6 @@ export {
     LiftBanCommand,
     ApplyRoleBanCommand,
     LiftRoleBanCommand,
-    LiftMuteCommand
+    LiftMuteCommand,
+    ApplyDiscordRoleCommand
 }

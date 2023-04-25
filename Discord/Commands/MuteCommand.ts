@@ -55,7 +55,7 @@ export const MuteCommand: Command = {
         const reason = interaction.options.get('reason')
         let unbanDate: Date;
         let match;
-        let regexp
+        let regexp;
 
         if (input && typeof (input.value) === 'string') {
             if (input.value.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {

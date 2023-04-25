@@ -20,5 +20,10 @@
   },
   "exclude": [
     "node_modules"
+  ],
+  "references": [
+    { "path": "../Web" }
+    { "path": "../Elastic" }
+    { "path": "../Commands" }
   ]
 }

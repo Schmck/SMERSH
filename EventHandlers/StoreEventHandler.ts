@@ -15,7 +15,8 @@ import {
     RoleBanAppliedEvent,
     RoleBanLiftedEvent,
     LayoutChangedEvent,
-    MuteLiftedEvent
+    MuteLiftedEvent,
+    DiscordRoleAppliedEvent
 } from '../Events'
 import { SearchClient } from '../Elastic'
 import { EventSearchReport } from '../Reports/Entities/eventStore';
@@ -39,7 +40,8 @@ let cls: { new(id?: Guid, event?: Event): EventSearchReport } = EventSearchRepor
     RoleBanAppliedEvent,
     RoleBanLiftedEvent,
     LayoutChangedEvent,
-    MuteLiftedEvent
+    MuteLiftedEvent,
+    DiscordRoleAppliedEvent
 )
 export class StoreEventHandler implements
     IEventHandler<PlayerRegisteredEvent>,
@@ -54,7 +56,8 @@ export class StoreEventHandler implements
     IEventHandler<RoleBanAppliedEvent>,
     IEventHandler<RoleBanLiftedEvent>,
     IEventHandler<LayoutChangedEvent>,
-    IEventHandler<MuteLiftedEvent>
+    IEventHandler<MuteLiftedEvent>,
+    IEventHandler<DiscordRoleAppliedEvent>
 {
     public constructor(protected readonly commandBus: CommandBus) {
         }
@@ -73,6 +76,7 @@ export class StoreEventHandler implements
     async handle(event: RoleBanLiftedEvent)
     async handle(event: LayoutChangedEvent)
     async handle(event: MuteLiftedEvent)
+    async handle(event: DiscordRoleAppliedEvent)
     async handle(event: Event) {
 
 

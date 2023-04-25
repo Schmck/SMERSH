@@ -71,33 +71,36 @@ export const UnMuteCommand: Command = {
         const input = interaction.options.get('input');
 
         let match;
-        let regexp
 
         if (input && typeof (input.value) === 'string') {
-            if (input.value.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
+            if (Guid.parse(input.value)) {
                 match = {
                     "Id": input.value
                 }
-            } else if (input.value.match(/[A-Z0-9]{9,10}/)) {
-                match = {
-                    "Id": `0x0110000${input.value}`
-                }
-            } else {
-                regexp = {
-                    "Name": {
-                        "value": `.*${input.value}.*`,
-                        "flags": "ALL",
-                        "case_insensitive": true
-                    }
-                }
-            }
+            }  
         }
 
         const policy = (await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
             "query": {
-                match,
-                regexp,
-            }
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "IsActive": true
+                            }
+                        },
+                        {
+                            "match": {
+                                "Action": Action.Mute.DisplayName
+                            }
+                        },
+                        {
+                            match
+                        }
+                    ]
+
+                }
+            },
         })).shift()
 
         if (policy) {

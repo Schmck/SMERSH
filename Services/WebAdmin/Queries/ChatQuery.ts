@@ -7,7 +7,7 @@ import { Player } from '../Models';
 
 export class ChatQuery extends Query {
 
-    public static async Get() {
+    public static async Get(): Promise<Array<{username: string, id: string, message: string, visibility: string, team: string, timestamp: string}>> {
         const session = WebAdminSession.get();
         const dom = await session.navigate(ChatRoute.GetChat.Action)
         const players = await PlayerQuery.GetPlayers();
@@ -63,5 +63,9 @@ export class ChatQuery extends Query {
 
             return messages
         //})
+    }
+
+    public async Post(value: string) {
+
     }
 }

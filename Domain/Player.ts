@@ -1,12 +1,16 @@
 import { Guid } from "guid-typescript";
 import { Domain } from './Domain'
-import { PlayerRegisteredEvent, PlayerNameChangedEvent, PolicyAppliedEvent, BanLiftedEvent, RoleBanAppliedEvent, RoleBanLiftedEvent } from '../Events/Player'
+import { PlayerRegisteredEvent, PlayerNameChangedEvent, PolicyAppliedEvent, BanLiftedEvent, RoleBanAppliedEvent, RoleBanLiftedEvent, DiscordRoleAppliedEvent } from '../Events/Player'
 import { Action } from '../SMERSH/ValueObjects/player'
 import { Role, Team } from "../SMERSH/ValueObjects";
 
 export class Player extends Domain {
 
     public Name: string;
+
+    public Ip: string;
+
+    public Role: number,
 
     public constructor(id: Guid) {
         super(id)
@@ -25,6 +29,14 @@ export class Player extends Domain {
         this.Name = name;
         this.apply(new PlayerNameChangedEvent(this.Id, this.Name, oldName));
         return;
+
+    }
+
+    public async applyDiscordRole(role: number) {
+        if (typeof (this.Role) === 'number' && this.Role === role) {
+            return;
+        }
+        this.apply(new DiscordRoleAppliedEvent(this.Id, role))
 
     }
 

@@ -7,5 +7,5 @@ export class ChatRoute extends Route {
 
     public static GetChat: ChatRoute = new ChatRoute('GET', "/current/chat/data")
 
-    public static PostChat: ChatRoute = new ChatRoute('POST', "/current/chat")
+    public static PostChat: ChatRoute = new ChatRoute('POST', "/current/chat/data")
 }
