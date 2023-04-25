@@ -38,15 +38,16 @@ export const HelpCommand: Command = {
             const row = []
 
             if (command.name) {
-                row.push({name: `/${command.name}`, value: '', inline: false})
+                row.push({name: `/${command.name}`, value: command.description, inline: false})
             }
 
             if (command.options && command.options.length) {
                 command.options.forEach(option => {
-                    return { name: option.name, value: option.description, inline: true }
+                    row.push({ name: option.name, value: option.description, inline: true })
                 })
-                row.push({ name: '\u200B', value: '\u200B', inline: false })
             }
+            row.push({ name: '\u200B', value: '\u200B', inline: false })
+
 
             return row
         }).flat()
