@@ -81,7 +81,7 @@ export const RankingsCommand: Command = {
         }).flat()
 
         const players = (await Promise.all(playerIds.map(playerId => SearchClient.Get(playerId as any as Guid, PlayerSearchReport)))).filter(f => f)
-        const fields = Object.keys(statistics).map(r => {
+        const fields: List<{ name: string, value: string, inline: boolean }> = Object.keys(statistics).map(r => {
             const role = Role.fromValue(parseInt(r))
             const ranking = statistics[role.Value]
             const row = []
@@ -112,29 +112,32 @@ export const RankingsCommand: Command = {
                 row.push({ name: 'K/D', value: ranking.defending.KD.toFixed(2).toString(), inline: true }, { name: '\u200B', value: '\u200B', inline: false });
             }
             return row
-        }).flat().filter(f => f)
+        }).flat().filter(f => f) as List<{ name: string, value: string, inline: boolean }>
 
 
         if (fields.length > 25) {
+            const roleNames = Role.getAll<Role>().map(role => role.DisplayName);
             await interaction.followUp({
                 embeds: [{
                     title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
                     type: EmbedType.Rich,
                     color: 12370112,
-                    fields: fields.slice(0, fields.findIndex((f, i) => f.name === '\u200B' && i >= 20) + 2),
+                    fields: fields.slice(0, fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= 20 && i <= 25)),
 
                 }]
             });
 
-            await interaction.followUp({
-                embeds: [{
-                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
-                    type: EmbedType.Rich,
-                    color: 12370112,
-                    fields: fields.slice(fields.findIndex((f, i) => f.name === '\u200B' && i >= 20) + 3),
-
-                }]
-            });
+            for (let index = 25; index <= fields.length; index += 25) {
+                await interaction.followUp({
+                    embeds: [{
+                        title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
+                        type: EmbedType.Rich,
+                        color: 12370112,
+                        fields: fields.slice(fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= (index - 5) && i <= index), fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= (index + 25 -5) && i <= (index + 25))),
+                    }]
+                });
+            }
+           
         } else {
             await interaction.followUp({
                 embeds: [{
@@ -229,4 +232,11 @@ function percentage(partialValue, totalValue) {
         return 0
     }
     return (100 / totalValue) * partialValue;
+}
+
+interface List<T> extends Array<T> {
+    findLastIndex(
+        predicate: (value: T, index: number, obj: T[]) => unknown,
+        thisArg?: any
+    ): number
 }
