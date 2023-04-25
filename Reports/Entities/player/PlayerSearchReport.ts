@@ -4,9 +4,8 @@ import { Index, Field } from '@../../../SMERSH/Utilities'
 
 @Index()
 export class PlayerSearchReport extends SearchReport {
-    constructor(id?: Guid, name?: string) {
+    constructor(id?: Guid) {
         super(id)
-        this.Name = name || ""
     }
 
     @Field('text')
