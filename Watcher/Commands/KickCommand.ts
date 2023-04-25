@@ -33,13 +33,13 @@ export const KickCommand: Command = {
                 match = {
                     "Id": id
                 }
-            } else {
-                regexp = {
-                    "Name": {
-                        "value": `.*${name}.*`,
-                        "flags": "ALL",
-                        "case_insensitive": true
-                    }
+            }
+        } else {
+            regexp = {
+                "Name": {
+                    "value": `.*${name}.*`,
+                    "flags": "ALL",
+                    "case_insensitive": true
                 }
             }
         }
@@ -71,7 +71,7 @@ export const KickCommand: Command = {
 
             await axios.post(url, urlencoded, config)
             const message = `${player.Name} was kicked for ${reason}`
-            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat
+            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
             /*await interaction.followUp({
@@ -80,7 +80,7 @@ export const KickCommand: Command = {
             });*/
         } else {
             const message = `${name} could not be found in the database`
-            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat
+            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
         }

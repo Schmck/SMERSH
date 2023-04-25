@@ -84,12 +84,12 @@ export const MuteCommand: Command = {
                 await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, env["COMMAND_CHANNEL_ID"], Action.Mute, player.Name, reason, new Date(), unbanDate))
 
                 const message = `${player.Name} was muted for ${untilString} for ${reason} until ${unbanDate.toString().split(' GMT')[0]}`
-                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat
+                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(chatUrl, chatUrlencoded, config)
             } else {
                 const message = `${name} could not be found in the database`
-                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat
+                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(chatUrl, chatUrlencoded, config)
             }
@@ -97,7 +97,7 @@ export const MuteCommand: Command = {
 
         if (players.length > 1) {
             const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Name}[${player.Id.slice(9)}]`).join('\, ')}]`
-            const url = env["BASE_URL"] + ChatRoute.PostChat
+            const url = env["BASE_URL"] + ChatRoute.PostChat.Action
             const urlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(url, urlencoded, config)
             return;

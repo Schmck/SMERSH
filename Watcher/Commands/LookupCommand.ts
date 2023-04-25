@@ -33,13 +33,13 @@ export const LookupCommand: Command = {
                 match = {
                     "Id": id
                 }
-            } else {
-                regexp = {
-                    "Name": {
-                        "value": `.*${name}.*`,
-                        "flags": "ALL",
-                        "case_insensitive": true
-                    }
+            } 
+        } else {
+            regexp = {
+                "Name": {
+                    "value": `.*${name}.*`,
+                    "flags": "ALL",
+                    "case_insensitive": true
                 }
             }
         }
@@ -57,14 +57,14 @@ export const LookupCommand: Command = {
 
         if (players.length) {
             const playerIds = players.map(player => `${player.Name}[${player.Id.slice(9)}]`)
-            const url = env["BASE_URL"] + ChatRoute.PostChat
+            const url = env["BASE_URL"] + ChatRoute.PostChat.Action
             playerIds.forEach(async playerId => {
                 const urlencoded = `ajax=1&message=${playerId}&teamsay=-1`
                 await axios.post(url, urlencoded, config)
             })
         } else {
             const message = `${name} could not be found in the database`
-            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat
+            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
         }

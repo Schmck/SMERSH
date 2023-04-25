@@ -55,7 +55,7 @@ export const UnBanCommand: Command = {
 
             if (players.length > 1) {
                 const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Name}[${player.Id.slice(9)}]`).join('\, ')}]`
-                const url = env["BASE_URL"] + ChatRoute.PostChat
+                const url = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const urlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(url, urlencoded, config)
                 return;
@@ -96,12 +96,12 @@ export const UnBanCommand: Command = {
             await commandBus.execute(new LiftBanCommand(Guid.parse(policy.Id), Guid.parse(policy.PlayerId)))
 
             const message = `${policy.Name} was unbanned`
-            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat
+            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
         } else {
             const message = `${name} could not be found in the database`
-            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat
+            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
         }
