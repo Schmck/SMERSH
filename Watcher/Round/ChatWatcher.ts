@@ -48,7 +48,8 @@ export class ChatWatcher extends Watcher {
                             const player = await SearchClient.Get(msg.id as any, PlayerSearchReport)
                             const command = Commands.find(comm => comm.name === commandName || comm.aliases.includes(commandName))
                             if (player.Role && command.permissions.find(perm => perm.Value === player.Role)) {
-                                const { name, id, reason, duration } = this.parseCommand(msg.message.split(' ').slice(1))
+                                const input = msg.message.slice(0, msg.message.match(/\#[A-Z0-9]{0,4}\:/).index)
+                                const { name, id, reason, duration } = this.parseCommand(input.split(' ').slice(1))
                                 command.run(this.commandBus, name, id, reason, duration)
                             }
     
