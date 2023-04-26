@@ -95,42 +95,17 @@ export class PlayerQuery extends Query {
     public static async GetById(id: string) {
         const session = WebAdminSession.get();
 
-        const status = await session.navigate(StatusRoute.GetStatus.Action)
         const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
 
+        if (admin && admin.window && admin.window.document) {
+            const table = admin.window.document.querySelector("#players");
+            let playas;
 
-        let players: Array<Player>
-
-        if (status && status.window && status.window.document) {
-            const playerTable = status.window.document.querySelector("#players");
-
-            if (playerTable) {
-                players = Parsers.playerTable(playerTable as HTMLTableElement);
-                if (admin && admin.window && admin.window.document) {
-                    const table = admin.window.document.querySelector("#players");
-                    let playas;
-
-                    if (table) {
-                        playas = Parsers.playerTable(table as HTMLTableElement)
-                        try {
-                            // players = players.map((player, i) => Object.assign({}, player, { Id: playas[i].UniqueID, IpAddress: playas[i].IP, PlayerKey: playas[i].PlayerKey }));
-                            players = players.map((player, i) => {
-                                const playa = playas.find(playa => playa.Playername === player.Playername)
-                                if (playa) {
-                                    return Object.assign({}, player, { Id: playa.UniqueID, IpAddress: playa.IP, PlayerKey: playa.PlayerKey })
-                                }
-                                return player
-                            });
-                            players = players.filter(player => player.UniqueID === id)
-
-                        } catch (error) { }
-                    }
-
-                }
+            if (table) {
+                playas = Parsers.playerTable(table as HTMLTableElement)
+                return playas.find(playa => playa.UniqueID === id)
             }
 
-
-            return players.shift();
         }
         return null;
     }

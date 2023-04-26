@@ -35,7 +35,7 @@ export const KickCommand: Command = {
         const focusedValue = interaction.options.getFocused(true);
         const players = await PlayerQuery.Get();
         if (players) {
-            const choices = players.filter(player => !player.Bot && player.Id).map(player => { return { name: player.Playername, value: player.Id } })
+            const choices = players.filter(player => !player.Bot && player.Id).map(player => { return { name: player.Playername, value: player.PlayerKey } })
             const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
             interaction.respond(filtered.slice(0, 24));
         }
@@ -47,13 +47,14 @@ export const KickCommand: Command = {
         let regexp
 
         if (input && typeof (input.value) === 'string') {
-            if (input.value.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
+            const id = input.value.slice(5, 23)
+            if (id.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
                 match = {
-                    "Id": input.value
+                    "Id": id
                 }
             } else if (input.value.match(/[A-Z0-9]{9,10}/)) {
                 match = {
-                    "Id": `0x0110000${input.value}`
+                    "Id": `0x0110000${id}`
                 }
             } else {
                 regexp = {
@@ -88,7 +89,12 @@ export const KickCommand: Command = {
         }
 
         if (player) {
-            const playa = await PlayerQuery.GetById(player.Id)
+            let playerKey = input.value.toString();
+
+            if (!playerKey.match(/[0-9]{4}\_0x011[0]{4}[A-Z0-9]{9,10}\_\d\.[0-9]{4}/)) {
+                const playa = await PlayerQuery.GetById(player.Id);
+                playerKey = playa.PlayerKey;
+            }
 
             await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Kick, player.Name, reason.value.toString(), new Date()))
 
@@ -103,7 +109,7 @@ export const KickCommand: Command = {
                 },
             }
 
-            const urlencoded = `ajax=1&action=kick&playerkey=${playa.PlayerKey}`
+            const urlencoded = `ajax=1&action=kick&playerkey=${playerKey}`
 
             axios.post(url, urlencoded, config).then(result => {
                 client.log.info(JSON.stringify(result.data))
