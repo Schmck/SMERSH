@@ -10,3 +10,4 @@ foreach($folder in $folders) {
     Set-Location ..
     
 }
+npm install

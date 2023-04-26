@@ -116,3 +116,6 @@ obj/
 *.d.ts
 */bin
 *.njsproj
+Web/package-lock.json
+*/package-lock.json
+package-lock.json
