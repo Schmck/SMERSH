@@ -1,13 +1,12 @@
-import { SteamUser, SteamID, SteamCommunity, EResult } from 'steam-chat-bot';
+import { SteamUser, SteamID, EResult, EChatEntryType, EFriendRelationship } from 'steam-user';
+import SteamID64 from 'steamid';
 
+export class SteamBot {    
 
-export class SteamBot {
-    
     public async sendMessageToFriend(id: string, message: string) {
-        const env = JSON.parse(process.argv[process.argv.length - 1]);
-
-        // Convert the hexadecimal ID string to a SteamID object
-        const steamId = new SteamID(id, SteamID.Type.INDIVIDUAL);
+        const env = JSON.parse(process.argv[process.argv.length - 1])
+        // Convert the hexadecimal ID string to a SteamID64 object
+        const steamId64 = new SteamID64(id);
 
         // Create a SteamUser object to represent the bot
         const bot = new SteamUser();
@@ -26,21 +25,23 @@ export class SteamBot {
         });
 
         // Check if the user is already a friend of the bot
-        const isFriend = await new Promise<boolean>((resolve) => {
-            bot.getPersonas([steamId], (personas : any) => {
-                const persona = personas[steamId.toString()];
-                resolve(!!persona && persona.friendRelationship === SteamUser.EFriendRelationship.Friend);
+            const isFriend = await new Promise<any>((resolve) => {
+                bot.on('friendsList', function () {
+                    let friends = Object.keys(bot.myFriends).filter(steamId => bot.myFriends[steamId] == EFriendRelationship.Friend);
+
+                    if (friends.includes(steamId64)) {
+                        resolve(friends.includes(steamId64))
+                    }
             });
-        });
 
         if (!isFriend) {
             // Send a friend request to the user
-            bot.addFriend(steamId);
+            bot.addFriend(steamId64, () => { });
 
             // Wait for the user to accept the friend request
             const addFriendResult = await new Promise<any>((resolve) => {
-                bot.on('friendRelationship', (steamId: any, relationship: any) => {
-                    if (relationship === SteamUser.EFriendRelationship.Friend) {
+                bot.once('friendRelationship', (steamId: any, relationship: any) => {
+                    if (relationship === EFriendRelationship.Friend) {
                         resolve(EResult.OK);
                     }
                 });
@@ -51,13 +52,7 @@ export class SteamBot {
             }
         }
 
-        // Create a SteamCommunity object to handle Steam-related tasks
-        const community = new SteamCommunity();
-
-        // Get the chat object for the user we want to message
-        const chat = await community.getSteamChat(steamId);
-
         // Send the message to the user
-        await chat.sendMessage(message);
-    }
+                await bot.sendFriendMessage(steamId64, message, EChatEntryType.ChatMsg, () => { });
+}
 }

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "allowJs": true,
     "composite": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
@@ -16,7 +17,6 @@
     "removeComments": true,
     "noLib": false,
     "emitDecoratorMetadata": true,
-    "allowJs": false
   },
   "exclude": [
     "node_modules"
