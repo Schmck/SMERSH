@@ -70,7 +70,7 @@ export class PolicyAppliedEventHandler implements IEventHandler<PolicyAppliedEve
             duration = ` until ${event.UnbanDate.toString().split(' GMT')[0]}`
         }
         const message = `you have been ${action}${reason}${duration}. \nplease make a ticket on our discord if you disagree with this decision: https://discord.gg/43XsqZB`
-        this.steam.sendMessageToFriend(event.PlayerId, message)
+        //this.steam.sendMessageToFriend(event.PlayerId, message)
         return;
     }
 }
