@@ -131,7 +131,10 @@ export const StatsCommand: Command = {
                     });
                 }
                 if (stat === 'KD') {
-                    return [{ name: 'K/D', value: field.toFixed(2).toString() as string, inline: true }, {name: 'Rounds', value: playerRounds.length.toString(), inline: true}];
+                    const kills = stats['Kills']
+                    const deaths = stats['Deaths']
+                    let value = `${kills}/${deaths} [${field.toFixed(2).toString()}]`
+                    return [{ name: 'K/D', value, inline: true }, {name: 'Rounds', value: playerRounds.length.toString(), inline: true}];
                 }
                 return;
             }).flat().flat().filter(f => f);
@@ -180,6 +183,8 @@ function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: str
                 [side]: stats.Sides[side] ? stats.Sides[side] + 1 : 1
             },
             KD: stats.KD ? stats.KD + (percentage(round.Kills, round.Deaths) / 100) : percentage(round.Kills, round.Deaths) / 100,
+            Kills: stats.Kills ? stats.Kills + round.Kills: round.Kills,
+            Deaths: stats.Deaths ? stats.Deaths + round.Deaths : round.Deaths,
 
         }
 
@@ -220,6 +225,8 @@ function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: str
         Teams: {},
         Sides: {},
         KD: 0,
+        Kills: 0,
+        Deaths: 0,
     })
 }
 
