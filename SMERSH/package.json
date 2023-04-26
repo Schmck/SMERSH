@@ -20,6 +20,7 @@
     "elasticsearch": "^16.7.3",
     "rxjs": "^7.6.0",
     "steam-user": "^4.28.1",
+    "steamid": "^2.0.0",
     "ts_steam_user": "^400.190.100"
   }
 }
