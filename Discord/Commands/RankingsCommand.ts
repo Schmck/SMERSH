@@ -222,12 +222,11 @@ async function generateStats(role: Role, firstDay: Date, lastDay: Date): Promise
 }
 
 function percentage(partialValue, totalValue) {
-    if (!totalValue) {
-        return partialValue * 100
-    }
-
     if (!partialValue && !totalValue) {
         return 0
+    }
+    if (!totalValue) {
+        return partialValue * 100
     }
     return (100 / totalValue) * partialValue;
 }

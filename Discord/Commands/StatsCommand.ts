@@ -210,7 +210,7 @@ function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: str
 
             const kd = fields.KD / playerRounds.length
             return {
-                ...stats,
+                ...fields,
                 Roles: roles,
                 Teams: teams,
                 Sides: sides,
@@ -231,12 +231,13 @@ function generateStats(playerRounds: PlayerRoundSearchReport[]): { PlayerId: str
 }
 
 function percentage(partialValue, totalValue) {
+    if (!partialValue && !totalValue) {
+        return 0
+    }
+
     if (!totalValue) {
         return partialValue * 100
     }
 
-    if (!partialValue && !totalValue) {
-        return 0
-    }
     return (100 / totalValue) * partialValue;
 }
