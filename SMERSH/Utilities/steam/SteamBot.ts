@@ -1,12 +1,12 @@
 import { SteamUser, EResult, EChatEntryType, EFriendRelationship } from 'steam-user';
-import { SteamID } from 'steamid';
+import { hexToDec } from 'hex2dec'
 
 export class SteamBot {
 
     public async sendMessageToFriend(id: string, message: string) {
         const env = JSON.parse(process.argv[process.argv.length - 1])
         // Convert the hexadecimal ID string to a SteamID64 object
-        const steamId64 = new SteamID(id).getSteamID64();
+        const steamId64 = hexToDec(id);
 
         // Create a SteamUser object to represent the bot
         const bot = new SteamUser();
