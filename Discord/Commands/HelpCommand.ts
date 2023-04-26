@@ -34,7 +34,7 @@ export const HelpCommand: Command = {
             return command.permissions.includes(role)
         })
 
-        const fields = commands.map(command => {
+        const fields: List<{ name: string, value: string, inline: boolean }> = commands.map(command => {
             const row = []
 
             if (command.name) {
@@ -50,7 +50,7 @@ export const HelpCommand: Command = {
 
 
             return row
-        }).flat()
+        }).flat() as List<{ name: string, value: string, inline: boolean }>
 
         if (fields.length > 25) {
             const commandNames = Commands.map(command => command.name)
@@ -88,3 +88,10 @@ export const HelpCommand: Command = {
         }
     }
 };
+
+interface List<T> extends Array<T> {
+    findLastIndex(
+        predicate: (value: T, index: number, obj: T[]) => unknown,
+        thisArg?: any
+    ): number
+}
