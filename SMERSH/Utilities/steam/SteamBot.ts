@@ -26,10 +26,8 @@ export class SteamBot {
 
         // Check if the user is already a friend of the bot
         const isFriend = await new Promise<any>((resolve) => {
-            bot.on('friendsList', function () {
-                let friends = Object.keys(bot.myFriends).filter(steamId => bot.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);
-                resolve(friends.includes(steamId64))
-            });
+            let friends = Object.keys(bot.myFriends).filter(steamId => bot.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);
+            resolve(friends.includes(steamId64))
         })
 
         if (!isFriend) {
@@ -53,14 +51,12 @@ export class SteamBot {
         }
 
         const isFriendNow = await new Promise<any>((resolve) => {
-            bot.on('friendsList', function () {
-                let friends = Object.keys(bot.myFriends).filter(steamId => bot.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);
-                resolve(friends.includes(steamId64))
-            });
+            let friends = Object.keys(bot.myFriends).filter(steamId => bot.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);
+            resolve(friends.includes(steamId64))
         })
 
         if (isFriendNow) {
-            await bot.sendFriendMessage(steamId64, message, SteamUser.EChatEntryType.ChatMsg, () => { });
+            await bot.chat.sendFriendMessage(steamId64, message, { chatEntryType: SteamUser.EChatEntryType.ChatMsg }, () => { });
         } else {
             console.log(id, ' did not want to be friends')
         }
