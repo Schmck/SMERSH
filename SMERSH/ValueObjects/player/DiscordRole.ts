@@ -5,6 +5,8 @@ export class DiscordRole extends Enumeration {
         super(value, displayName)
     }
 
+    public static Regular: DiscordRole = new DiscordRole(-1, "RO2 Regular")
+
     public static Veteran: DiscordRole = new DiscordRole(0, "RO2 Veteran")
 
     public static SmershAgent: DiscordRole = new DiscordRole(1, "SMERSH Agent")

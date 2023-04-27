@@ -5,7 +5,7 @@ import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { Client, Utils } from '../Framework'
 import { Role, Team } from "../../SMERSH/ValueObjects";
 import { PlayerQuery } from "../../Services/WebAdmin/Queries";
-import { ApplyRoleBanCommand } from "../../Commands/Player";
+import { ApplyDiscordRoleCommand, ApplyRoleBanCommand } from "../../Commands/Player";
 import { Guid } from "guid-typescript";
 import { PolicySearchReport } from "../../Reports/Entities/policy";
 import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
@@ -94,7 +94,7 @@ export const StatsCommand: Command = {
                 if (stat === 'Roles') {
                     return Object.keys(field).map((r, i, self) => {
                         const role = Role.fromValue<Role>(parseInt(r));
-                        const value = `${Math.round(field[r])}%`;
+                        const value = `${field[r].toFixed(2)}%`;
 
                         if (i + 1 === self.length) {
                             return [{ name: role.DisplayName, value, inline: true }, { name: '\u200B', value: '\u200B', inline: false }]
@@ -138,6 +138,18 @@ export const StatsCommand: Command = {
                 }
                 return;
             }).flat().flat().filter(f => f);
+
+            if (playerRounds.length > 100 && !player.Role || player.Role < DiscordRole.Regular.Value) {
+                await client.commandBus.execute(new ApplyDiscordRoleCommand(player.Id as any as Guid, DiscordRole.Regular.Value))
+            }
+
+            if (playerRounds.length > 500 && !player.Role || player.Role < DiscordRole.Veteran.Value) {
+                await client.commandBus.execute(new ApplyDiscordRoleCommand(player.Id as any as Guid, DiscordRole.Veteran.Value))
+            }
+
+            if (playerRounds.length > 10000 && !player.Role || player.Role < DiscordRole.SmershAgent.Value) {
+                await client.commandBus.execute(new ApplyDiscordRoleCommand(player.Id as any as Guid, DiscordRole.SmershAgent.Value))
+            }
             await interaction.followUp({
                 ephemeral: true,
                 embeds: [{
