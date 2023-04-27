@@ -93,7 +93,7 @@ export const UnBanCommand: Command = {
         })).shift()
 
         if (policy) {
-            await commandBus.execute(new LiftBanCommand(Guid.parse(policy.Id), Guid.parse(policy.PlayerId)))
+            await commandBus.execute(new LiftBanCommand(Guid.parse(policy.Id), policy.PlayerId))
 
             const message = `${policy.Name} was unbanned`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action

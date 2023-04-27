@@ -153,7 +153,7 @@ export class BanWatcher extends Watcher {
                     },
                 }
 
-                await this.commandBus.execute(new LiftBanCommand(Guid.parse(ban.Id), ban.PlayerId as any))
+                await this.commandBus.execute(new LiftBanCommand(Guid.parse(ban.Id), ban.PlayerId))
 
                 await axios.post(url, urlencoded, config).then(result => {
                     this.log.info(result)
