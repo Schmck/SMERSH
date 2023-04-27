@@ -63,7 +63,7 @@ export const KickCommand: Command = {
         }
 
         if (player) {
-            const playa = await PlayerQuery.GetByName(player.Name)
+            const playa = await PlayerQuery.GetById(player.Id)
             const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
             const urlencoded = `ajax=1&action=kick&playerkey=${playa.PlayerKey}`
 
@@ -79,10 +79,23 @@ export const KickCommand: Command = {
                 content: 
             });*/
         } else {
-            const message = `${name} could not be found in the database`
-            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
-            const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
-            await axios.post(chatUrl, chatUrlencoded, config)
+            const playa = await PlayerQuery.GetByName(name)
+            if (playa) {
+                const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
+                const urlencoded = `ajax=1&action=kick&playerkey=${playa.PlayerKey}`
+                await commandBus.execute(new ApplyPolicyCommand(Guid.create(), playa.UniqueID, env["COMMAND_CHANNEL_ID"], Action.Kick, playa.Playername, reason, new Date()))
+
+                await axios.post(url, urlencoded, config)
+                const message = `${player.Name} was kicked for ${reason}`
+                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
+                const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
+                await axios.post(chatUrl, chatUrlencoded, config)
+            } else {
+                const message = `${name} could not be found in the database`
+                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
+                const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
+                await axios.post(chatUrl, chatUrlencoded, config)
+            }
         }
 
     }
