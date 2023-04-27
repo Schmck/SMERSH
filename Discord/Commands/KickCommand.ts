@@ -76,6 +76,10 @@ export const KickCommand: Command = {
             }
         })
         const player = players.shift();
+        const id = input.value.toString().slice(5, 23)
+        let name = interaction.options.get('input').name
+        let playerKey = input.value.toString();
+
 
         if (players.length > 1) {
             let playerTable: string = await Utils.generatePlayerTable(players, false)
@@ -89,41 +93,36 @@ export const KickCommand: Command = {
         }
 
         if (player) {
-            let playerKey = input.value.toString();
 
+            name = player.Name;
             if (!playerKey.match(/[0-9]{4}\_0x011[0]{4}[A-Z0-9]{9,10}\_\d\.[0-9]{4}/)) {
                 const playa = await PlayerQuery.GetById(player.Id);
                 playerKey = playa.PlayerKey;
             }
-
-            await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Kick, player.Name, reason.value.toString(), new Date()))
-
-            const env = JSON.parse(process.argv[process.argv.length - 1]);
-            const axios = Api.axios();
-            const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
-            const config: AxiosRequestConfig =
-            {
-                headers: {
-                    "Content-type": "application/x-www-form-urlencoded",
-                    "Cookie": `authcred="${env["AUTHCRED"]}"`
-                },
-            }
-
-            const urlencoded = `ajax=1&action=kick&playerkey=${playerKey}`
-
-            axios.post(url, urlencoded, config).then(result => {
-                client.log.info(JSON.stringify(result.data))
-            });
-            await interaction.followUp({
-                ephemeral: true,
-                content: `${player.Name} was kicked for ${reason.value}`
-            });
-        } else {
-            await interaction.followUp({
-                ephemeral: true,
-                content: `could not find ${input.value} in the database`
-            });
         }
+
+        await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), id, interaction.channelId, Action.Kick, name, reason.value.toString(), new Date()))
+
+        const env = JSON.parse(process.argv[process.argv.length - 1]);
+        const axios = Api.axios();
+        const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
+        const config: AxiosRequestConfig =
+        {
+            headers: {
+                "Content-type": "application/x-www-form-urlencoded",
+                "Cookie": `authcred="${env["AUTHCRED"]}"`
+            },
+        }
+
+        const urlencoded = `ajax=1&action=kick&playerkey=${playerKey}`
+
+        axios.post(url, urlencoded, config).then(result => {
+            client.log.info(JSON.stringify(result.data))
+        });
+        await interaction.followUp({
+            ephemeral: true,
+            content: `${player.Name} was kicked for ${reason.value}`
+        });
         
     }
 };
