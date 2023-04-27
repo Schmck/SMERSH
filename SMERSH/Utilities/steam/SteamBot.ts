@@ -1,4 +1,4 @@
-import * as SteamUser from 'steam-user';
+const SteamUser = require('steam-user');
 import { hexToDec } from 'hex2dec'
 
 export class SteamBot {
@@ -19,7 +19,7 @@ export class SteamBot {
 
         // Wait for the bot to become logged in and ready
         await new Promise<void>((resolve) => {
-            bot.once('loggedOn', () => {
+            bot.on('loggedOn', () => {
                 resolve();
             });
         });
@@ -28,32 +28,42 @@ export class SteamBot {
         const isFriend = await new Promise<any>((resolve) => {
             bot.on('friendsList', function () {
                 let friends = Object.keys(bot.myFriends).filter(steamId => bot.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);
-
-                if (friends.includes(steamId64)) {
-                    resolve(friends.includes(steamId64))
-                }
+                resolve(friends.includes(steamId64))
             });
         })
 
-            if (!isFriend) {
-                // Send a friend request to the user
-                bot.addFriend(steamId64, () => { });
+        if (!isFriend) {
+            // Send a friend request to the user
+            bot.addFriend(steamId64, () => { });
 
-                // Wait for the user to accept the friend request
-                const addFriendResult = await new Promise<any>((resolve) => {
-                    bot.once('friendRelationship', (steamId: any, relationship: any) => {
-                        if (relationship === SteamUser.EFriendRelationship.Friend && steamId === steamId64) {
-                            resolve(SteamUser.EResult.OK);
-                        }
-                    });
+            // Wait for the user to accept the friend request
+            const addFriendResult = await new Promise<any>((resolve) => {
+                bot.on('friendRelationship', (steamId: any, relationship: any) => {
+                    if (relationship === SteamUser.EFriendRelationship.Friend && steamId === steamId64) {
+                        resolve(SteamUser.EResult.OK);
+                    } else {
+                        resolve(SteamUser.EResult.AccountNotFriends)
+                    }
                 });
+            });
 
-                if (addFriendResult !== SteamUser.EResult.OK) {
-                    throw new Error(`Failed to add user with ID ${id} as a friend`);
-                }
+            if (addFriendResult !== SteamUser.EResult.OK) {
+                throw new Error(`Failed to add user with ID ${id} as a friend`);
             }
+        }
 
+        const isFriendNow = await new Promise<any>((resolve) => {
+            bot.on('friendsList', function () {
+                let friends = Object.keys(bot.myFriends).filter(steamId => bot.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);
+                resolve(friends.includes(steamId64))
+            });
+        })
+
+        if (isFriendNow) {
+            await bot.sendFriendMessage(steamId64, message, SteamUser.EChatEntryType.ChatMsg, () => { });
+        } else {
+            console.log(id, ' did not want to be friends')
+        }
             // Send the message to the user
-        await bot.sendFriendMessage(steamId64, message, SteamUser.EChatEntryType.ChatMsg, () => { });
     }
 }
