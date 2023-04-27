@@ -19,7 +19,7 @@ export class SteamBot {
 
         // Wait for the bot to become logged in and ready
         await new Promise<void>((resolve) => {
-            bot.on('loggedOn', () => {
+            bot.once('loggedOn', () => {
                 resolve();
             });
         });

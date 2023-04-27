@@ -57,7 +57,7 @@ export class PolicyAppliedEventHandler implements IEventHandler<PolicyAppliedEve
             } break;
             case Action.Ban.DisplayName: {
                 action = 'banned'
-            }
+            } break;
             case Action.IpBan.DisplayName: {
                 action = 'ip banned'
             } break;
