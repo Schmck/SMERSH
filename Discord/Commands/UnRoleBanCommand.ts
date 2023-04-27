@@ -36,7 +36,7 @@ export const UnRoleBanCommand: Command = {
     ],
     autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
         const focusedValue = interaction.options.getFocused(true);
-        const query = {
+        const query: any = {
             "bool": {
                 "must": [
                     {
@@ -48,9 +48,6 @@ export const UnRoleBanCommand: Command = {
                         "match": {
                             "IsActive": true
                         }
-                    },
-                    {
-                        "regexp": {}
                     }
                 ]
             }
