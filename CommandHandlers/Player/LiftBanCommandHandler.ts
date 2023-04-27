@@ -19,7 +19,7 @@ export class LiftBanCommandHandler implements ICommandHandler<LiftBanCommand> {
         const props = await this.repository.Get<PolicySearchReport, Policy>(Id, PolicySearchReport, Policy)
         const domain = this.publisher.mergeObjectContext(props)
 
-        await domain.liftBan(Id);
+        await domain.liftBan(PlayerId);
         await domain.commit();
         return;
 
