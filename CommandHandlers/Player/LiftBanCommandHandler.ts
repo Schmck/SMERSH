@@ -3,6 +3,8 @@ import { LiftBanCommand } from '../../Commands/Player'
 import { Repository } from '../Framework'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { Player } from '../../Domain/Player'
+import { PolicySearchReport } from '../../Reports/Entities/policy';
+import { Policy } from '../../Domain/Policy';
 
 @CommandHandler(LiftBanCommand)
 export class LiftBanCommandHandler implements ICommandHandler<LiftBanCommand> {
@@ -14,7 +16,7 @@ export class LiftBanCommandHandler implements ICommandHandler<LiftBanCommand> {
 
     async execute(command: LiftBanCommand) {
         const { Id, PlayerId} = command
-        const props = await this.repository.Get<PlayerSearchReport, Player>(PlayerId, PlayerSearchReport, Player)
+        const props = await this.repository.Get<PolicySearchReport, Policy>(Id, PolicySearchReport, Policy)
         const domain = this.publisher.mergeObjectContext(props)
 
         await domain.liftBan(Id);

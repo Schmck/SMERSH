@@ -10,6 +10,7 @@ import { Guid } from 'guid-typescript';
 import { Client } from '../../Discord/Framework';
 import { TextChannel } from 'discord.js';
 import { Role } from '../../SMERSH/ValueObjects';
+import { SteamBot } from '../../SMERSH/Utilities/steam';
 
 @EventsHandler(RoleBanLiftedEvent)
 export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEvent>
@@ -20,7 +21,10 @@ export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEve
         this.client = new Client(token, {
             intents: []
         }, commandBus)
+        this.steam = new SteamBot();
     }
+
+    public steam: SteamBot;
 
     async handle(event: RoleBanLiftedEvent) {
         let policy: PolicySearchReport = await SearchClient.Get(event.Id, PolicySearchReport)
@@ -35,6 +39,10 @@ export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEve
                 await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`)
             } 
         });
+
+        const message = `your roleban for ${role.DisplayName} has been lifted`
+
+        await this.steam.sendMessageToFriend(event.PlayerId, message)
 
         return;
     }

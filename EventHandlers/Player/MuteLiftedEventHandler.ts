@@ -9,6 +9,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
 import { Client } from '../../Discord/Framework';
 import { TextChannel } from 'discord.js';
+import { SteamBot } from '../../SMERSH/Utilities/steam';
 
 @EventsHandler(MuteLiftedEvent)
 export class MuteLiftedEventHandler implements IEventHandler<MuteLiftedEvent>
@@ -19,7 +20,10 @@ export class MuteLiftedEventHandler implements IEventHandler<MuteLiftedEvent>
         this.client = new Client(token, {
             intents: []
         }, commandBus)
+        this.steam = new SteamBot();
     }
+
+    public steam: SteamBot;
 
     async handle(event: MuteLiftedEvent) {
         let policy: PolicySearchReport = await SearchClient.Get(event.Id, PolicySearchReport)
@@ -34,6 +38,10 @@ export class MuteLiftedEventHandler implements IEventHandler<MuteLiftedEvent>
                 await channel.send(`mute lifted from ${policy.Name}, originally muted for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`)
 }
         });
+
+        const message = `your ban has been lifted, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`
+
+        await this.steam.sendMessageToFriend(event.PlayerId, message)
 
         return;
     }

@@ -3,7 +3,7 @@ import { Event } from ".."
 import { RoleBan } from '../../SMERSH/ValueObjects'
 
 export class RoleBanAppliedEvent extends Event {
-	constructor(id: Guid, playerId: string, channelId: string, action: string, name: string, reason: string, roleBans: Record<number, RoleBan>, banDate: Date, unbanDate?: Date) {
+	constructor(id: Guid, playerId: string, channelId: string, action: string, name: string, reason: string, roleBans: Record<number, RoleBan>, role: number, banDate: Date, unbanDate?: Date) {
 		super(id)
 
 		this.PlayerId = playerId;
@@ -12,6 +12,7 @@ export class RoleBanAppliedEvent extends Event {
 		this.Name = name;
 		this.Reason = reason;
 		this.RoleBans = roleBans;
+		this.Role = role;
 		this.BanDate = banDate;
 		this.UnbanDate = unbanDate;
 	}
@@ -27,6 +28,8 @@ export class RoleBanAppliedEvent extends Event {
 	public Reason: string;
 
 	public RoleBans: Record<number, RoleBan>;
+
+	public Role: number;
 
 	public BanDate: Date;
 

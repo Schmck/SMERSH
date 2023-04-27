@@ -8,6 +8,8 @@ import { PolicySearchReport } from '../../Reports/Entities/policy'
 import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
 import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
+import { Role, Team } from '../../SMERSH/ValueObjects';
+import { SteamBot } from '../../SMERSH/Utilities/steam';
 
 let cls: { new(id: Guid): PolicySearchReport } = PolicySearchReport;
 
@@ -16,7 +18,10 @@ export class RoleBanAppliedEventHandler implements IEventHandler<RoleBanAppliedE
 {
     public constructor(protected readonly commandBus: CommandBus) {
         this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
+        this.steam = new SteamBot();
     }
+
+    public steam: SteamBot;
 
     public log: FileLogger;
 
@@ -35,6 +40,15 @@ export class RoleBanAppliedEventHandler implements IEventHandler<RoleBanAppliedE
         policy.IsActive = true;
 
         await SearchClient.Update(policy);
+
+
+        const roleBan = event.RoleBans[event.Role];
+        const role = Role.fromValue<Role>(event.Role);
+        const teams = roleBan.Teams.map(team => Team.fromValue<Team>(team).DisplayName).join('and ')
+        const sides = roleBan.Sides.join('and ')
+        const message = `you have been rolebanned from ${role.DisplayName} on ${teams} while ${sides}`
+
+        await this.steam.sendMessageToFriend(event.PlayerId, message)
         return;
     }
 }

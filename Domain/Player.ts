@@ -45,9 +45,4 @@ export class Player extends Domain {
         return;
     }
    
-    public async liftBan(actionId: Guid) {
-        this.apply(new BanLiftedEvent(actionId, this.Id));
-        return;
-    }
-
 }

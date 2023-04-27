@@ -9,6 +9,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
 import { TextChannel } from 'discord.js';
 import { Client } from '../../Discord/Framework';
+import { SteamBot } from '../../SMERSH/Utilities/steam';
 
 @EventsHandler(BanLiftedEvent)
 export class BanLiftedEventHandler implements IEventHandler<BanLiftedEvent>
@@ -19,7 +20,9 @@ export class BanLiftedEventHandler implements IEventHandler<BanLiftedEvent>
         this.client = new Client(token, {
             intents: []
         }, commandBus)
+        this.steam = new SteamBot();
     }
+    public steam: SteamBot;
 
     async handle(event: BanLiftedEvent) {
         let policy: PolicySearchReport = await SearchClient.Get(event.Id, PolicySearchReport)
@@ -32,7 +35,12 @@ export class BanLiftedEventHandler implements IEventHandler<BanLiftedEvent>
             const channel = await client.channels.fetch(policy.ChannelId) as TextChannel;
             if (channel) {
                 await channel.send(`ban lifted from ${policy.Name}, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`)
-  }
+            }
+
+            const message = `your ban has been lifted, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`
+
+            await this.steam.sendMessageToFriend(event.PlayerId, message)
+
         });
 
         return;
