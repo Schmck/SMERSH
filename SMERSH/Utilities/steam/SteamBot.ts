@@ -1,4 +1,4 @@
-import { SteamUser, EResult, EChatEntryType, EFriendRelationship } from 'steam-user';
+import * as SteamUser from 'steam-user';
 import { hexToDec } from 'hex2dec'
 
 export class SteamBot {
@@ -27,7 +27,7 @@ export class SteamBot {
         // Check if the user is already a friend of the bot
         const isFriend = await new Promise<any>((resolve) => {
             bot.on('friendsList', function () {
-                let friends = Object.keys(bot.myFriends).filter(steamId => bot.myFriends[steamId] == EFriendRelationship.Friend);
+                let friends = Object.keys(bot.myFriends).filter(steamId => bot.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);
 
                 if (friends.includes(steamId64)) {
                     resolve(friends.includes(steamId64))
@@ -42,18 +42,18 @@ export class SteamBot {
                 // Wait for the user to accept the friend request
                 const addFriendResult = await new Promise<any>((resolve) => {
                     bot.once('friendRelationship', (steamId: any, relationship: any) => {
-                        if (relationship === EFriendRelationship.Friend && steamId === steamId64) {
-                            resolve(EResult.OK);
+                        if (relationship === SteamUser.EFriendRelationship.Friend && steamId === steamId64) {
+                            resolve(SteamUser.EResult.OK);
                         }
                     });
                 });
 
-                if (addFriendResult !== EResult.OK) {
+                if (addFriendResult !== SteamUser.EResult.OK) {
                     throw new Error(`Failed to add user with ID ${id} as a friend`);
                 }
             }
 
             // Send the message to the user
-            await bot.sendFriendMessage(steamId64, message, EChatEntryType.ChatMsg, () => { });
+        await bot.sendFriendMessage(steamId64, message, SteamUser.EChatEntryType.ChatMsg, () => { });
     }
 }
