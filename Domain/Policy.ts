@@ -36,13 +36,8 @@ export class Policy extends Domain {
         if (this.RoleBans) {
             let roleBan = this.RoleBans[role.Value]
 
-            if (!roleBan) {
-                roleBan = new RoleBan();
-                roleBan.Sides = []
-                roleBan.Teams = []
-            }
 
-            if (roleBan.Sides.includes(side) && roleBan.Teams.includes(team.Value)) {
+            if (roleBan && roleBan.Sides.includes(side) && roleBan.Teams.includes(team.Value)) {
                 return;
             }
             if (roleBan) {
