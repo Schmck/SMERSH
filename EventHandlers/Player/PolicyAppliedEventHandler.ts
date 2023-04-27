@@ -9,6 +9,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
 import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
 import { SteamBot } from '../../SMERSH/Utilities/steam'
+import { Action } from '../../SMERSH/ValueObjects';
 
 let cls: { new(id: Guid): PolicySearchReport } = PolicySearchReport;
 
@@ -47,17 +48,20 @@ export class PolicyAppliedEventHandler implements IEventHandler<PolicyAppliedEve
         let reason = ' for no reason'
 
         switch (event.Action) {
-            case "kick": {
+            case Action.Kick.DisplayName: {
                 action = 'kicked'
             } break;
-            case "sessionban": {
+            case Action.SessionBan.DisplayName: {
                 action = 'session banned'
                 duration = 'until the match is over'
             } break;
-            case "banip": {
+            case Action.Ban.DisplayName: {
+                action = 'banned'
+            }
+            case Action.IpBan.DisplayName: {
                 action = 'ip banned'
             } break;
-            case "mutevoice": {
+            case Action.Mute.DisplayName: {
                 action = 'muted'
             } break;
         }
