@@ -77,90 +77,20 @@ export const UnRoleBanCommand: Command = {
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         const role = interaction.options.get('role');
-        let match
-        let regexp
 
-        if (input && typeof (input.value) === 'string') {
-            if (input.value.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
-                match = {
-                    "Id": input.value
-                }
-            } else if (input.value.match(/[A-Z0-9]{9,10}/)) {
-                match = {
-                    "Id": `0x0110000${input.value}`
-                }
-            } else {
-                regexp = {
-                    "Name": {
-                        "value": `.*${input.value}.*`,
-                        "flags": "ALL",
-                        "case_insensitive": true
-                    }
-                }
-            }
-        }
-
-
-
-        const players = await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
-            "query": {
-                match,
-                regexp
-            }
-        })
-
-        if (players.length > 1) {
-            let playerTable: string = await Utils.generatePlayerTable(players, false)
-            await interaction.followUp({
-                ephemeral: true,
-                content: `\`\`\`prolog
-                ${playerTable}
-                \`\`\``,
-            });
-        } else if (players.length) {
-            const player = players.shift();
-            let policyId = Guid.create()
-
-            const policy = (await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
-                "query": {
-                    "bool": {
-                        "must": [
-                            {
-                                "match": {
-                                    "Action": Action.RoleBan.DisplayName,
-                                }
-                            },
-                            {
-                                "match": {
-                                    "IsActive": true
-                                }
-                            },
-                            {
-                                "match": {
-                                    "Id": player.Id
-                                }
-                            }
-                        ]
-                    }
-                },
-            })).shift()
-
-            if (policy) {
-                policyId = Guid.parse(policy.Id);
-            }
-
-            client.commandBus.execute(new LiftRoleBanCommand(policyId, Role.fromDisplayName<Role>(role.value.toString()).Value))
-
-            await interaction.followUp({
-                ephemeral: true,
-                content: `removed ${input.value} from the role ban list`
-            });
-
-        } else {
+        if (!Guid.parse(input.value.toString())) {
             await interaction.followUp({
                 ephemeral: true,
                 content: `could not find ${input.value} in the database`
             });
         }
+
+        client.commandBus.execute(new LiftRoleBanCommand(Guid.parse(input.value.toString()), Role.fromDisplayName<Role>(role.value.toString()).Value))
+
+        await interaction.followUp({
+            ephemeral: true,
+            content: `removed ${input.value} from the role ban list`
+        });
+
     }
 };
