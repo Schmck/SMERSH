@@ -25,6 +25,8 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 
     await ClientBuilder.Build(elasticUrl)
 
+    await SteamBot.set(steamAccountName, steamPassword);
+
     WebAdminSession.set(baseUrl, authcred)
 
     const bus = app.get(CommandBus);
@@ -35,7 +37,6 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     const round = new RoundWatcher(bus, discord.client, steamToken);
     const ban = new BanWatcher(bus, discord.client, steamToken);
     
-    SteamBot.set(steamAccountName, steamPassword);
     chat.Watch();
     round.Watch();
     ban.Watch();
