@@ -73,7 +73,8 @@ export class PolicyAppliedEventHandler implements IEventHandler<PolicyAppliedEve
         if (event.UnbanDate) {
             duration = ` until ${event.UnbanDate.toString().split(' GMT')[0]}`
         }
-        const message = `you have been ${action}${reason}${duration}. \nplease make a ticket on our discord if you disagree with this decision: https://discord.gg/43XsqZB`
+        const discord = event.Action !== Action.Kick.DisplayName ? `\nplease make a ticket on our discord if you disagree with this decision: https://discord.gg/43XsqZB` : ''
+        const message = `you have been ${action}${reason}${duration}.${discord}`
         this.steam.sendMessageToFriend(event.PlayerId, message)
         return;
     }

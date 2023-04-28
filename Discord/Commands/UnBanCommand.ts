@@ -5,15 +5,15 @@ import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { Client, Utils } from '../Framework'
 import { Role, Team } from "../../SMERSH/ValueObjects";
 import { PlayerQuery } from "../../Services/WebAdmin/Queries";
-import { ApplyRoleBanCommand, LiftRoleBanCommand } from "../../Commands/Player";
+import { ApplyRoleBanCommand, LiftBanCommand, LiftRoleBanCommand } from "../../Commands/Player";
 import { Guid } from "guid-typescript";
 import { PolicySearchReport } from "../../Reports/Entities/policy";
 import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 
 
-export const UnRoleBanCommand: Command = {
-    name: "unroleban",
-    description: "remove role ban from player",
+export const UnBanCommand: Command = {
+    name: "unban",
+    description: "remove ban from a player",
     permissions: [DiscordRole.Admin],
     type: ApplicationCommandType.ChatInput,
     options: [
@@ -23,16 +23,7 @@ export const UnRoleBanCommand: Command = {
             type: ApplicationCommandOptionType.String,
             required: true,
             autocomplete: true,
-        },
-        {
-            name: 'role',
-            'description': 'pick a role, any role',
-            type: ApplicationCommandOptionType.String,
-            required: true,
-            choices: Role.getAll<Role>().map(role => {
-                return { name: role.DisplayName, value: role.DisplayName }
-            }),
-        },
+        }
     ],
     autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
         const focusedValue = interaction.options.getFocused(true);
@@ -41,7 +32,7 @@ export const UnRoleBanCommand: Command = {
                 "must": [
                     {
                         "match": {
-                            "Action": Action.RoleBan.DisplayName,
+                            "Action": Action.Ban.DisplayName,
                         }
                     },
                     {
@@ -85,7 +76,7 @@ export const UnRoleBanCommand: Command = {
             });
         }
 
-        client.commandBus.execute(new LiftRoleBanCommand(Guid.parse(input.value.toString()), Role.fromDisplayName<Role>(role.value.toString()).Value))
+        client.commandBus.execute(new LiftBanCommand(Guid.parse(input.value.toString())))
 
         await interaction.followUp({
             ephemeral: true,

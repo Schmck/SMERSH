@@ -71,8 +71,8 @@ export class Policy extends Domain {
         return;
     }
 
-    public async liftBan(playerId:string) {
-        this.apply(new BanLiftedEvent(this.Id, playerId));
+    public async liftBan() {
+        this.apply(new BanLiftedEvent(this.Id, this.PlayerId));
         return;
     }
 
