@@ -42,7 +42,7 @@ export class ChatWatcher extends Watcher {
         if (roundDate && lastMessageDate && (roundDate.getDate() === lastMessageDate.getDate())) {
             if (messages.length) {
                 messages.forEach(async msg => {
-                    if (msg.message.startsWith('/') || msg.message.startsWith('!')) {
+                    if (msg.message.startsWith('/') || msg.message.startsWith('!') || msg.message.startsWith('\\') || msg.message.startsWith('>') || msg.message.startsWith(':')) {
                         const commandName = msg.message.split(' ')[0].slice(1)
                         if (commandNames.includes(commandName)) {
                             const player = await SearchClient.Get(msg.id as any, PlayerSearchReport)
