@@ -43,7 +43,7 @@ export class SteamBot {
     }
 
     public async setStatus() {
-        const user = this.steam.users[this.steam.logonResult.client_supplied_steamid]
+        const user = this.steam.users[this.steam.logOnResult.client_supplied_steamid]
         if (user.gameid !== 9800) {
             this.steam.setPersona(SteamUser.EPersonaState.Online);
             this.steam.gamesPlayed(9800);
