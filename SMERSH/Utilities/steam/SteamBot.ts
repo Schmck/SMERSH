@@ -5,13 +5,14 @@ export class SteamBot {
     public static set(accountName: string, password: string) {
         const env = JSON.parse(process.argv[process.argv.length - 1])
         const bot = new SteamBot();
+        bot.steam = new SteamUser();
         bot.steam.logOn({
             accountName: accountName,
             password: password,
         });
 
-        bot.steam.setPersona(SteamUser.EPersonaState.Online);
-        bot.steam.gamesPlayed(9800);
+      
+        bot.setStatus();
     }
 
     public static get() {
@@ -24,6 +25,16 @@ export class SteamBot {
     public static bot: SteamBot;
 
     public steam;
+
+    public async setStatus() {
+        await new Promise<void>((resolve) => {
+            this.steam.once('loggedOn', () => {
+                resolve();
+            });
+        });
+        this.steam.setPersona(SteamUser.EPersonaState.Online);
+        this.steam.gamesPlayed(9800);
+    }
 
     public async sendMessageToFriend(id: string, message: string) {
         const env = JSON.parse(process.argv[process.argv.length - 1])
