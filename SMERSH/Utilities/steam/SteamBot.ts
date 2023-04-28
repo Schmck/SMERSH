@@ -43,8 +43,11 @@ export class SteamBot {
     }
 
     public async setStatus() {
-        this.steam.setPersona(SteamUser.EPersonaState.Online);
-        this.steam.gamesPlayed(9800);
+        const user = this.steam.users[this.steam.logonResult.client_supplied_steamid]
+        if (user.gameid !== 9800) {
+            this.steam.setPersona(SteamUser.EPersonaState.Online);
+            this.steam.gamesPlayed(9800);
+        }
     }
 
     public async sendMessageToFriend(id: string, message: string) {
