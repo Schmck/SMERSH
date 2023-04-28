@@ -15,11 +15,11 @@ export class LiftBanCommandHandler implements ICommandHandler<LiftBanCommand> {
     }
 
     async execute(command: LiftBanCommand) {
-        const { Id, PlayerId} = command
+        const { Id} = command
         const props = await this.repository.Get<PolicySearchReport, Policy>(Id, PolicySearchReport, Policy)
         const domain = this.publisher.mergeObjectContext(props)
 
-        await domain.liftBan(PlayerId);
+        await domain.liftBan();
         await domain.commit();
         return;
 
