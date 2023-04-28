@@ -39,7 +39,7 @@ export class MuteLiftedEventHandler implements IEventHandler<MuteLiftedEvent>
 }
         });
 
-        const message = `your ban has been lifted, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`
+        const message = `your mute has been lifted, originally muted for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`
 
         await this.steam.sendMessageToFriend(event.PlayerId, message)
 
