@@ -21,7 +21,7 @@ export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEve
         this.client = new Client(token, {
             intents: []
         }, commandBus)
-        this.steam = new SteamBot();
+        this.steam = SteamBot.get();
     }
 
     public steam: SteamBot;

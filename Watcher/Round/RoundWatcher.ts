@@ -19,7 +19,7 @@ import { stat } from 'fs';
 
 export class RoundWatcher extends Watcher {
 
-    public override async Watch(timeout = 1000, ...args: Array<{status: Status, mapTime: number}>) {
+    public override async Watch(timeout = 100, ...args: Array<{status: Status, mapTime: number}>) {
         const status = await StatusQuery.Get();
         const prevStatus = args[0] && args[0].status;
         let prevMapTime = args[0] && args[0].mapTime

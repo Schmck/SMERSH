@@ -4,48 +4,38 @@ import { hexToDec } from 'hex2dec'
 export class SteamBot {
 
     public constructor() {
-        this.steam = new SteamUser();
+        const steam = new SteamUser();
+
+       
+        return steam
     }
+
+    public static set(accountName: string, password: string) {
+        const env = JSON.parse(process.argv[process.argv.length - 1])
+        const bot = new SteamBot();
+        bot.steam.logOn({
+            accountName: accountName,
+            password: password,
+        });
+
+        bot.steam.setPersona(SteamUser.EPersonaState.Online);
+        bot.steam.gamesPlayed(9800);
+    }
+
+    public static get() {
+        if (!this.bot) {
+            return null
+        }
+        return this.bot;
+    }
+
+    public static bot: SteamBot;
 
     public steam;
-
-    /*
-    public async setGameStatus() {
-        const env = JSON.parse(process.argv[process.argv.length - 1])
-
-        await this.steam.logOn({
-            accountName: env["STEAM_ACCOUNT_NAME"],
-            password: env["STEAM_ACCOUNT_PASSWORD"],
-        });
-
-        await new Promise<void>((resolve) => {
-            this.steam.once('loggedOn', () => {
-                resolve();
-            });
-        });
-        this.steam.setPersona(SteamUser.EPersonaState.Online);
-        this.steam.gamesPlayed(9800);
-    }
-    */
 
     public async sendMessageToFriend(id: string, message: string) {
         const env = JSON.parse(process.argv[process.argv.length - 1])
         const steamId64 = hexToDec(id);
-
-        await this.steam.logOn({
-            accountName: env["STEAM_ACCOUNT_NAME"],
-            password: env["STEAM_ACCOUNT_PASSWORD"],
-        });
-
-      
-        await new Promise<void>((resolve) => {
-            this.steam.once('loggedOn', () => {
-                resolve();
-            });
-        });
-
-        this.steam.setPersona(SteamUser.EPersonaState.Online);
-        this.steam.gamesPlayed(9800);
 
         const isFriend = await new Promise<any>((resolve) => {
             let friends = Object.keys(this.steam.myFriends).filter(steamId => this.steam.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);

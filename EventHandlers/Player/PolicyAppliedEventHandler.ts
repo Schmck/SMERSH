@@ -19,7 +19,7 @@ export class PolicyAppliedEventHandler implements IEventHandler<PolicyAppliedEve
     public constructor(protected readonly commandBus: CommandBus) {
         this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
 
-        this.steam = new SteamBot();
+        this.steam = SteamBot.get();
     }
 
     public log: FileLogger;
