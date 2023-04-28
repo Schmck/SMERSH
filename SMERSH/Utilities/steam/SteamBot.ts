@@ -2,21 +2,27 @@ const SteamUser = require('steam-user');
 import { hexToDec } from 'hex2dec'
 
 export class SteamBot {
+    public constructor(steamUser) {
+        this.steam = steamUser;
+    }
+
     public static async set(accountName: string, password: string) {
-        this.bot = new SteamBot();
-        this.bot.steam = new SteamUser();
-        await this.bot.steam.logOn({
-            accountName: accountName,
-            password: password,
-        });
-
-        await new Promise<void>((resolve) => {
-        this.bot.steam.once('loggedOn', () => {
-                resolve();
+        if (!this.bot) {
+            this.bot = new SteamBot(new SteamUser());
+            await this.bot.steam.logOn({
+                accountName: accountName,
+                password: password,
             });
-        });
 
-        await this.bot.setStatus();
+            await new Promise<void>((resolve) => {
+                this.bot.steam.once('loggedOn', () => {
+                    resolve();
+                });
+            });
+
+            await this.bot.setStatus();
+        }
+        return this.bot;
     }
 
     public static get() {
@@ -31,7 +37,6 @@ export class SteamBot {
     public steam;
 
     public async setStatus() {
-        
         this.steam.setPersona(SteamUser.EPersonaState.Online);
         this.steam.gamesPlayed(9800);
     }

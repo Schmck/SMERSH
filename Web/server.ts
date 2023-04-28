@@ -19,13 +19,13 @@ const args = process.argv;
 
 
 async function start(baseUrl: string, elasticUrl, authcred: string, discordToken: string, steamToken: string, steamAccountName: string, steamPassword: string, port: number) {
+    await SteamBot.set(steamAccountName, steamPassword);
 
     const app = await NestFactory.create(AppModule)
     await app.listen(port, () => { console.log(`cqrs module running on port ${port}`) })
 
     await ClientBuilder.Build(elasticUrl)
 
-    await SteamBot.set(steamAccountName, steamPassword);
 
     WebAdminSession.set(baseUrl, authcred)
 
