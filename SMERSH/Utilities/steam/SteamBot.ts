@@ -9,17 +9,8 @@ export class SteamBot {
     public static async set(accountName: string, password: string) {
         if (!this.bot) {
             this.bot = new SteamBot(new SteamUser());
-            await this.bot.steam.logOn({
-                accountName: accountName,
-                password: password,
-            });
-
-            await new Promise<void>((resolve) => {
-                this.bot.steam.once('loggedOn', () => {
-                    resolve();
-                });
-            });
-
+            
+            await this.bot.login(accountName, password)
             await this.bot.setStatus();
         }
         return this.bot;
@@ -36,6 +27,20 @@ export class SteamBot {
 
     public steam;
 
+    public async login(accountName: string, password: string) {
+        await this.steam.logOn({
+            accountName: accountName,
+            password: password,
+        });
+
+        await new Promise<void>((resolve) => {
+            this.steam.once('loggedOn', () => {
+                resolve();
+            });
+        });
+        return;
+    }
+
     public async setStatus() {
         this.steam.setPersona(SteamUser.EPersonaState.Online);
         this.steam.gamesPlayed(9800);
@@ -44,11 +49,16 @@ export class SteamBot {
     public async sendMessageToFriend(id: string, message: string) {
         const env = JSON.parse(process.argv[process.argv.length - 1])
         const steamId64 = hexToDec(id);
-
+        const online = this.steam.logOnResult && this.steam.logOnResult.eresult;
         const isFriend = await new Promise<any>((resolve) => {
             let friends = Object.keys(this.steam.myFriends).filter(steamId => this.steam.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);
             resolve(friends.includes(steamId64))
         })
+
+        if (!online) {
+            const env = JSON.parse(process.argv[process.argv.length - 1]);
+            await this.login(env["STEAM_ACCOUNT_NAME"], env["STEAM_ACCOUNT_PASSWORD"])
+        }
 
         if (!isFriend) {
             await this.steam.addFriend(steamId64, () => { });
