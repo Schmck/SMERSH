@@ -31,6 +31,7 @@ export class SteamBot {
         await this.steam.logOn({
             accountName: accountName,
             password: password,
+            logonID: Math.round(Math.random() * 100),
         });
 
         await new Promise<void>((resolve) => {
