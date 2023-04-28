@@ -2,14 +2,6 @@ const SteamUser = require('steam-user');
 import { hexToDec } from 'hex2dec'
 
 export class SteamBot {
-
-    public constructor() {
-        const steam = new SteamUser();
-
-       
-        return steam
-    }
-
     public static set(accountName: string, password: string) {
         const env = JSON.parse(process.argv[process.argv.length - 1])
         const bot = new SteamBot();
