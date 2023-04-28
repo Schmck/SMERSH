@@ -3,16 +3,15 @@ import { hexToDec } from 'hex2dec'
 
 export class SteamBot {
     public static set(accountName: string, password: string) {
-        const env = JSON.parse(process.argv[process.argv.length - 1])
-        const bot = new SteamBot();
-        bot.steam = new SteamUser();
-        bot.steam.logOn({
+        this.bot = new SteamBot();
+        this.bot.steam = new SteamUser();
+        this.bot.steam.logOn({
             accountName: accountName,
             password: password,
         });
 
       
-        bot.setStatus();
+        this.bot.setStatus();
     }
 
     public static get() {
