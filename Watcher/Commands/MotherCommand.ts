@@ -63,7 +63,7 @@ export const MotherCommand: Command = {
         }
 
         if (player) {
-            const message = `did your mother drop you on the head ${playa.Playername}`
+            const message = `did your mother drop you on the head ${player.Name}`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
