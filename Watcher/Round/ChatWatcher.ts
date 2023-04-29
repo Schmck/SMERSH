@@ -13,6 +13,8 @@ import { RoundSearchReport } from '../../Reports/Entities/round'
 import { Client } from '../../Discord/Framework';
 import { Commands } from '../Commands'
 import { PlayerSearchReport } from '../../Reports/Entities/player';
+import { AxiosRequestConfig } from 'axios';
+import { Api } from '../../Web/Framework';
 
 
 export class ChatWatcher extends Watcher {
@@ -37,6 +39,15 @@ export class ChatWatcher extends Watcher {
         })).shift()
 
         const roundDate = round ? new Date(round.Date) : false
+        const axios = Api.axios();
+        const env = JSON.parse(process.argv[process.argv.length - 1]);
+        const config: AxiosRequestConfig =
+        {
+            headers: {
+                "Content-type": "application/x-www-form-urlencoded",
+                "Cookie": `authcred="${env["AUTHCRED"]}"`
+            },
+        }
 
 
         if (roundDate && lastMessageDate && (roundDate.getDate() === lastMessageDate.getDate())) {
@@ -50,11 +61,16 @@ export class ChatWatcher extends Watcher {
                             if (player.Role && command.permissions.find(perm => perm.Value === player.Role)) {
                                 const input = msg.message.slice(0, msg.message.match(/\#[A-Z0-9]{0,4}\:/).index)
                                 const { name, id, reason, duration } = this.parseCommand(input.split(' ').slice(1))
-                                command.run(this.commandBus, name, id, reason, duration)
+                                command.run(this.commandBus, msg.username, name, id, reason, duration)
+                            } else {
+                                const message = `you do not have the required permissions to use this command ${msg.username}[${msg.id.slice(9)}]`
+                                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
+                                const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
+                                await axios.post(chatUrl, chatUrlencoded, config)
                             }
-    
+
                         }
-                    }
+                    } 
                     
                 })
 

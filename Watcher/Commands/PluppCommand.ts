@@ -11,10 +11,10 @@ import { ChatRoute, PlayersRoute } from '../../Services/WebAdmin/Routes';
 import { PlayerQuery } from '../../Services/WebAdmin/Queries'
 import { CommandBus } from "@nestjs/cqrs";
 
-export const KickCommand: Command = {
-    name: "kick",
-    aliases: ["k"],
-    permissions: [DiscordRole.Admin, DiscordRole.SmershAgent],
+export const PluppCommand: Command = {
+    name: "plupp",
+    aliases: [],
+    permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
     run: async (commandBus: CommandBus, caller: string, name: string, id: string, reason: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
@@ -63,14 +63,7 @@ export const KickCommand: Command = {
         }
 
         if (player) {
-            const playa = await PlayerQuery.GetById(player.Id)
-            const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
-            const urlencoded = `ajax=1&action=kick&playerkey=${playa.PlayerKey}`
-
-            await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, env["COMMAND_CHANNEL_ID"], Action.Kick, player.Name, reason, new Date()))
-
-            await axios.post(url, urlencoded, config)
-            const message = `${player.Name} was kicked for ${reason}`
+            const message = `${player.Name}just got plupp'd!`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
@@ -81,12 +74,7 @@ export const KickCommand: Command = {
         } else {
             const playa = await PlayerQuery.GetByName(name)
             if (playa) {
-                const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
-                const urlencoded = `ajax=1&action=kick&playerkey=${playa.PlayerKey}`
-                await commandBus.execute(new ApplyPolicyCommand(Guid.create(), playa.UniqueID, env["COMMAND_CHANNEL_ID"], Action.Kick, playa.Playername, reason, new Date()))
-
-                await axios.post(url, urlencoded, config)
-                const message = `${player.Name} was kicked for ${reason}`
+                const message = `${player.Name}just got plupp'd!`
                 const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(chatUrl, chatUrlencoded, config)

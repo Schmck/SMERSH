@@ -15,7 +15,7 @@ export const MuteCommand: Command = {
     name: "mute",
     aliases: ["m"],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent],
-    run: async (commandBus: CommandBus, name: string, id: string, reason: string, duration: string) => {
+    run: async (commandBus: CommandBus, caller: string, name: string, id: string, reason: string, duration: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const config: AxiosRequestConfig =
