@@ -55,6 +55,14 @@ export const MuteCommand: Command = {
         })
         const player = players.shift();
 
+        if (players.length > 1) {
+            const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Name}[${player.Id.slice(9)}]`).join('\, ')}]`
+            const url = env["BASE_URL"] + ChatRoute.PostChat.Action
+            const urlencoded = `ajax=1&message=${message}&teamsay=-1`
+            await axios.post(url, urlencoded, config)
+            return;
+        }
+
         if (duration && duration && typeof (duration) === 'string') {
             let [until, format] = duration.split(/([0-9]+)/).slice(1)
             let untilInt = parseInt(until, 10)
@@ -95,13 +103,6 @@ export const MuteCommand: Command = {
             }
         }
 
-        if (players.length > 1) {
-            const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Name}[${player.Id.slice(9)}]`).join('\, ')}]`
-            const url = env["BASE_URL"] + ChatRoute.PostChat.Action
-            const urlencoded = `ajax=1&message=${message}&teamsay=-1`
-            await axios.post(url, urlencoded, config)
-            return;
-        }
     }
 };
 
