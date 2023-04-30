@@ -74,8 +74,9 @@ export class PolicyAppliedEventHandler implements IEventHandler<PolicyAppliedEve
             duration = ` until ${event.UnbanDate.toString().split(' GMT')[0]}`
         }
         const discord = event.Action !== Action.Kick.DisplayName ? `\nplease make a ticket on our discord if you disagree with this decision: https://discord.gg/43XsqZB` : ''
-        const message = `you have been ${action}${reason}${duration}.${discord}`
-        this.steam.sendMessageToFriend(event.PlayerId, message)
+        const message = `\nYou have been ${action}${reason}${duration}.${discord}`
+        await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message`)
+        await this.steam.sendMessageToFriend(event.PlayerId, message)
         return;
     }
 }
