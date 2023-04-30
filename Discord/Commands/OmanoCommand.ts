@@ -1,5 +1,5 @@
 import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteInteraction } from "discord.js";
-import { Command } from "../FrameWork/Command"
+import { Command } from "../Framework/Command"
 import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { ApplyPolicyCommand } from '../../Commands/Player'
