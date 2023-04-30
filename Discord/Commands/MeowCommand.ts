@@ -14,6 +14,7 @@ import { Client, Utils } from "../Framework";
 
 export const MeowCommand: Command = {
     name: "meow",
+    description: "hahaha Meow!",
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
     options: [
         {
