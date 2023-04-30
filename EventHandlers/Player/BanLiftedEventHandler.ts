@@ -39,6 +39,7 @@ export class BanLiftedEventHandler implements IEventHandler<BanLiftedEvent>
 
             const message = `your ban has been lifted, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`
 
+            await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message`)
             await this.steam.sendMessageToFriend(event.PlayerId, message)
 
         });

@@ -42,6 +42,7 @@ export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEve
 
         const message = `your roleban for ${role.DisplayName} has been lifted`
 
+        await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message`)
         await this.steam.sendMessageToFriend(event.PlayerId, message)
 
         return;

@@ -48,6 +48,7 @@ export class RoleBanAppliedEventHandler implements IEventHandler<RoleBanAppliedE
         const sides = roleBan.Sides.join('and ')
         const message = `you have been rolebanned from ${role.DisplayName} on ${teams} while ${sides}`
 
+        await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message`)
         await this.steam.sendMessageToFriend(event.PlayerId, message)
         return;
     }
