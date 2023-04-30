@@ -83,7 +83,7 @@ export const MuteCommand: Command = {
             if (player) {
                 await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, env["COMMAND_CHANNEL_ID"], Action.Mute, player.Name, reason, new Date(), unbanDate))
 
-                const message = `${player.Name} was muted for ${untilString} for ${reason} until ${unbanDate.toString().split(' GMT')[0]}`
+                const message = `${player.Name} was muted for ${untilString} for ${reason ? reason : 'no reason'} until ${unbanDate.toString().split(' GMT')[0]}`
                 const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(chatUrl, chatUrlencoded, config)

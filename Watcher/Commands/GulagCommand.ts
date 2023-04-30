@@ -74,7 +74,7 @@ export const GulagCommand: Command = {
         } else {
             const playa = await PlayerQuery.GetByName(name)
             if (playa) {
-                const message = `You go to gulag ${player.Name} by order of comrade Stalin!`
+                const message = `You go to gulag ${playa.Playername} by order of comrade Stalin!`
                 const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(chatUrl, chatUrlencoded, config)

@@ -10,12 +10,21 @@ import { AxiosRequestConfig } from 'axios';
 import { ChatRoute, PlayersRoute } from '../../Services/WebAdmin/Routes';
 import { PlayerQuery } from '../../Services/WebAdmin/Queries'
 import { CommandBus } from "@nestjs/cqrs";
+import { Client, Utils } from "../Framework";
 
 export const MeowCommand: Command = {
     name: "meow",
-    aliases: [],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
-    run: async (commandBus: CommandBus, caller: string, name: string, id: string, reason: string) => {
+    options: [
+        {
+            name: 'input',
+            description: 'name or ID of player',
+            type: ApplicationCommandOptionType.String,
+            required: true,
+            autocomplete: true,
+        }
+    ],
+    run: async (client: Client, interaction: CommandInteraction) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const config: AxiosRequestConfig =
@@ -25,21 +34,25 @@ export const MeowCommand: Command = {
                 "Cookie": `authcred="${env["AUTHCRED"]}"`
             },
         }
+        const input = interaction.options.get('input')
         let match
         let regexp
-
-        if (id && typeof (id) === 'string') {
-            if (id.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
+        if (input && typeof (input.value) === 'string') {
+            if (input.value.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
                 match = {
-                    "Id": id
+                    "Id": input.value
                 }
-            }
-        } else {
-            regexp = {
-                "Name": {
-                    "value": `.*${name}.*`,
-                    "flags": "ALL",
-                    "case_insensitive": true
+            } else if (input.value.match(/[A-Z0-9]{9,10}/)) {
+                match = {
+                    "Id": `0x0110000${input.value}`
+                }
+            } else {
+                regexp = {
+                    "Name": {
+                        "value": `.*${input.value}.*`,
+                        "flags": "ALL",
+                        "case_insensitive": true
+                    }
                 }
             }
         }
@@ -55,10 +68,13 @@ export const MeowCommand: Command = {
         const player = players.shift();
 
         if (players.length > 1) {
-            const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Name}[${player.Id.slice(9)}]`).join('\, ')}]`
-            const url = env["BASE_URL"] + ChatRoute.PostChat
-            const urlencoded = `ajax=1&message=${message}&teamsay=-1`
-            await axios.post(url, urlencoded, config)
+            let playerTable: string = await Utils.generatePlayerTable(players, false)
+            await interaction.followUp({
+                ephemeral: true,
+                content: `\`\`\`prolog
+                ${playerTable}
+                \`\`\``,
+            });
             return;
         }
 
@@ -68,23 +84,29 @@ export const MeowCommand: Command = {
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
-            /*await interaction.followUp({
-                ephemeral: true,
-                content: 
-            });*/
+            await interaction.followUp({
+                content: message
+            });
         } else {
-            const playa = await PlayerQuery.GetByName(name)
+            const playa = await PlayerQuery.GetByName(input.value.toString())
             if (playa) {
                 const messages = [`${playa.Playername} ha ha ha ha Meow!`, `Meow ha ha... ${playa.Playername} Meow!`, `${playa.Playername} Meow!`]
                 const message = messages[Math.floor(Math.random() * (2 - 0 + 1) + 0)]
                 const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
-                const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
-                await axios.post(chatUrl, chatUrlencoded, config)
+                const chatUrlencoded = `ajax=1&message=${messages[Math.floor(Math.random() * (2 - 0 + 1) + 0)]}&teamsay=-1`
+
+                await axios.post(chatUrl, chatUrlencoded, config) 
+                await interaction.followUp({
+                    content: message
+                });
             } else {
-                const message = `${name} could not be found in the database`
+                const message = `${input.value} could not be found in the database`
                 const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(chatUrl, chatUrlencoded, config)
+                await interaction.followUp({
+                    content: message
+                });
             }
         }
 

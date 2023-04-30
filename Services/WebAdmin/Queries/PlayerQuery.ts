@@ -60,7 +60,7 @@ export class PlayerQuery extends Query {
 
             if (table) {
                 playas = Parsers.playerTable(table as HTMLTableElement)
-                return playas.find(playa => playa.Playername === name)
+                return playas.find(playa => playa.Playername.includes(name))
             }
 
         }
