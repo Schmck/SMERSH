@@ -77,7 +77,7 @@ export class ChatWatcher extends Watcher {
                             }
 
                         }
-                    } else if (msg.message.includes(':/')) {
+                    } else if (msg.message.includes(':/') && msg.username !== 'admin' && (Math.random() * (32 - 1 + 1) + 1) === 32) {
                         const message = `:/`
                         const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                         const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
