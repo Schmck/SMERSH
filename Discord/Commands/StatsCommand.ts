@@ -139,15 +139,15 @@ export const StatsCommand: Command = {
                 return;
             }).flat().flat().filter(f => f);
 
-            if (playerRounds.length > 100 && !player.Role || player.Role < DiscordRole.Regular.Value) {
+            if (playerRounds.length > 100 && !player.Role && typeof (player.Role) !== 'number') {
                 await client.commandBus.execute(new ApplyDiscordRoleCommand(player.Id as any as Guid, DiscordRole.Regular.Value))
             }
 
-            if (playerRounds.length > 500 && !player.Role || player.Role < DiscordRole.Veteran.Value) {
+            if (playerRounds.length > 500 && typeof (player.Role) === 'number' && player.Role < DiscordRole.Veteran.Value) {
                 await client.commandBus.execute(new ApplyDiscordRoleCommand(player.Id as any as Guid, DiscordRole.Veteran.Value))
             }
 
-            if (playerRounds.length > 10000 && !player.Role || player.Role < DiscordRole.SmershAgent.Value) {
+            if (playerRounds.length > 10000 &&  typeof(player.Role) === 'number' && player.Role < DiscordRole.SmershAgent.Value) {
                 await client.commandBus.execute(new ApplyDiscordRoleCommand(player.Id as any as Guid, DiscordRole.SmershAgent.Value))
             }
             await interaction.followUp({
