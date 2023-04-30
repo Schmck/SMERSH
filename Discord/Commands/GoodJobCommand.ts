@@ -1,5 +1,5 @@
 import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteInteraction } from "discord.js";
-import { Command } from "./Command"
+import { Command } from "../FrameWork/Command"
 import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { ApplyPolicyCommand } from '../../Commands/Player'
@@ -14,7 +14,7 @@ import { Client, Utils } from "../Framework";
 
 export const GoodJobCommand: Command = {
     name: "goodjob",
-    aliases: ["gj"],
+    description: "in game command to let other players know what you think of them"
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
     options: [
         {
