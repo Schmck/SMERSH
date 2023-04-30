@@ -17,6 +17,7 @@ import { MemesCommand } from './MemesCommand'
 import { ShipItCommand } from './ShipItCommand'
 import { PimPamPumCommand } from './PimPamPumCommand'
 import { GulagCommand } from './GulagCommand'
+import { FrownCommand } from './FrownCommand'
 
 
 export const Commands: Command[] = [
@@ -38,4 +39,5 @@ export const Commands: Command[] = [
     ShipItCommand,
     PimPamPumCommand,
     GulagCommand,
+    FrownCommand
 ];

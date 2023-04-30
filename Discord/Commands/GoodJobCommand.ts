@@ -88,8 +88,8 @@ export const GoodJobCommand: Command = {
         }
 
         if (player) {
-            const forReason = reason ? `for ${reason}` : ''
-            const message = `${interaction.user.username} says great job ${player.Name} you deserve a medal ${forReason}`
+            const forReason = reason ? ` for ${reason}!` : '!'
+            const message = `${interaction.user.username} says great job ${player.Name} you deserve a medal${forReason}`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
@@ -100,8 +100,8 @@ export const GoodJobCommand: Command = {
         } else {
             const playa = await PlayerQuery.GetByName(input.value.toString())
             if (playa) {
-                const forReason = reason ? `for ${reason}` : ''
-                const message = `${interaction.user.username} says great job ${player.Name} you deserve a medal ${forReason}`
+                const forReason = reason ? ` for ${reason}!` : '!'
+                const message = `${interaction.user.username} says great job ${player.Name}, you deserve a medal${forReason}`
                 const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(chatUrl, chatUrlencoded, config)
