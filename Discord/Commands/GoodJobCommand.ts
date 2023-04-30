@@ -14,7 +14,7 @@ import { Client, Utils } from "../Framework";
 
 export const GoodJobCommand: Command = {
     name: "goodjob",
-    description: "in game command to let other players know what you think of them"
+    description: "in game command to let other players know what you think of them",
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
     options: [
         {
