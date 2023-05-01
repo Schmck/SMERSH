@@ -43,7 +43,7 @@ export const KickCommand: Command = {
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         const reason = interaction.options.get('reason');
-        const id = input.value.toString().slice(input.value.toString().indexOf('_'), input.value.toString().lastIndexOf('_'))
+        const id = input.value.toString().slice(input.value.toString().indexOf('_') + 1, input.value.toString().lastIndexOf('_'))
         let match
         let regexp
 
