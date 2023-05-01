@@ -60,7 +60,7 @@ export class PlayerQuery extends Query {
 
             if (table) {
                 playas = Parsers.playerTable(table as HTMLTableElement)
-                return playas.find(playa => playa.Playername.includes(name))
+                return playas.find(playa => playa.Playername.toLowerCase().includes(name.toLowerCase()))
             }
 
         }
@@ -78,7 +78,7 @@ export class PlayerQuery extends Query {
 
             if (table) {
                 playas = Parsers.playerTable(table as HTMLTableElement)
-                return playas.filter(playa => playa.Playername.includes(name))
+                return playas.filter(playa => playa.Playername.toLowerCase().includes(name.toLowerCase()))
             }
 
         }
