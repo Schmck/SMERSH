@@ -25,67 +25,30 @@ export const MeowCommand: Command = {
                 "Cookie": `authcred="${env["AUTHCRED"]}"`
             },
         }
-        let match
-        let regexp
-
-        if (id && typeof (id) === 'string') {
-            if (id.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
-                match = {
-                    "Id": id
-                }
+        let player = await PlayerQuery.GetById(id);
+        if (!player) {
+            const players = await PlayerQuery.GetMultipleByName(name);
+            player = players.shift();
+            if (players.length > 1) {
+                const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Playername}[${player.UniqueID.slice(9)}]`).join('\, ')}]`
+                const url = env["BASE_URL"] + ChatRoute.PostChat.Action
+                const urlencoded = `ajax=1&message=${message}&teamsay=-1`
+                await axios.post(url, urlencoded, config)
+                return;
             }
-        } else {
-            regexp = {
-                "Name": {
-                    "value": `.*${name}.*`,
-                    "flags": "ALL",
-                    "case_insensitive": true
-                }
-            }
-        }
-
-
-
-        const players = await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
-            "query": {
-                match,
-                regexp
-            }
-        })
-        const player = players.shift();
-
-        if (players.length > 1) {
-            const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Name}[${player.Id.slice(9)}]`).join('\, ')}]`
-            const url = env["BASE_URL"] + ChatRoute.PostChat.Action
-            const urlencoded = `ajax=1&message=${message}&teamsay=-1`
-            await axios.post(url, urlencoded, config)
-            return;
         }
 
         if (player) {
-            const messages = [`${player.Name} ha ha ha ha Meow!`, `Meow ha ha... ${player.Name} Meow!`, `${player.Name} Meow!`]
+            const messages = [`${player.Playername} ha ha ha ha Meow!`, `Meow ha ha... ${player.Playername} Meow!`, `${player.Playername} Meow!`]
             const message = messages[Math.floor(Math.random() * (2 - 0 + 1) + 0)]
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
-            /*await interaction.followUp({
-                ephemeral: true,
-                content: 
-            });*/
         } else {
-            const playa = await PlayerQuery.GetByName(name)
-            if (playa) {
-                const messages = [`${playa.Playername} ha ha ha ha Meow!`, `Meow ha ha... ${playa.Playername} Meow!`, `${playa.Playername} Meow!`]
-                const message = messages[Math.floor(Math.random() * (2 - 0 + 1) + 0)]
-                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
-                const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
-                await axios.post(chatUrl, chatUrlencoded, config)
-            } else {
-                const message = `${name} could not be found in the database`
-                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
-                const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
-                await axios.post(chatUrl, chatUrlencoded, config)
-            }
+            const message = `${name} could not be found in the database`
+            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
+            const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
+            await axios.post(chatUrl, chatUrlencoded, config)
         }
 
     }

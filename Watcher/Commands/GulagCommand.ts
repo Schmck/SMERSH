@@ -25,65 +25,29 @@ export const GulagCommand: Command = {
                 "Cookie": `authcred="${env["AUTHCRED"]}"`
             },
         }
-        let match
-        let regexp
-
-        if (id && typeof (id) === 'string') {
-            if (id.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
-                match = {
-                    "Id": id
-                }
+        let player = await PlayerQuery.GetById(id);
+        if (!player) {
+            const players = await PlayerQuery.GetMultipleByName(name);
+            player = players.shift();
+            if (players.length > 1) {
+                const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Playername}[${player.UniqueID.slice(9)}]`).join('\, ')}]`
+                const url = env["BASE_URL"] + ChatRoute.PostChat.Action
+                const urlencoded = `ajax=1&message=${message}&teamsay=-1`
+                await axios.post(url, urlencoded, config)
+                return;
             }
-        } else {
-            regexp = {
-                "Name": {
-                    "value": `.*${name}.*`,
-                    "flags": "ALL",
-                    "case_insensitive": true
-                }
-            }
-        }
-
-
-
-        const players = await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
-            "query": {
-                match,
-                regexp
-            }
-        })
-        const player = players.shift();
-
-        if (players.length > 1) {
-            const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Name}[${player.Id.slice(9)}]`).join('\, ')}]`
-            const url = env["BASE_URL"] + ChatRoute.PostChat.Action
-            const urlencoded = `ajax=1&message=${message}&teamsay=-1`
-            await axios.post(url, urlencoded, config)
-            return;
         }
 
         if (player) {
-            const message = `You go to gulag ${player.Name} by order of comrade Stalin!`
+            const message = `You go to gulag ${player.Playername} by order of comrade Stalin!`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
-            /*await interaction.followUp({
-                ephemeral: true,
-                content: 
-            });*/
         } else {
-            const playa = await PlayerQuery.GetByName(name)
-            if (playa) {
-                const message = `You go to gulag ${playa.Playername} by order of comrade Stalin!`
-                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
-                const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
-                await axios.post(chatUrl, chatUrlencoded, config)
-            } else {
-                const message = `${name} could not be found in the database`
-                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
-                const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
-                await axios.post(chatUrl, chatUrlencoded, config)
-            }
+            const message = `${name} could not be found in the database`
+            const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
+            const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
+            await axios.post(chatUrl, chatUrlencoded, config)
         }
 
     }

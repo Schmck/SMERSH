@@ -67,7 +67,7 @@ export class PlayerQuery extends Query {
         return null;
     }
 
-    public static async GetById(id: string) {
+    public static async GetMultipleByName(name: string) {
         const session = WebAdminSession.get();
 
         const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
@@ -78,10 +78,31 @@ export class PlayerQuery extends Query {
 
             if (table) {
                 playas = Parsers.playerTable(table as HTMLTableElement)
-                return playas.find(playa => playa.UniqueID === id)
+                return playas.filter(playa => playa.Playername.includes(name))
             }
 
         }
+        return [];
+    }
+
+    public static async GetById(id: string) {
+        const session = WebAdminSession.get();
+
+        if (id && (id.match(/[A-Z0-9]{9,10}/) || id.match('/0x011[0]{4}[A-Z0-9]{9,10}/'))) {
+            const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
+
+            if (admin && admin.window && admin.window.document) {
+                const table = admin.window.document.querySelector("#players");
+                let playas;
+
+                if (table) {
+                    playas = Parsers.playerTable(table as HTMLTableElement)
+                    return playas.find(playa => playa.UniqueID === id)
+                }
+
+            }
+        }
+        
         return null;
     }
 

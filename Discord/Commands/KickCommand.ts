@@ -43,11 +43,11 @@ export const KickCommand: Command = {
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         const reason = interaction.options.get('reason');
+        const id = input.value.toString().slice(6, 23)
         let match
         let regexp
 
         if (input && typeof (input.value) === 'string') {
-            const id = input.value.slice(5, 23)
             if (id.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
                 match = {
                     "Id": id
@@ -76,7 +76,6 @@ export const KickCommand: Command = {
             }
         })
         const player = players.shift();
-        const id = input.value.toString().slice(5, 23)
         let name = interaction.options.get('input').name
         let playerKey = input.value.toString();
 
