@@ -104,6 +104,7 @@ export const RankCommand: Command = {
                 ${playerTable}
                 \`\`\``,
             });
+            return;
         }
         const player = players.shift();
         let stats: { KD: Record<string, number>, PlayerId: string, rounds: number } = await generateStats(input.value.toString(), role, firstDay, lastDay);
@@ -121,7 +122,7 @@ export const RankCommand: Command = {
             await interaction.followUp({
                 ephemeral: true,
                 embeds: [],
-                content: `could not find any rounds that ${player.Name} has played in`
+                content: `could not find any rounds that ${player.Name} has played in as ${role.DisplayName}`
             });
             return
         }
@@ -141,15 +142,15 @@ export const RankCommand: Command = {
         let fields: List<{ name: string, value: string, inline: boolean }> = []
 
         if ((statistics.attacking && statistics.attacking.KD) || (statistics.defending && statistics.defending.KD)) {
-            fields.push({ name: role.DisplayName, value: '', inline: false })
+            fields.push({ name: role.DisplayName, value: '\u200B', inline: false })
         }
 
         if (statistics.attacking && statistics.attacking.KD) {
-            fields.push({ name: 'Attacking', value: `${player.Name}`, inline: true });
+            fields.push({ name: 'Attacking', value: '', inline: true });
         }
 
         if (statistics.defending && statistics.defending.KD) {
-            fields.push({ name: '\u200B', value: '\u200B', inline: true }, { name: 'Defending', value: `${player.Name}`, inline: true });
+            fields.push({ name: '\u200B', value: '\u200B', inline: true }, { name: 'Defending', value: '', inline: true });
         }
 
         if (statistics.attacking && statistics.attacking.KD) {
@@ -168,7 +169,7 @@ export const RankCommand: Command = {
             const roleNames = Role.getAll<Role>().map(role => role.DisplayName);
             await interaction.followUp({
                 embeds: [{
-                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
+                    title: `[${date.toLocaleString('default', { month: 'long' })}] ${player.Name}`,
                     type: EmbedType.Rich,
                     color: 12370112,
                     fields: fields.slice(0, fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= 20 && i <= 25)),
@@ -179,7 +180,7 @@ export const RankCommand: Command = {
             for (let index = 25; index <= fields.length; index += 25) {
                 await interaction.followUp({
                     embeds: [{
-                        title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
+                        title: `[${date.toLocaleString('default', { month: 'long' })}] ${player.Name}`,
                         type: EmbedType.Rich,
                         color: 12370112,
                         fields: fields.slice(fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= (index - 5) && i <= index), fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= (index + 25 - 5) && i <= (index + 25))),
@@ -190,7 +191,7 @@ export const RankCommand: Command = {
         } else {
             await interaction.followUp({
                 embeds: [{
-                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
+                    title: `[${date.toLocaleString('default', { month: 'long' })}] ${player.Name}`,
                     type: EmbedType.Rich,
                     color: 12370112,
                     fields,

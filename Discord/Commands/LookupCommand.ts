@@ -89,6 +89,7 @@ export const LookupCommand: Command = {
                 ${playerTable}
                 \`\`\``,
             });
+            return;
         } else {
             await interaction.followUp({
                 ephemeral: true,

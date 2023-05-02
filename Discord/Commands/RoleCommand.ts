@@ -101,6 +101,7 @@ export const RoleCommand: Command = {
                 ${playerTable}
                 \`\`\``,
             });
+            return;
         } else if (players.length) {
             const player = players.shift();
             
