@@ -145,17 +145,11 @@ export const RankCommand: Command = {
         }
 
         if (statistics.attacking && statistics.attacking.KD) {
-            const player = players.find(player => player.Id === statistics.attacking.playerId);
-            if (player) {
-                fields.push({ name: 'Attacking', value: `${player.Name}`, inline: true });
-            }
+            fields.push({ name: 'Attacking', value: `${player.Name}`, inline: true });
         }
 
         if (statistics.defending && statistics.defending.KD) {
-            const player = players.find(player => player.Id === statistics.defending.playerId);
-            if (player) {
-                fields.push({ name: '\u200B', value: '\u200B', inline: true }, { name: 'Defending', value: `${player.Name}`, inline: true });
-            }
+            fields.push({ name: '\u200B', value: '\u200B', inline: true }, { name: 'Defending', value: `${player.Name}`, inline: true });
         }
 
         if (statistics.attacking && statistics.attacking.KD) {
@@ -174,7 +168,7 @@ export const RankCommand: Command = {
             const roleNames = Role.getAll<Role>().map(role => role.DisplayName);
             await interaction.followUp({
                 embeds: [{
-                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings |${role.DisplayName}|`,
+                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
                     type: EmbedType.Rich,
                     color: 12370112,
                     fields: fields.slice(0, fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= 20 && i <= 25)),
@@ -185,7 +179,7 @@ export const RankCommand: Command = {
             for (let index = 25; index <= fields.length; index += 25) {
                 await interaction.followUp({
                     embeds: [{
-                        title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings |${role.DisplayName}|`,
+                        title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
                         type: EmbedType.Rich,
                         color: 12370112,
                         fields: fields.slice(fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= (index - 5) && i <= index), fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= (index + 25 - 5) && i <= (index + 25))),
@@ -196,7 +190,7 @@ export const RankCommand: Command = {
         } else {
             await interaction.followUp({
                 embeds: [{
-                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings |${role.DisplayName}|`,
+                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
                     type: EmbedType.Rich,
                     color: 12370112,
                     fields,
