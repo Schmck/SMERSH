@@ -29,7 +29,7 @@ export const RankCommand: Command = {
         },
         {
             name: 'role',
-            'description': 'pick a role, any role',
+            description: 'pick a role, any role',
             type: ApplicationCommandOptionType.String,
             required: true,
             choices: Role.getAll<Role>().map(role => {
@@ -65,7 +65,7 @@ export const RankCommand: Command = {
         const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
         const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
         const input = interaction.options.get('input');
-        const role = Role.fromDisplayName<Role>(interaction.options.get('role').toString());
+        const role = Role.fromDisplayName<Role>(interaction.options.get('role').value.toString());
         let stats: { KD: Record<string, number>, PlayerId: string, rounds: number } = await generateStats(input.value, role, firstDay, lastDay);
         let match
         let regexp
