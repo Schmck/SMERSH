@@ -14,7 +14,7 @@ import { PlayerRoundSearchReport } from "../../Reports/Entities/round/playerRoun
 import { stat } from "fs";
 
 
-export const RankingsCommand: Command = {
+export const RankCommand: Command = {
     name: "rank",
     description: "shows an overview for a player of the last month for each role",
     permissions: [DiscordRole.Veteran, DiscordRole.SmershAgent, DiscordRole.Admin],
