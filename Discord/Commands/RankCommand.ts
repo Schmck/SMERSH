@@ -66,7 +66,6 @@ export const RankCommand: Command = {
         const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
         const input = interaction.options.get('input');
         const role = Role.fromDisplayName<Role>(interaction.options.get('role').value.toString());
-        let stats: { KD: Record<string, number>, PlayerId: string, rounds: number } = await generateStats(input.value, role, firstDay, lastDay);
         let match
         let regexp
 
@@ -90,8 +89,6 @@ export const RankCommand: Command = {
             }
         }
 
-
-
         const players = await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
             "query": {
                 match,
@@ -108,7 +105,26 @@ export const RankCommand: Command = {
                 \`\`\``,
             });
         }
+        const player = players.shift();
+        let stats: { KD: Record<string, number>, PlayerId: string, rounds: number } = await generateStats(input.value.toString(), role, firstDay, lastDay);
 
+
+        if(!player) {
+            await interaction.followUp({
+                ephemeral: true,
+                embeds: [],
+                content: `could not find ${input.name}/${input.value} in the database`
+            });
+        }
+
+        if (!stats) {
+            await interaction.followUp({
+                ephemeral: true,
+                embeds: [],
+                content: `could not find any rounds that ${player.Name} has played in`
+            });
+            return
+        }
         let statistics: { attacking: { KD: number, playerId: string }, defending: { KD: number, playerId: string } } = {
             attacking: {
                 KD: stats.KD.attacking,
@@ -158,7 +174,7 @@ export const RankCommand: Command = {
             const roleNames = Role.getAll<Role>().map(role => role.DisplayName);
             await interaction.followUp({
                 embeds: [{
-                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
+                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings |${role.DisplayName}|`,
                     type: EmbedType.Rich,
                     color: 12370112,
                     fields: fields.slice(0, fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= 20 && i <= 25)),
@@ -169,7 +185,7 @@ export const RankCommand: Command = {
             for (let index = 25; index <= fields.length; index += 25) {
                 await interaction.followUp({
                     embeds: [{
-                        title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
+                        title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings |${role.DisplayName}|`,
                         type: EmbedType.Rich,
                         color: 12370112,
                         fields: fields.slice(fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= (index - 5) && i <= index), fields.findLastIndex((f, i) => roleNames.includes(f.name) && i >= (index + 25 - 5) && i <= (index + 25))),
@@ -180,7 +196,7 @@ export const RankCommand: Command = {
         } else {
             await interaction.followUp({
                 embeds: [{
-                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings`,
+                    title: `[${date.toLocaleString('default', { month: 'long' })}] Rankings |${role.DisplayName}|`,
                     type: EmbedType.Rich,
                     color: 12370112,
                     fields,
@@ -192,7 +208,7 @@ export const RankCommand: Command = {
 }
 
 
-async function generateStats(playerId, role: Role, firstDay: Date, lastDay: Date): Promise<{ KD: Record<string, number>, PlayerId: string, rounds: number }> {
+async function generateStats(playerId: string, role: Role, firstDay: Date, lastDay: Date): Promise<{ KD: Record<string, number>, PlayerId: string, rounds: number }> {
     const playerRounds = await SearchClient.Search<PlayerRoundSearchReport>(PlayerRoundSearchReport, {
         "query": {
             "bool": {
