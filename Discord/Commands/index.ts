@@ -12,6 +12,7 @@ import { ChatLogCommand } from './ChatLogCommand'
 import { SaveLayoutCommand } from './SaveLayoutCommand'
 import { StatsCommand } from './StatsCommand'
 import { RankingsCommand } from './RankingsCommand'
+import { RankCommand } from './RankCommand'
 import { RoleCommand } from './RoleCommand'
 import { HelpCommand } from './HelpCommand'
 import { BalanceCommand } from './BalanceCommand'
@@ -40,6 +41,7 @@ export const Commands: Command[] = [
     SaveLayoutCommand,
     StatsCommand,
     RankingsCommand,
+    RankCommand,
     RoleCommand,
     BalanceCommand,
     CamperCommand,
