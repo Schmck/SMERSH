@@ -138,7 +138,7 @@ export const RankCommand: Command = {
         
 
 
-        let fields: List<{ name: string, value: string, inline: boolean }>
+        let fields: List<{ name: string, value: string, inline: boolean }> = []
 
         if ((statistics.attacking && statistics.attacking.KD) || (statistics.defending && statistics.defending.KD)) {
             fields.push({ name: role.DisplayName, value: '', inline: false })
