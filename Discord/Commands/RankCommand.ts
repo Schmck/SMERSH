@@ -109,38 +109,17 @@ export const RankCommand: Command = {
             });
         }
 
-        let statistics: { attacking: { KD: number, playerId: string }, defending: { KD: number, playerId: string } } = Object.keys(stats).reduce((leaderboard, playerId) => {
-            const player = players[playerId]
-
-            if (player.rounds > 10) {
-                if (leaderboard.attacking.KD) {
-                    if (leaderboard.attacking.KD < player.KD.attacking) {
-                        leaderboard.attacking.KD = player.KD.attacking
-                        leaderboard.attacking.playerId = player.PlayerId
-                    }
-                } else {
-                    leaderboard.attacking.KD = player.KD.attacking
-                    leaderboard.attacking.playerId = player.PlayerId
-                }
-
-                if (leaderboard.defending.KD) {
-                    if (leaderboard.defending.KD < player.KD.defending) {
-                        leaderboard.defending.KD = player.KD.defending
-                        leaderboard.defending.playerId = player.PlayerId
-                    }
-                } else {
-                    leaderboard.defending.KD = player.KD.defending
-                    leaderboard.defending.playerId = player.PlayerId
-                }
+        let statistics: { attacking: { KD: number, playerId: string }, defending: { KD: number, playerId: string } } = {
+            attacking: {
+                KD: stats.KD.attacking,
+                playerId: stats.PlayerId,
+            },
+            defending: {
+                KD: stats.KD.defending,
+                playerId: stats.PlayerId,
             }
-
-
-            return leaderboard
-
-        }, {
-            attacking: { KD: 0, playerId: "" },
-            defending: { KD: 0, playerId: "" }
-        })
+        }
+        
 
 
         let fields: List<{ name: string, value: string, inline: boolean }>
