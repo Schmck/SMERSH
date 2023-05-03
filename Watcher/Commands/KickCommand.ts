@@ -45,7 +45,7 @@ export const KickCommand: Command = {
             await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.UniqueID, env["COMMAND_CHANNEL_ID"], Action.Kick, player.Playername, reason, new Date()))
 
             await axios.post(url, urlencoded, config)
-            const message = `${player.Name} was kicked for ${reason ? reason : 'no reason'}`
+            const message = `${player.Playername} was kicked for ${reason ? reason : 'no reason'}`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
