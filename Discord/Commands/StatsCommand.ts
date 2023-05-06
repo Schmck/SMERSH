@@ -83,7 +83,7 @@ export const StatsCommand: Command = {
             "query": {
                 match
             },
-            size: 256,
+            size: 1000,
         })
 
         if (playerRounds.length) {

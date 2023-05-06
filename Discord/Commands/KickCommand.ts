@@ -120,7 +120,7 @@ export const KickCommand: Command = {
         });
         await interaction.followUp({
             ephemeral: true,
-            content: `${player.Name} was kicked for ${reason.value}`
+            content: `${name} was kicked for ${reason.value}`
         });
         
     }
