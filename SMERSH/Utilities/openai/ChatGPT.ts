@@ -1,13 +1,12 @@
-eval("import { ChatGPTAPI } from 'chatgpt'");
-
 
 export class ChatGPT {
 
     private static instance: ChatGPT;
 
-    public static set(apiKey: string, prompt?: string) {
+    public static async set(apiKey: string, prompt?: string) {
         if (!this.instance) {
-            this.instance = new ChatGPT(apiKey, prompt)
+            const { ChatGPTAPI } = await import('chatgpt');
+            this.instance = new ChatGPT(apiKey, ChatGPTAPI, prompt)
         }
         return this.instance;
     }
@@ -16,8 +15,9 @@ export class ChatGPT {
         return this.instance;
     }
 
-    public constructor(apiKey: string, prompt?: string) {
-        this.api = eval("new ChatGPTAPI({apiKey: apiKey})")
+
+    public constructor(apiKey: string, ChatGPTAPI: any, prompt?: string) {
+        this.api = new ChatGPTAPI({apiKey: apiKey})
 
         this.prompt = prompt ?? `
             We are SMERSH, an agency that was created to root out spies and deserters. 
