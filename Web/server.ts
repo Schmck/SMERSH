@@ -12,13 +12,15 @@ import { Bot } from '../Discord/Bot'
 import * as path from 'path'
 import { NestApplicationOptions } from '@nestjs/common';
 import { SteamBot } from '../SMERSH/Utilities/steam';
+import { ChatGPT } from '../SMERSH/Utilities/chatgpt';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 const config = process.env;
 const args = process.argv;
 
 
-async function start(baseUrl: string, elasticUrl, authcred: string, discordToken: string, steamToken: string, steamAccountName: string, steamPassword: string, port: number) {
+async function start(baseUrl: string, elasticUrl, authcred: string, discordToken: string, steamToken: string, steamAccountName: string, steamPassword: string, ChatGPTApiKey: string, port: number) {
+    await ChatGPT.set(ChatGPTApiKey)
     await SteamBot.set(steamAccountName, steamPassword);
 
     const app = await NestFactory.create(AppModule)
@@ -31,6 +33,7 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 
     const bus = app.get(CommandBus);
     const discord: Bot = new Bot(discordToken, bus);
+    const steam: SteamBot = SteamBot.get();
 
 
     const chat = new ChatWatcher(bus, discord.client, steamToken);
@@ -40,26 +43,20 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     chat.Watch();
     round.Watch();
     ban.Watch();
-
+    steam.steam.on('friendMessage', (steamID, message) => {
+        steam.respondToFriend(steamID, message)
+    });
 
 }
 
-
-/*
-function boot() {
-    const webAdmins = JSON.parse(config["WEBADMIN_URLS"]) as Array<Record<string, string | number>>;
-    webAdmins.forEach(webAdmin => {
-        start(webAdmin.BASE_URL.toString(), webAdmin.AUTHCRED.toString(), webAdmin.DISCORD_TOKEN.toString(), parseInt(webAdmin.PORT.toString()))
-    })
-}*/
 function boot() {
     const webAdmin = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
-    start(webAdmin.BASE_URL.toString(), webAdmin.ELASTIC_URL.toString(), webAdmin.AUTHCRED.toString(), webAdmin.DISCORD_TOKEN.toString(), webAdmin.STEAM_TOKEN.toString(), webAdmin.STEAM_ACCOUNT_NAME.toString(), webAdmin.STEAM_ACCOUNT_PASSWORD.toString(), parseInt(webAdmin.PORT.toString()))
+    start(webAdmin.BASE_URL.toString(), webAdmin.ELASTIC_URL.toString(), webAdmin.AUTHCRED.toString(), webAdmin.DISCORD_TOKEN.toString(), webAdmin.STEAM_TOKEN.toString(), webAdmin.STEAM_ACCOUNT_NAME.toString(), webAdmin.STEAM_ACCOUNT_PASSWORD.toString(), webAdmin.CHATGPT_API_KEY.toString(), parseInt(webAdmin.PORT.toString()))
 }
 
 boot();
 
 process.on('uncaughtException', function (err) {
-    console.error(err);
+    console.trace(err);
     console.log("Node NOT Exiting...");
 });
