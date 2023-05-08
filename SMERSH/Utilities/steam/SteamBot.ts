@@ -1,5 +1,6 @@
 const SteamUser = require('steam-user');
 import { hexToDec } from 'hex2dec'
+import { ChatGPT } from '../chatgpt'
 
 export class SteamBot {
     public constructor(steamUser) {
@@ -23,7 +24,7 @@ export class SteamBot {
         return this.bot;
     }
 
-    public static bot: SteamBot;
+    private static bot: SteamBot;
 
     public steam;
 
@@ -84,5 +85,12 @@ export class SteamBot {
 
         await this.steam.chat.sendFriendMessage(steamId64, message, { chatEntryType: SteamUser.EChatEntryType.ChatMsg }, () => { });
 
+    }
+
+    public async respondToFriend(id: string, message: string, name?: string) {
+        const chatGPT = ChatGPT.get();
+        const response = await chatGPT.send(message, name)
+
+        await this.steam.chat.sendFriendMessage(id, response, { chatEntryType: SteamUser.EChatEntryType.ChatMsg }, () => { });
     }
 }
