@@ -1,6 +1,6 @@
 const SteamUser = require('steam-user');
 import { hexToDec } from 'hex2dec'
-import { ChatGPT } from '../chatgpt'
+import { ChatGPT } from '../openai'
 
 export class SteamBot {
     public constructor(steamUser) {

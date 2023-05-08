@@ -12,7 +12,7 @@ import { Bot } from '../Discord/Bot'
 import * as path from 'path'
 import { NestApplicationOptions } from '@nestjs/common';
 import { SteamBot } from '../SMERSH/Utilities/steam';
-import { ChatGPT } from '../SMERSH/Utilities/chatgpt';
+import { ChatGPT } from '../SMERSH/Utilities/openai';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 const config = process.env;
