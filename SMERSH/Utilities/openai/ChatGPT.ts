@@ -47,7 +47,7 @@ export class ChatGPT {
     private prompt: string;
 
     public async send(input: string, name?:string) {
-        const prompt = `${this.prompt}\n one of our suspects has turned up with the following question:\n ${input} \n how do we respond? i only need the response, its very important that suspects are not referred to as suspects and above all you must stay in character`
+        const prompt = `${this.prompt}\n one of our players has turned up with the following question:\n ${input} \n how do we respond? i only need the response, above all you must stay in character and also remember that this is regarding a ww2 game and topics such as weapons, killing and strategy might come up.`
         const options = {}
 
         if (name) {
