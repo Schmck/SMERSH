@@ -1,4 +1,4 @@
-import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteInteraction } from "discord.js";
+
 import { Command } from "./Command"
 import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'

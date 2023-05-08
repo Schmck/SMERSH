@@ -9,6 +9,7 @@ import { ApplyRoleBanCommand, LiftRoleBanCommand } from "../../Commands/Player";
 import { Guid } from "guid-typescript";
 import { PolicySearchReport } from "../../Reports/Entities/policy";
 import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
+import { Policy } from "../../Reports/Entities";
 
 
 export const UnRoleBanCommand: Command = {
@@ -77,19 +78,23 @@ export const UnRoleBanCommand: Command = {
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         const role = interaction.options.get('role');
+        const policyId = Guid.parse(input.value.toString())
 
-        if (!Guid.parse(input.value.toString())) {
+        if (!policyId) {
             await interaction.followUp({
                 ephemeral: true,
-                content: `could not find ${input.value} in the database`
+                content: `Please use the autocomplete instead.`
             });
+            return;
         }
 
-        client.commandBus.execute(new LiftRoleBanCommand(Guid.parse(input.value.toString()), Role.fromDisplayName<Role>(role.value.toString()).Value))
+        const roleBan = await SearchClient.Get<PolicySearchReport>(policyId, PolicySearchReport)
+
+        client.commandBus.execute(new LiftRoleBanCommand(policyId, Role.fromDisplayName<Role>(role.value.toString()).Value))
 
         await interaction.followUp({
             ephemeral: true,
-            content: `removed ${input.name} from the role ban list`
+            content: `removed ${roleBan.Name} from the role ban list`
         });
 
     }

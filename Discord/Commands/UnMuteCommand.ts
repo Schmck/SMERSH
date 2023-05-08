@@ -70,39 +70,17 @@ export const UnMuteCommand: Command = {
     },
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
-
-        let match;
-
-        if (input && typeof (input.value) === 'string') {
-            if (Guid.parse(input.value)) {
-                match = {
-                    "Id": input.value
-                }
-            }  
+        const policyId = Guid.parse(input.value.toString())
+        if (!policyId) {
+            await interaction.followUp({
+                ephemeral: true,
+                content: `Please use the autocomplete instead.`
+            });
+            return;
         }
 
-        const policy = (await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "match": {
-                                "IsActive": true
-                            }
-                        },
-                        {
-                            "match": {
-                                "Action": Action.Mute.DisplayName
-                            }
-                        },
-                        {
-                            match
-                        }
-                    ]
+        const policy = await SearchClient.Get<PolicySearchReport>(policyId, PolicySearchReport)
 
-                }
-            },
-        })).shift()
 
         if (policy) {
             await client.commandBus.execute(new LiftMuteCommand(Guid.parse(policy.Id)))

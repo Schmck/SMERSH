@@ -68,19 +68,23 @@ export const UnBanCommand: Command = {
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         const role = interaction.options.get('role');
-
-        if (!Guid.parse(input.value.toString())) {
+        const policyId = Guid.parse(input.value.toString())
+        if (!policyId) {
             await interaction.followUp({
                 ephemeral: true,
-                content: `could not find ${input.value} in the database`
+                content: `Please use the autocomplete instead.`
             });
+            return;
         }
+
+        const policy = await SearchClient.Get<PolicySearchReport>(policyId, PolicySearchReport)
+
 
         client.commandBus.execute(new LiftBanCommand(Guid.parse(input.value.toString())))
 
         await interaction.followUp({
             ephemeral: true,
-            content: `removed ${input.name} from the role ban list`
+            content: `removed ${policy.Name} from the role ban list`
         });
 
     }
