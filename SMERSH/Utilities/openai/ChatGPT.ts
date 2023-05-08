@@ -1,4 +1,4 @@
-import { ChatGPTAPI } from 'chatgpt'
+eval("import { ChatGPTAPI } from 'chatgpt'");
 
 
 export class ChatGPT {
@@ -17,9 +17,7 @@ export class ChatGPT {
     }
 
     public constructor(apiKey: string, prompt?: string) {
-        this.api = new ChatGPTAPI({
-            apiKey: apiKey
-        })
+        this.api = eval("new ChatGPTAPI({apiKey: apiKey})")
 
         this.prompt = prompt ?? `
             We are SMERSH, an agency that was created to root out spies and deserters. 
@@ -45,7 +43,7 @@ export class ChatGPT {
 
     }
 
-    private api: ChatGPTAPI;
+    private api: any;
 
     private prompt: string;
 
