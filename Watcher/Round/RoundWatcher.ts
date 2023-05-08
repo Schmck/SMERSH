@@ -77,6 +77,7 @@ export class RoundWatcher extends Watcher {
                 const playerIds: string[] = status.Players ? status.Players.map(player => player.Id).filter(id => id) : []
                 const timeLimit = status.Rules && status.Rules.TimeLimit ? status.Rules.TimeLimit : 0
                 const newMapTime = status.Rules && status.Rules.TimeLeft ? status.Rules.TimeLeft : 0
+                const thereBeBots = status.Players.every(player => !player.Bot)
 
 
                 if (round && mapTime && timeLimit && timeLimit === mapTime) {
@@ -129,7 +130,7 @@ export class RoundWatcher extends Watcher {
                             }
                         }
 
-                        if (exists && status && status.Teams && status.Teams.length && round && status.Players.every(player => !player.Bot) && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
+                        if (exists && status && status.Teams && status.Teams.length && round && thereBeBots && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
                             const team = Team.fromValue<Team>(player.Team);
                             const role = Role.fromDisplayName<Role>(player.Role);
                             const id = Guid.parse((round.Id.toString().slice(0, 27) + playerId.slice(9)))
