@@ -5,7 +5,7 @@ import { PolicySearchReport } from '../../Reports/Entities/policy';
 export class Policy {
 
     public static async getPolicies(steamId: string) {
-        const id = decToHex(steamId);
+        const id = `0x0${decToHex(steamId).slice(2)}`;
         const policies = await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
             "query": {
                 "match": {
