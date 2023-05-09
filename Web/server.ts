@@ -45,7 +45,7 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     round.Watch();
     ban.Watch();
     steam.steam.on('friendMessage', async (steamID, message) => {
-        const policies = (await Policy.getPolicies(steamID)).map(policy => {
+        const policies = (await Policy.getPolicies(steamID.getSteamID64())).map(policy => {
             let duration
             if (policy.BanDate && policy.UnbanDate) {
                 duration = Policy.getDurationString(new Date(policy.BanDate), new Date(policy.UnbanDate))
