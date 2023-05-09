@@ -16,7 +16,12 @@ export class ChatGPT {
 
 
     public constructor(apiKey: string, ChatGPTAPI: any, prompt?: string) {
-        this.api = new ChatGPTAPI({apiKey: apiKey})
+        this.api = new ChatGPTAPI({
+            apiKey: apiKey,
+            completionParams: {
+                model: 'gpt-4',
+            }
+            })
 
         this.prompt = prompt ?? `
             We are SMERSH, an agency that was created to root out spies and deserters. 
