@@ -11,7 +11,8 @@ export class Policy {
                 "match": {
                     "PlayerId": id
                 }
-            }
+            },
+            size:100
         })
 
         return policies;
