@@ -87,9 +87,9 @@ export class SteamBot {
 
     }
 
-    public async respondToFriend(id: string, message: string, name?: string) {
+    public async respondToFriend(id: string, policies: Array<{ action: string, reason?: string, duration?: string, active?: boolean }>, message: string, name?: string) {
         const chatGPT = ChatGPT.get();
-        const response = await chatGPT.send(message, name)
+        const response = await chatGPT.send(policies, message, name)
 
         await this.steam.chat.sendFriendMessage(id, response, { chatEntryType: SteamUser.EChatEntryType.ChatMsg }, () => { });
     }

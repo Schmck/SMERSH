@@ -13,6 +13,7 @@ import * as path from 'path'
 import { NestApplicationOptions } from '@nestjs/common';
 import { SteamBot } from '../SMERSH/Utilities/steam';
 import { ChatGPT } from '../SMERSH/Utilities/openai';
+import { Policy } from './Utils'
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 const config = process.env;
@@ -43,8 +44,15 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     chat.Watch();
     round.Watch();
     ban.Watch();
-    steam.steam.on('friendMessage', (steamID, message) => {
-        steam.respondToFriend(steamID, message)
+    steam.steam.on('friendMessage', async (steamID, message) => {
+        const policies = (await Policy.getPolicies(steamID)).map(policy => {
+            let duration
+            if (policy.BanDate && policy.UnbanDate) {
+                duration = Policy.getDurationString(new Date(policy.BanDate), new Date(policy.UnbanDate))
+            }
+            return {action: policy.Action, reason: policy.Reason, duration, active: policy.IsActive }
+        })
+        steam.respondToFriend(steamID, policies, message)
     });
 
 }
@@ -55,6 +63,7 @@ function boot() {
 }
 
 boot();
+
 
 process.on('uncaughtException', function (err) {
     console.trace(err);
