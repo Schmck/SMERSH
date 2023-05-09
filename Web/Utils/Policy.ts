@@ -7,9 +7,9 @@ export class Policy {
     public static async getPolicies(steamId: string) {
         const id = decToHex(steamId);
         const policies = await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
-            query: {
-                match: {
-                    PlayerId: id,
+            "query": {
+                "match": {
+                    "PlayerId": id
                 }
             }
         })
