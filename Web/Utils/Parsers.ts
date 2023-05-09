@@ -60,13 +60,16 @@ export class Parsers {
                 let header = result.headers[index].toString()
                 let vl = val
 
-                if(vl === 'Yes') {
-                    vl = true
-                }
+                if (!header.includes('Player name')) {
+                    if (vl === 'Yes') {
+                        vl = true
+                    }
 
-                if(vl === 'No') {
-                    vl = false;
+                    if (vl === 'No') {
+                        vl = false;
+                    }
                 }
+               
 
                 if(Number.isInteger(parseInt(vl)) && !header.includes('Player name') && !header.includes('PlayerKey') && !header.includes('Unique ID') && !header.includes('IP')) {
                     vl = parseInt(vl)
