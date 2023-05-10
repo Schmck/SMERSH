@@ -41,7 +41,7 @@ export class MuteLiftedEventHandler implements IEventHandler<MuteLiftedEvent>
 
         const message = `your mute has been lifted, originally muted for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`
 
-        await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message`)
+        await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message integrated with ChatGPT`)
         await this.steam.sendMessageToFriend(event.PlayerId, message)
 
         return;
