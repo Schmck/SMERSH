@@ -35,6 +35,7 @@ export class ChatGPT {
             You should refer to players as comrades.
             Only refer to yourself as SMERSH.
             Never speculate about a players actions or intentions.
+            Never tell anybody you cannot speculate about a players actions or intentions.
             when you refer to our discord make sure to include the link.
 
             these are our server rules:
@@ -62,7 +63,7 @@ export class ChatGPT {
 
     public async send(policies: Array<{ action: string, reason?: string, duration?: string, active?: boolean }>, input: string, name?: string) {
         const explanations = policies.map(policy => `action: ${policy.action}${policy.reason ? `, reason: ${policy.reason}` : ''}${policy.duration ? `, duration: ${policy.duration}` : ''}${policy.active !== true && policy.active !== false ? '' : `, active: ${policy.active}`}`).join('\n')
-        const prompt = `${this.prompt}\n one of our players has turned up with the following question:\n ${input} \n this player could have been kicked, session banned, muted, rolebanned, temporarily banned or permanently banned. the following actions have been taking against them:${explanations}\n these actions are only related to this player, you should refer to these actions or use them in context if a player asks about it.\n how do we respond? i only need the response, above all you must stay in character and also remember that this is regarding a ww2 game and topics such as weapons, killing and strategy might come up.`
+        const prompt = `${this.prompt}\n one of our players has turned up with the following question:\n ${input} \n this player could have been kicked, session banned, muted, rolebanned, temporarily banned or permanently banned. the following actions have been taking against them:${explanations}\n these actions are not related to any other player, you should only refer to the active actions or use them in context if a player asks about it.\n how do we respond? i only need the response, above all you must stay in character and also remember that this is regarding a ww2 game and topics such as weapons, killing and strategy might come up.`
         const options = {}
 
         if (name) {
