@@ -3,7 +3,7 @@ import { Client, Utils } from '../Framework'
 import { Command } from "../Framework/Command"
 import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
-import { ChangeLayoutCommand } from '../../Commands/Layout'
+import { SaveLayoutCommand } from '../../Commands/Layout'
 import { Guid } from "guid-typescript";
 import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 import { Api } from '../..//Web/Framework';
@@ -12,7 +12,7 @@ import { PlayersRoute } from '../../Services/WebAdmin/Routes';
 import { LayoutQuery, PlayerQuery } from '../../Services/WebAdmin/Queries'
 import { LayoutSearchReport } from "../../Reports/Entities/layout";
 
-export const SaveLayoutCommand: Command = {
+export const SaveCommand: Command = {
     name: "save",
     description: "saves the layout that is currently on the server",
     permissions: [DiscordRole.Admin],
@@ -59,7 +59,7 @@ export const SaveLayoutCommand: Command = {
             } else {
                 layoutId = Guid.create()
             }
-            await client.commandBus.execute(new ChangeLayoutCommand(layoutId, name.value.toString(), layout))
+            await client.commandBus.execute(new SaveLayoutCommand(layoutId, name.value.toString(), layout))
             await interaction.followUp({
                 ephemeral: true,
                 content: `the ${name.value} layout has been saved`

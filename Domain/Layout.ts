@@ -1,11 +1,19 @@
 import { Guid } from "guid-typescript";
 import { Domain } from './Domain'
-import { MapChangedEvent } from '../Events/Map'
-import { LayoutChangedEvent } from "../Events";
+import { LayoutSavedEvent, LayoutRequirementsChangedEvent } from "../Events";
 
 export class Layout extends Domain {
 
     public Name: string;
+
+    public MinimumPlayerCount: number;
+
+    public MaximumPlayerCount: number;
+
+    public StartTime: number;
+
+    public EndTime: number;
+
 
     public Layout: Record<string, string[]>;
 
@@ -15,8 +23,17 @@ export class Layout extends Domain {
         super(id);
     }
 
-    public changeLayout(name: string, layout: Record<string, string[]>) {
-        this.apply(new LayoutChangedEvent(this.Id, name, layout, this.IsActive))
+    public saveLayout(name: string, layout: Record<string, string[]>) {
+        this.apply(new LayoutSavedEvent(this.Id, name, layout, this.IsActive))
+    }
+
+    public changeLayoutRequirements(minimumPlayerCount: number, maximumPlayerCount: number, startTime: number, endTime: number) {
+
+        if (this.MinimumPlayerCount == minimumPlayerCount && this.MaximumPlayerCount == maximumPlayerCount && this.StartTime === startTime && this.EndTime === endTime) {
+            return;
+        }
+
+        this.apply(new LayoutRequirementsChangedEvent(this.Id, minimumPlayerCount, maximumPlayerCount, startTime, endTime))
     }
 
 }

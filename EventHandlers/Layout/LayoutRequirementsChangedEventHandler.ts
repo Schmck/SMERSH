@@ -1,7 +1,7 @@
 export { }
 import { IEventHandler } from '@nestjs/cqrs';
 import { EventsHandler } from '@nestjs/cqrs/dist/decorators/events-handler.decorator';
-import { LayoutChangedEvent } from '../../Events'
+import { LayoutRequirementsChangedEvent } from '../../Events'
 import { SearchClient } from '../../Elastic/app'
 import { LayoutSearchReport } from '../../Reports/Entities/layout'
 import { RoundSearchReport } from '../../Reports/Entities/round'
@@ -10,20 +10,21 @@ import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
 let cls: { new(id: Guid): LayoutSearchReport } = LayoutSearchReport;
 
-@EventsHandler(LayoutChangedEvent)
-export class LayoutChangedEventHandler implements IEventHandler<LayoutChangedEvent>
+@EventsHandler(LayoutRequirementsChangedEvent)
+export class LayoutRequirementsChangedEventHandler implements IEventHandler<LayoutRequirementsChangedEvent>
 {
     public constructor(protected readonly commandBus: CommandBus) {
     }
 
-    async handle(event: LayoutChangedEvent) {
+    async handle(event: LayoutRequirementsChangedEvent) {
 
         let layout = new cls(event.Id);
-        layout.Name = event.Name;
-        layout.Maps = event.Layout;
-        layout.IsActive = event.IsActive;
 
-        console.log(layout)
+        layout.MinimumPlayerCount = event.MinimumPlayerCount;
+        layout.MaximumPlayerCount = event.MaximumPlayerCount;
+        layout.StartTime = event.StartTime;
+        layout.EndTime = event.EndTime;
+
         await SearchClient.Update(layout);
         return;
     }

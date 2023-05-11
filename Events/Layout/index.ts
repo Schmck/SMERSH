@@ -1,1 +1,2 @@
-export { LayoutChangedEvent } from './LayoutChangedEvent'
+export { LayoutSavedEvent } from './LayoutSavedEvent'
+export { LayoutRequirementsChangedEvent } from './LayoutRequirementsChangedEvent'

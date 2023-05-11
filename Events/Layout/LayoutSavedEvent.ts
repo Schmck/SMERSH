@@ -1,7 +1,7 @@
 import { Guid } from "guid-typescript";
-import { Event } from '../'
+import { Event } from '..'
 
-export class LayoutChangedEvent extends Event {
+export class LayoutSavedEvent extends Event {
 
     constructor(id: Guid, name: string, layout: Record<string, string[]>, isActive: boolean) {
         super(id)

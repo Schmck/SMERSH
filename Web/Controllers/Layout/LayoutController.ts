@@ -73,7 +73,7 @@ export class LayoutController extends SmershController {
 
         const client = Api.axios();
 
-        const parsed = Object.fromEntries(Object.values(layout).map((territory: string[], index) => {
+        Object.fromEntries(Object.values(layout).map((territory: string[], index) => {
             const key = `sg_territory_`
             urlencoded.append(key + index, territory.join('\n'))
             return [key + index, territory]

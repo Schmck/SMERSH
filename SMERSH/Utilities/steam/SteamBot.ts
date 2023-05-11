@@ -44,8 +44,9 @@ export class SteamBot {
     }
 
     public async setStatus() {
-        const gameid = this.steam._playingAppIds.shift();
-        if (!gameid || gameid !== 9800) {
+        const gameId : number = this.steam.users[this.steam.steamId].gamePlayedAppId || 0
+
+        if (!gameId) {
             this.steam.setPersona(SteamUser.EPersonaState.Online);
             this.steam.gamesPlayed(9800);
         }

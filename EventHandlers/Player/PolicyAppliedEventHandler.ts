@@ -75,7 +75,7 @@ export class PolicyAppliedEventHandler implements IEventHandler<PolicyAppliedEve
         }
         const discord = event.Action !== Action.Kick.DisplayName ? `\nplease make a ticket on our discord if you disagree with this decision: https://discord.gg/43XsqZB` : ''
         const message = `\nYou have been ${action}${reason}${duration}.${discord}`
-        await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message`)
+        await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message integrated with ChatGPT`)
         await this.steam.sendMessageToFriend(event.PlayerId, message)
         return;
     }

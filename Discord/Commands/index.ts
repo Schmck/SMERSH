@@ -9,7 +9,7 @@ import { UnRoleBanCommand } from './UnRoleBanCommand'
 import { MuteCommand } from './MuteCommand'
 import { UnMuteCommand } from './UnMuteCommand'
 import { ChatLogCommand } from './ChatLogCommand'
-import { SaveLayoutCommand } from './SaveLayoutCommand'
+import { SaveCommand } from './SaveLayoutCommand'
 import { StatsCommand } from './StatsCommand'
 import { RankingsCommand } from './RankingsCommand'
 import { RankCommand } from './RankCommand'
@@ -38,7 +38,7 @@ export const Commands: Command[] = [
     MuteCommand,
     UnMuteCommand,
     ChatLogCommand,
-    SaveLayoutCommand,
+    SaveCommand,
     StatsCommand,
     RankingsCommand,
     RankCommand,

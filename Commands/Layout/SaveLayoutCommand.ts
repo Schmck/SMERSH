@@ -1,7 +1,7 @@
 import { Guid } from "guid-typescript"
 import { Command } from "../Command"
 
-export class ChangeLayoutCommand extends Command {
+export class SaveLayoutCommand extends Command {
     constructor(id: Guid, name: string, layout: Record<string, string[]>) {
         super(id)
 

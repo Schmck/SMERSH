@@ -15,6 +15,18 @@ export class LayoutSearchReport extends SearchReport {
     @Field('boolean')
     public IsActive: boolean;
 
+    @Field('integer')
+    public MinimumPlayerCount: number;
+
+    @Field('integer')
+    public MaximumPlayerCount: number;
+
+    @Field('integer')
+    public StartTime: number;
+
+    @Field('integer')
+    public EndTime: number;
+
     @Field({ nested: Object})
     public Maps: Record<string, string[]>;
 

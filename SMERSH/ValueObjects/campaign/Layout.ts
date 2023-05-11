@@ -5,11 +5,15 @@ export class Layout extends Enumeration {
         super(value, displayName)
     }
 
-    public static Fill: Layout = new Layout(0, "long maps only")
+    //long maps only
+    public static Fill: Layout = new Layout(0, "fill")
 
-    public static Stock: Layout = new Layout(1, "stock maps only")
+    //stock maps only
+    public static Stock: Layout = new Layout(1, "stock")
 
-    public static Regular: Layout = new Layout(2, "a mix of custom and stock maps")
+    //a mix of custom and stock maps
+    public static Regular: Layout = new Layout(2, "regular")
 
-    public static Custom: Layout = new Layout(3, "more rare custom maps compared to regular")
+    //more rare custom maps compared to regular
+    public static Custom: Layout = new Layout(3, "custom")
 }
