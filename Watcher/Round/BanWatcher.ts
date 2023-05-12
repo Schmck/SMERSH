@@ -12,7 +12,7 @@ import { Team, Role, Action } from '../../SMERSH/ValueObjects';
 
 export class BanWatcher extends Watcher {
 
-    public override async Watch(timeout = 60000, ...args: any[]) {
+    public override async Watch(timeout = 5000, ...args: any[]) {
         const count = await SearchClient.Count<PolicySearchReport>(PolicySearchReport)
         const status = await StatusQuery.Get();
         const players = status && status.Players ? status.Players: [];
