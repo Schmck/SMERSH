@@ -1,6 +1,6 @@
-import { LayoutChangedEventHandler } from './LayoutSavedEventHandler'
+import { LayoutSavedEventHandler } from './LayoutSavedEventHandler'
 import { LayoutRequirementsChangedEventHandler } from './LayoutRequirementsChangedEventHandler'
 export const LayoutEventHandlers = [
-    LayoutChangedEventHandler,
-    LayoutChangedEventHandler
+    LayoutSavedEventHandler,
+    LayoutRequirementsChangedEventHandler
 ]
