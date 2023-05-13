@@ -85,10 +85,10 @@ export const LayoutCommand: Command = {
     },
     run: async (client: Client, interaction: CommandInteraction) => {
         const name = interaction.options.get('name');
-        const minimumPlayerCount = parseInt(interaction.options.get('minimum player count').value.toString());
-        const maximumPlayerCount = parseInt(interaction.options.get('maximum player count').value.toString());
-        const startTime = parseInt(interaction.options.get('start time').value.toString());
-        const endTime = parseInt(interaction.options.get('end time').value.toString());
+        let minimumPlayerCount = interaction.options.get('minimum player count').value;
+        let maximumPlayerCount = interaction.options.get('maximum player count').value;
+        let startTime = interaction.options.get('start time').value;
+        let endTime = interaction.options.get('end time').value;
         let layoutId: Guid;
         const layout = (await SearchClient.Search<LayoutSearchReport>(LayoutSearchReport, {
             "query": {
@@ -101,6 +101,30 @@ export const LayoutCommand: Command = {
       
 
         if (layout) {
+            if (minimumPlayerCount === undefined || minimumPlayerCount === null) {
+                minimumPlayerCount = layout.MinimumPlayerCount;
+            } else {
+                minimumPlayerCount = parseInt(minimumPlayerCount.toString())
+            }
+
+            if (maximumPlayerCount === undefined || maximumPlayerCount === null) {
+                maximumPlayerCount = layout.MaximumPlayerCount;
+            } else {
+                maximumPlayerCount = parseInt(maximumPlayerCount.toString())
+            }
+
+            if (startTime === undefined || startTime === null) {
+                startTime = layout.StartTime;
+            } else {
+                startTime = parseInt(startTime.toString())
+            }
+
+            if (endTime === undefined || endTime === null) {
+                endTime = layout.EndTime;
+            } else {
+                endTime = parseInt(endTime.toString())
+            }
+
             
             await client.commandBus.execute(new ChangeLayoutRequirementsCommand(layoutId, minimumPlayerCount, maximumPlayerCount, startTime, endTime))
             await interaction.followUp({
