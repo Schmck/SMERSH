@@ -44,8 +44,8 @@ export class SteamBot {
     }
 
     public async setStatus(gameId: number) {
-        const appId = this.steam.users[this.steam.steamId].gameId || 0
-        if (appId.toString() !== gameId.toString()) {
+        const { blocked, appid } = this.steam.playingState
+        if (!blocked && appid.toString() !== gameId.toString()) {
             this.steam.setPersona(SteamUser.EPersonaState.Online);
             this.steam.gamesPlayed(gameId);
         }
