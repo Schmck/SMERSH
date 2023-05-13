@@ -12,7 +12,7 @@ export class SteamBot {
             this.bot = new SteamBot(new SteamUser());
             
             await this.bot.login(accountName, password)
-            await this.bot.setStatus();
+            await this.bot.setStatus(9800);
         }
         return this.bot;
     }
@@ -43,11 +43,11 @@ export class SteamBot {
         return;
     }
 
-    public async setStatus() {
+    public async setStatus(gameId: number) {
         this.steam.getCurrentGame((steamId: any, appId: any) => {
             if(appId.toString() !== gameId.toString()) {
                 this.steam.setPersona(SteamUser.EPersonaState.Online);
-                this.steam.gamesPlayed(9800);
+                this.steam.gamesPlayed(gameId);
             }
         })
     }
