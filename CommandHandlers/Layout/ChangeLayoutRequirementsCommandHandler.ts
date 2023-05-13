@@ -7,7 +7,7 @@ import { LayoutSearchReport } from '../../Reports/Entities/layout';
 
 
 @CommandHandler(ChangeLayoutRequirementsCommand)
-export class ChangeLayoutCommandHandler implements ICommandHandler<ChangeLayoutRequirementsCommand> {
+export class ChangeLayoutRequirementsCommandHandler implements ICommandHandler<ChangeLayoutRequirementsCommand> {
     constructor(
         protected readonly publisher: EventPublisher,
         protected readonly repository: Repository
