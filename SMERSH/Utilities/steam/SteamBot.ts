@@ -44,8 +44,6 @@ export class SteamBot {
     }
 
     public async setStatus() {
-        const gameId: number = this.steam.users[this.steam.steamId].gamePlayedAppId || 0
-
         this.steam.getCurrentGame((steamId: any, appId: any) => {
             if(appId.toString() !== gameId.toString()) {
                 this.steam.setPersona(SteamUser.EPersonaState.Online);
