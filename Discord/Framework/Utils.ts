@@ -39,7 +39,7 @@ export class Utils {
     }
 
     public static generateRoleBanTable(policies: PolicySearchReport[]) {
-        const roleBans = policies.map(policy => {
+        const roleBans = policies.sort((polA, polB) => new Date(polB.BanDate).valueOf() - new Date(polA.BanDate).valueOf()).map(policy => {
             return Object.keys(policy.RoleBans).map(r => {
                 const role = parseInt(r, 10)
                 const roleBan = Object.assign({}, { Name: policy.Name, Id: policy.PlayerId, Role: role }, policy.RoleBans[role])
