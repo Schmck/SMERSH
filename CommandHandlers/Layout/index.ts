@@ -1,5 +1,7 @@
-import { ChangeLayoutCommandHandler } from './ChangeLayoutCommandHandler'
+import { SaveLayoutCommandHandler } from './ChangeLayoutCommandHandler'
+import { ChangeLayoutRequirementsCommandHandler } from './ChangeLayoutRequirementsCommandHandler'
 
 export const LayoutCommandHandlers = [
-    ChangeLayoutCommandHandler
+    SaveLayoutCommandHandler,
+    ChangeLayoutRequirementsCommandHandler
 ]
