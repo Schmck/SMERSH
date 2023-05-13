@@ -6,7 +6,7 @@ import { Config, ClientBuilder } from './Framework';
 import * as dotenv from 'dotenv';
 import { NestApplication, NestFactory } from '@nestjs/core';
 import { AppModule } from './Framework/app.module';
-import { ChatWatcher, RoundWatcher, BanWatcher } from '../Watcher'
+import { ChatWatcher, RoundWatcher, BanWatcher, LayoutWatcher } from '../Watcher'
 import { CommandBus, } from '@nestjs/cqrs'
 import { Bot } from '../Discord/Bot'
 import * as path from 'path'
@@ -40,17 +40,20 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     const chat = new ChatWatcher(bus, discord.client, steamToken);
     const round = new RoundWatcher(bus, discord.client, steamToken);
     const ban = new BanWatcher(bus, discord.client, steamToken);
+    const layout = new LayoutWatcher(bus, discord.client, steamToken);
     
     chat.Watch();
     round.Watch();
     ban.Watch();
+    layout.Watch();
+
     steam.steam.on('friendMessage', async (steamID, message) => {
         const policies = (await Policy.getPolicies(steamID.getSteamID64())).map(policy => {
             let duration
             if (policy.BanDate && policy.UnbanDate) {
                 duration = Policy.getDurationString(new Date(policy.BanDate), new Date(policy.UnbanDate))
             }
-            return {action: policy.Action, reason: policy.Reason, duration, active: policy.IsActive }
+            return { action: policy.Action, reason: policy.Reason, duration, active: policy.IsActive }
         })
         steam.respondToFriend(steamID, policies, message)
     });
