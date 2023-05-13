@@ -3,7 +3,7 @@ import { Client, Utils } from '../Framework'
 import { Command } from "../Framework/Command"
 import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
-import { ChangeLayoutCommand, ChangeLayoutRequirementsCommand } from '../../Commands/Layout'
+import { ChangeLayoutRequirementsCommand } from '../../Commands/Layout'
 import { Guid } from "guid-typescript";
 import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 import { Api } from '../..//Web/Framework';
