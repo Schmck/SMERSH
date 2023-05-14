@@ -87,7 +87,7 @@ export const LayoutCommand: Command = {
     run: async (client: Client, interaction: CommandInteraction) => {
         const name = interaction.options.get('name');
         let minimumPlayerCount = interaction.options.get('minimum_player_count').value;
-        let maximumPlayerCount = interaction.options.get('maximum player_count').value;
+        let maximumPlayerCount = interaction.options.get('maximum_player_count').value;
         let startTime = interaction.options.get('start_time').value;
         let endTime = interaction.options.get('end_time').value;
         let layoutId: Guid;
