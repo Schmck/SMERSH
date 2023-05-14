@@ -15,6 +15,7 @@ import { SteamBot } from '../SMERSH/Utilities/steam';
 import { ChatGPT } from '../SMERSH/Utilities/openai';
 import { Policy } from './Utils'
 import { Client, Logger } from '../Discord/Framework';
+import { TextChannel } from 'discord.js';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 const config = process.env;
@@ -45,9 +46,9 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 
 
     discord.client.once('ready', async (client: Client) => {
-    const logger = await Logger.set(discord.client, logChannelId);
-        logger.publish();
-
+    const channel = await client.channels.fetch(logChannelId) as TextChannel;
+    const logger = await Logger.set(discord.client, channel);
+    logger.publish();
     })
     chat.Watch();
     round.Watch();

@@ -6,9 +6,8 @@ export class Logger {
 
     private static Instance: Logger;
 
-    public static async set(client: Client, channelId: string) {
+    public static async set(client: Client, channel: TextChannel) {
         if (!this.Instance) {
-            const channel = await client.channels.fetch(channelId) as TextChannel;
             const message = channel.lastMessage;
             this.Instance = new Logger(client, message)
 
