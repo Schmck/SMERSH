@@ -14,7 +14,7 @@ import { NestApplicationOptions } from '@nestjs/common';
 import { SteamBot } from '../SMERSH/Utilities/steam';
 import { ChatGPT } from '../SMERSH/Utilities/openai';
 import { Policy } from './Utils'
-import { Logger } from '../Discord/Framework';
+import { Client, Logger } from '../Discord/Framework';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 const config = process.env;
@@ -36,19 +36,23 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     const bus = app.get(CommandBus);
     const discord: Bot = new Bot(discordToken, bus);
     const steam: SteamBot = SteamBot.get();
-    const logger = await Logger.set(discord.client, logChannelId);
 
 
     const chat = new ChatWatcher(bus, discord.client, steamToken);
     const round = new RoundWatcher(bus, discord.client, steamToken);
     const policy = new PolicyWatcher(bus, discord.client, steamToken);
     const layout = new LayoutWatcher(bus, discord.client, steamToken);
-    
+
+
+    discord.client.once('ready', async (client: Client) => {
+    const logger = await Logger.set(discord.client, logChannelId);
+        logger.publish();
+
+    })
     chat.Watch();
     round.Watch();
     policy.Watch();
     layout.Watch();
-    logger.publish();
     
 
     steam.steam.on('friendMessage', async (steamID, message) => {

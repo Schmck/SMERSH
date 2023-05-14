@@ -8,14 +8,10 @@ export class Logger {
 
     public static async set(client: Client, channelId: string) {
         if (!this.Instance) {
-            await client.once('ready', async (disc) => {
-                const channel = await disc.channels.fetch(channelId) as TextChannel;
-                const message = channel.lastMessage;
-                this.Instance = new Logger(client, message)
-                
+            const channel = await client.channels.fetch(channelId) as TextChannel;
+            const message = channel.lastMessage;
+            this.Instance = new Logger(client, message)
 
-            })
-   
             return this.Instance;
         }
     }
