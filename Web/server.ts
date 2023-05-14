@@ -14,13 +14,14 @@ import { NestApplicationOptions } from '@nestjs/common';
 import { SteamBot } from '../SMERSH/Utilities/steam';
 import { ChatGPT } from '../SMERSH/Utilities/openai';
 import { Policy } from './Utils'
+import { Logger } from '../Discord/Framework';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 const config = process.env;
 const args = process.argv;
 
 
-async function start(baseUrl: string, elasticUrl, authcred: string, discordToken: string, steamToken: string, steamAccountName: string, steamPassword: string, ChatGPTApiKey: string, port: number) {
+async function start(baseUrl: string, elasticUrl, authcred: string, discordToken: string, logChannelId: string, steamToken: string, steamAccountName: string, steamPassword: string, ChatGPTApiKey: string, port: number) {
     await ChatGPT.set(ChatGPTApiKey)
     await SteamBot.set(steamAccountName, steamPassword);
 
@@ -46,6 +47,7 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     round.Watch();
     policy.Watch();
     layout.Watch();
+    Logger.set(discord.client, logChannelId);
 
     steam.steam.on('friendMessage', async (steamID, message) => {
         const policies = (await Policy.getPolicies(steamID.getSteamID64())).map(policy => {
@@ -62,7 +64,7 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 
 function boot() {
     const webAdmin = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
-    start(webAdmin.BASE_URL.toString(), webAdmin.ELASTIC_URL.toString(), webAdmin.AUTHCRED.toString(), webAdmin.DISCORD_TOKEN.toString(), webAdmin.STEAM_TOKEN.toString(), webAdmin.STEAM_ACCOUNT_NAME.toString(), webAdmin.STEAM_ACCOUNT_PASSWORD.toString(), webAdmin.CHATGPT_API_KEY.toString(), parseInt(webAdmin.PORT.toString()))
+    start(webAdmin.BASE_URL.toString(), webAdmin.ELASTIC_URL.toString(), webAdmin.AUTHCRED.toString(), webAdmin.DISCORD_TOKEN.toString(), webAdmin.LOG_CHANNEL_ID.toString(), webAdmin.STEAM_TOKEN.toString(), webAdmin.STEAM_ACCOUNT_NAME.toString(), webAdmin.STEAM_ACCOUNT_PASSWORD.toString(), webAdmin.CHATGPT_API_KEY.toString(), parseInt(webAdmin.PORT.toString()))
 }
 
 boot();

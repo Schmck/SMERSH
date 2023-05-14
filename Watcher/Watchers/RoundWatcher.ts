@@ -16,12 +16,14 @@ import SteamApi from 'steamapi'
 import { hexToDec } from 'hex2dec'
 import { Role, Team } from '../../SMERSH/ValueObjects';
 import { stat } from 'fs';
+import { Logger } from '../../Discord/Framework';
 
 export class RoundWatcher extends Watcher {
 
-    public override async Watch(timeout = 100, ...args: Array<{status: Status, mapTime: number}>) {
+    public override async Watch(timeout = 100, ...args: Array<{status: Status, mapTime: number, lastLogTime:Date}>) {
         const status = await StatusQuery.Get();
         const prevStatus = args[0] && args[0].status;
+        let lastLogTime = args[0] && args[0].lastLogTime;
         let prevMapTime = args[0] && args[0].mapTime
         let mapTime = (prevStatus && prevStatus.Rules && prevStatus.Rules.TimeLeft) || 0
 
@@ -88,6 +90,7 @@ export class RoundWatcher extends Watcher {
                     await this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds));
                 }
 
+
                 if (playerIds.length) {
                     for (let playerId of playerIds) {
                         const exists = await SearchClient.Get(playerId as any as Guid, PlayerSearchReport)
@@ -143,6 +146,14 @@ export class RoundWatcher extends Watcher {
                         }
                     }
                 }
+
+                if (lastLogTime.getMinutes() !== new Date().getMinutes() && !(new Date().getMinutes() % 5)) {
+                    const axisPlayers = status.Players.filter(p => !p.Team).length
+                    const alliesPlayers = status.Players.filter(p => !p.Team).length
+                    const attacking = status.Teams.map(team => team.Attacking ? `\u2694` : `\u26CA`).join('')
+                    Logger.append(`there are currently ${status.Players.filter(p => !p.Bot).length} \u2720${axisPlayers}${attacking}${alliesPlayers}\u262D`)
+
+                }
             } else {
                 const mapId = map && map.Id ? Guid.parse(map.Id) : Guid.create();
                 const roundId = Guid.create();
@@ -153,7 +164,7 @@ export class RoundWatcher extends Watcher {
     }
 
         setTimeout(() => {
-            this.Watch(timeout, { status: status ?? prevStatus, mapTime })
+            this.Watch(timeout, { status: status ?? prevStatus, mapTime, lastLogTime })
         }, timeout)
     }
 }

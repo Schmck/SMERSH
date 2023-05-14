@@ -1,7 +1,6 @@
 import { CommandBus } from '@nestjs/cqrs'
-import { Logger, dummyLogger } from "ts-log/build/src/index";
 import { FileLogger } from "../SMERSH/Utilities/FileLogger";
-import { Client } from '../Discord/Framework'
+import { Client, Logger } from '../Discord/Framework'
 import SteamApi from 'steamapi'
 
 export abstract class Watcher {
@@ -20,7 +19,6 @@ export abstract class Watcher {
     protected commandBus?: CommandBus;
 
     public steam: SteamApi;
-   
 
     public abstract Watch(timeout : number, ...args : any[]) : void
 }

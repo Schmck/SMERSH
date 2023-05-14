@@ -7,7 +7,7 @@ import { SearchClient } from '../../Elastic/app'
 import { PolicySearchReport } from '../../Reports/Entities/policy'
 import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
-import { Client } from '../../Discord/Framework';
+import { Client, Logger } from '../../Discord/Framework';
 import { TextChannel } from 'discord.js';
 import { Role } from '../../SMERSH/ValueObjects';
 import { SteamBot } from '../../SMERSH/Utilities/steam';
@@ -39,6 +39,8 @@ export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEve
                 await channel.send(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`)
             } 
         });
+
+        Logger.append(`${role.DisplayName} roleban lifted from ${policy.Name}, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`)
 
         const message = `your roleban for ${role.DisplayName} has been lifted`
 

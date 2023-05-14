@@ -8,7 +8,7 @@ import { RoundSearchReport } from '../../Reports/Entities/round'
 import { IndexedClass } from '../../SMERSH/Utilities/types';
 import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
-import { Client } from '../../Discord/Framework';
+import { Client, Logger } from '../../Discord/Framework';
 let cls: { new(id: Guid): PlayerSearchReport } = PlayerSearchReport;
 
 @EventsHandler(DiscordRoleAppliedEvent)

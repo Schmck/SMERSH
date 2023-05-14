@@ -10,6 +10,7 @@ import { Guid } from 'guid-typescript';
 import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
 import { Role, Team } from '../../SMERSH/ValueObjects';
 import { SteamBot } from '../../SMERSH/Utilities/steam';
+import { Logger } from '../../Discord/Framework';
 
 let cls: { new(id: Guid): PolicySearchReport } = PolicySearchReport;
 
@@ -46,7 +47,9 @@ export class RoleBanAppliedEventHandler implements IEventHandler<RoleBanAppliedE
         const role = Role.fromValue<Role>(event.Role);
         const teams = roleBan.Teams.map(team => Team.fromValue<Team>(team).DisplayName).join('and ')
         const sides = roleBan.Sides.join('and ')
-        const message = `you have been rolebanned from ${role.DisplayName} on ${teams} while ${sides}`
+        const message = `you have been rolebanned from ${role.DisplayName} on ${teams} while ${sides} for ${event.Reason}`
+
+        Logger.append(`${event.Name}has been rolebanned from ${role.DisplayName} on ${teams} while ${sides} for ${event.Reason}`)
 
         await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message integrated with ChatGPT`)
         await this.steam.sendMessageToFriend(event.PlayerId, message)

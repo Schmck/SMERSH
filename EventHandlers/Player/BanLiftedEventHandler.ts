@@ -8,7 +8,7 @@ import { PolicySearchReport } from '../../Reports/Entities/policy'
 import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
 import { TextChannel } from 'discord.js';
-import { Client } from '../../Discord/Framework';
+import { Client, Logger } from '../../Discord/Framework';
 import { SteamBot } from '../../SMERSH/Utilities/steam';
 
 @EventsHandler(BanLiftedEvent)
@@ -38,6 +38,9 @@ export class BanLiftedEventHandler implements IEventHandler<BanLiftedEvent>
             }
 
             const message = `your ban has been lifted, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`
+
+            Logger.append(`${policy.Name}s ban has been lifted, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`)
+
 
             await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message integrated with ChatGPT`)
             await this.steam.sendMessageToFriend(event.PlayerId, message)

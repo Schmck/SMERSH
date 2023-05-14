@@ -129,7 +129,7 @@ export const LayoutCommand: Command = {
             await client.commandBus.execute(new ChangeLayoutRequirementsCommand(Guid.parse(layout.Id), minimumPlayerCount, maximumPlayerCount, startTime, endTime))
             await interaction.followUp({
                 ephemeral: true,
-                content: `the requirements for the ${name.value} layout has been saved`
+                content: `the requirements for the ${name.value} layout have been saved`
             });
         } else {
             await interaction.followUp({

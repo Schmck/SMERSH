@@ -8,7 +8,7 @@ import { RoundSearchReport } from '../../Reports/Entities/round'
 import { IndexedClass } from '../../SMERSH/Utilities/types';
 import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
-import { Client } from '../../Discord/Framework';
+import { Client, Logger } from '../../Discord/Framework';
 let cls: { new(id: Guid): PlayerSearchReport } = PlayerSearchReport;
 
 @EventsHandler(PlayerNameChangedEvent)
@@ -27,6 +27,8 @@ export class PlayerNameChangedEventHandler implements IEventHandler<PlayerNameCh
         let player = new cls(event.Id);
         player.Name = event.Name;
         await SearchClient.Put(player)
+
+        Logger.append(`Name change detected: ${event.PrevName} -> ${event.Name}`)
 
         return;
     }
