@@ -45,8 +45,8 @@ export const TempbanCommand: Command = {
         const focusedValue = interaction.options.getFocused(true);
         const players = await PlayerQuery.Get();
         if (players) {
-            const choices = players.filter(player => !player.Bot && player.Id).map(player => { return { name: player.Playername, value: player.Id } })
-            const filtered = choices.filter(choice => choice.name && choice.name.toString() && choice.name.toString().toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
+            const choices = players.filter(player => !player.Bot && player.Id).map(player => { return { name: player.Playername.toString(), value: player.Id } })
+            const filtered = choices.filter(choice => choice.name && choice.name.toString().toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
             if (filtered.length) {
                 interaction.respond(filtered.slice(0, 24))
             } else {
