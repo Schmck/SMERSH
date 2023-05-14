@@ -9,7 +9,7 @@ export class Logger {
     public static async set(client: Client, channel: TextChannel) {
         if (!this.Instance) {
             const message = channel.lastMessage;
-            this.Instance = new Logger(client, message)
+            this.Instance = new Logger(client, channel, message)
 
             return this.Instance;
         }
@@ -21,9 +21,10 @@ export class Logger {
         }
         return this.Instance;
     }
-    public constructor(client: Client, logMessage: Message) {
+    public constructor(client: Client, channel: TextChannel, logMessage: Message) {
 
         this.Client = client;
+        this.Channel = channel;
         this.Log = logMessage;
         this.Messages = [];
     }
@@ -47,7 +48,7 @@ export class Logger {
                 this.Log = await this.Log.edit(newContent)
 
             } else {
-                this.Log = await this.Log.channel.send(`\`\`\`scala\n ${line} \`\`\``)
+                this.Log = await this.Channel.send(`\`\`\`scala\n ${line} \`\`\``)
             }
         }
 
@@ -59,6 +60,8 @@ export class Logger {
     private Client: Client;
 
     private Messages: Array<string>
+
+    private Channel: TextChannel;
 
     private Log: Message;
 
