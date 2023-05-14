@@ -10,13 +10,13 @@ import qs from 'qs'
 import { StatusQuery } from '../../Services/WebAdmin/Queries';
 import { Team, Role, Action } from '../../SMERSH/ValueObjects';
 
-export class BanWatcher extends Watcher {
+export class PolicyWatcher extends Watcher {
 
     public override async Watch(timeout = 5000, ...args: any[]) {
         const count = await SearchClient.Count<PolicySearchReport>(PolicySearchReport)
         const status = await StatusQuery.Get();
         const players = status && status.Players ? status.Players: [];
-        const bans = await SearchClient.Search(PolicySearchReport, {
+        const policies = await SearchClient.Search(PolicySearchReport, {
             "query": {
                 "bool": {
                     "must": [
@@ -56,12 +56,9 @@ export class BanWatcher extends Watcher {
         const argv = JSON.parse(process.argv[process.argv.length - 1]);
         const axios = Api.axios();
 
-        for (let ban of bans) {
-            //this.log.info(JSON.stringify(ban))
-
-
-            if (ban.Action === Action.RoleBan.DisplayName) {
-                const player = players.find(player => player.Id && player.Id.toString() === ban.PlayerId.toString())
+        for (let policy of policies) {
+            if (policy.Action === Action.RoleBan.DisplayName) {
+                const player = players.find(player => player.Id && player.Id.toString() === policy.PlayerId.toString())
                 if (player) {
                     const role : Role = Role.fromDisplayName<Role>(player.Role)
                     const team: Team = Team.fromValue<Team>(player.Team)
@@ -69,9 +66,9 @@ export class BanWatcher extends Watcher {
                     if (role && team) {
                         const side = status.Teams[team.Value].Attacking ? 'attacking' : 'defending'
 
-                        Object.keys(ban.RoleBans).forEach(rol => {
+                        Object.keys(policy.RoleBans).forEach(rol => {
                             const playerRole = parseInt(rol, 10)
-                            const roleBan = ban.RoleBans[playerRole]
+                            const roleBan = policy.RoleBans[playerRole]
 
                             if (role.Value === playerRole && roleBan.Teams && roleBan.Teams.includes(team.Value)) {
                                 if ((roleBan.Sides && roleBan.Sides.includes(side)) || (!roleBan.Sides || !roleBan.Sides.length)) {
@@ -99,8 +96,8 @@ export class BanWatcher extends Watcher {
                
             }
 
-            if (ban.Action === Action.Mute.DisplayName && ban.UnbanDate && new Date(ban.UnbanDate) >= new Date()) {
-                const player = players.find(player => player.Id && player.Id.toString() === ban.PlayerId.toString())
+            if (policy.Action === Action.Mute.DisplayName && policy.UnbanDate && new Date(policy.UnbanDate) >= new Date()) {
+                const player = players.find(player => player.Id && player.Id.toString() === policy.PlayerId.toString())
                 if (player) {
                     const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
                     const config: AxiosRequestConfig =
@@ -119,8 +116,8 @@ export class BanWatcher extends Watcher {
                 }
             }
 
-            if (ban.Action === Action.Mute.DisplayName && ban.UnbanDate && new Date(ban.UnbanDate) <= new Date()) {
-                const player = players.find(player => player.Id && player.Id.toString() === ban.PlayerId.toString())
+            if (policy.Action === Action.Mute.DisplayName && policy.UnbanDate && new Date(policy.UnbanDate) <= new Date()) {
+                const player = players.find(player => player.Id && player.Id.toString() === policy.PlayerId.toString())
                 if (player) {
                     const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
                     const config: AxiosRequestConfig =
@@ -132,18 +129,17 @@ export class BanWatcher extends Watcher {
                     }
 
                     const urlencoded = `ajax=1&action=unmutevoice&playerkey=${player.PlayerKey}`
-                    await axios.post(url, urlencoded, config).then(result => {
-                        this.log.info(JSON.stringify(result.data))
-                    });
+                    const response = await axios.post(url, urlencoded, config);
+                    this.log.info(JSON.stringify(response.data));
                 }
 
-                await this.commandBus.execute(new LiftMuteCommand(Guid.parse(ban.Id)))
+                await this.commandBus.execute(new LiftMuteCommand(Guid.parse(policy.Id)))
             }
 
-            if (ban.Action === Action.Ban.DisplayName && ban.UnbanDate && new Date(ban.UnbanDate) <= new Date()) {
+            if (policy.Action === Action.Ban.DisplayName && policy.UnbanDate && new Date(policy.UnbanDate) <= new Date()) {
 
-                const urlencoded = `banid=plainid:${ban.PlainId}&action=delete`
-                const url = argv["BASE_URL"] + PolicyRoute.AddBan.Action
+                const urlencoded = `banid=plainid%3A${policy.PlainId}&action=delete`
+                const url = argv["BASE_URL"] + PolicyRoute.DeleteBan.Action
 
                 const config: AxiosRequestConfig =
                 {
@@ -153,13 +149,10 @@ export class BanWatcher extends Watcher {
                     },
                 }
 
-                await this.commandBus.execute(new LiftBanCommand(Guid.parse(ban.Id)))
+                await this.commandBus.execute(new LiftBanCommand(Guid.parse(policy.Id)))
 
-                await axios.post(url, urlencoded, config).then(result => {
-                    this.log.info(result)
-                    //return result
-
-                });
+                const response = await axios.post(url, urlencoded, config);
+                this.log.info(JSON.stringify(response.data));
 
             }  
         }

@@ -28,8 +28,6 @@ export class Listeners {
                 }
 
                 if (interaction.isCommand() || interaction.isContextMenuCommand()) {
-
-
                     this.handleSlashCommand(client, interaction)
                 }
             }
@@ -40,8 +38,12 @@ export class Listeners {
 
     public static async handleAutoComplete(client: Client, interaction: AutocompleteInteraction): Promise<void> {
         const slashCommand = Commands.find(c => c.name === interaction.commandName);
-       
-        await slashCommand.autocomplete(client, interaction)
+
+        try {
+            await slashCommand.autocomplete(client, interaction)
+        } catch (error) {
+            console.trace(error)
+        }
     }
 
     public static async handleSlashCommand(client: Client, interaction: CommandInteraction): Promise<void> {

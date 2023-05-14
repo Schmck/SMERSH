@@ -42,7 +42,7 @@ export class WebAdminSession {
         let navUrl = url;
         let baseUrl = JSON.parse(process.argv[process.argv.length - 1])["BASE_URL"];
 
-        if (navUrl !== baseUrl) {
+        if (!navUrl.includes(baseUrl)) {
             navUrl = baseUrl + url
             //this.log.info(url, navUrl)
         }
@@ -60,6 +60,8 @@ export class WebAdminSession {
                 this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
             }
             catch (error) {
+                await this.close(navUrl)
+                this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
             }
 
             //this.log.info('after fromurl', new Date().toISOString(), Object.entries(this.DOMs));
