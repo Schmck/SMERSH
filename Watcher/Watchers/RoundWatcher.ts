@@ -147,11 +147,11 @@ export class RoundWatcher extends Watcher {
                     }
                 }
 
-                if (lastLogTime.getMinutes() !== new Date().getMinutes() && !(new Date().getMinutes() % 5)) {
+                if (lastLogTime.getMinutes() + 5 === new Date().getMinutes() && !(new Date().getMinutes() % 5)) {
                     const axisPlayers = status.Players.filter(p => !p.Team).length
                     const alliesPlayers = status.Players.filter(p => !p.Team).length
                     const attacking = status.Teams.map(team => team.Attacking ? `\u2694` : `\u26CA`).join('')
-                    Logger.append(`there are currently ${status.Players.filter(p => !p.Bot).length} \u2720${axisPlayers}${attacking}${alliesPlayers}\u262D`)
+                    Logger.append(`there are currently ${status.Players.filter(p => !p.Bot).length} players \u2720${axisPlayers}${attacking}${alliesPlayers}\u262D`)
 
                 }
             } else {
