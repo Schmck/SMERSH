@@ -151,6 +151,7 @@ export class RoundWatcher extends Watcher {
                     const axisPlayers = status.Players.filter(p => !p.Team).length
                     const alliesPlayers = status.Players.filter(p => !p.Team).length
                     const attacking = status.Teams.map(team => team.Attacking ? `\u2694` : `\u26CA`).join('')
+                    lastLogTime = new Date();
                     Logger.append(`there are currently ${status.Players.filter(p => !p.Bot).length} players \u2720${axisPlayers}${attacking}${alliesPlayers}\u262D`)
 
                 }
