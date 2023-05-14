@@ -1,5 +1,6 @@
 import { Client } from "./Client";
 import { TextChannel, Message } from 'discord.js';
+import { time } from "console";
 
 export class Logger {
 
@@ -10,8 +11,9 @@ export class Logger {
             const channel = await client.channels.fetch(channelId) as TextChannel;
             const message = channel.lastMessage;
 
-            this.Instance = new Logger(client, channel)
+            this.Instance = new Logger(client, message)
         }
+        return this.Instance;
     }
 
     public static get() {
@@ -20,9 +22,10 @@ export class Logger {
         }
         return this.Instance;
     }
-    public constructor(client: Client, channel: TextChannel) {
+    public constructor(client: Client, logMessage: Message) {
 
         this.Client = client;
+        this.Log = logMessage;
     }
 
     public static append(message: string) {
@@ -32,7 +35,7 @@ export class Logger {
         }
     }
 
-    private async publish(timeout: number) {
+    public async publish(timeout: number = 5000) {
         const line = this.Messages.shift();
         const validMessage = this.Log && this.Log.content && this.Log.content.length < 1800
         const validNewLine = line && validMessage && this.Log.content.length + line.length < 1900
@@ -45,6 +48,10 @@ export class Logger {
         } else {
             this.Log = await this.Log.channel.send(`\`\`\`scala\n ${line} \`\`\``)
         }
+
+        setTimeout(() => {
+            this.publish(timeout)
+        }, timeout)
     }
 
     private Client: Client;

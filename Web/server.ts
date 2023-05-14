@@ -36,6 +36,7 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     const bus = app.get(CommandBus);
     const discord: Bot = new Bot(discordToken, bus);
     const steam: SteamBot = SteamBot.get();
+    const logger = await Logger.set(discord.client, logChannelId);
 
 
     const chat = new ChatWatcher(bus, discord.client, steamToken);
@@ -47,7 +48,8 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     round.Watch();
     policy.Watch();
     layout.Watch();
-    Logger.set(discord.client, logChannelId);
+    logger.publish();
+    
 
     steam.steam.on('friendMessage', async (steamID, message) => {
         const policies = (await Policy.getPolicies(steamID.getSteamID64())).map(policy => {
