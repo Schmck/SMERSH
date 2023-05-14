@@ -90,7 +90,6 @@ export const LayoutCommand: Command = {
         let maximumPlayerCount = interaction.options.get('maximum_player_count').value;
         let startTime = interaction.options.get('start_time').value;
         let endTime = interaction.options.get('end_time').value;
-        let layoutId: Guid;
         const layout = (await SearchClient.Search<LayoutSearchReport>(LayoutSearchReport, {
             "query": {
                 match: {
@@ -127,7 +126,7 @@ export const LayoutCommand: Command = {
             }
 
             
-            await client.commandBus.execute(new ChangeLayoutRequirementsCommand(layoutId, minimumPlayerCount, maximumPlayerCount, startTime, endTime))
+            await client.commandBus.execute(new ChangeLayoutRequirementsCommand(Guid.parse(layout.Id), minimumPlayerCount, maximumPlayerCount, startTime, endTime))
             await interaction.followUp({
                 ephemeral: true,
                 content: `the requirements for the ${name.value} layout has been saved`
