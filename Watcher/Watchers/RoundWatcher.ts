@@ -23,7 +23,7 @@ export class RoundWatcher extends Watcher {
     public override async Watch(timeout = 100, ...args: Array<{status: Status, mapTime: number, lastLogTime:Date}>) {
         const status = await StatusQuery.Get();
         const prevStatus = args[0] && args[0].status;
-        let lastLogTime = args[0] && args[0].lastLogTime;
+        let lastLogTime = args[0] && args[0].lastLogTime || new Date();
         let prevMapTime = args[0] && args[0].mapTime
         let mapTime = (prevStatus && prevStatus.Rules && prevStatus.Rules.TimeLeft) || 0
 
