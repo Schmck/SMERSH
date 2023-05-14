@@ -60,8 +60,7 @@ export class WebAdminSession {
                 this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
             }
             catch (error) {
-                await this.close(navUrl)
-                this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
+              this.log.info(error)
             }
 
             //this.log.info('after fromurl', new Date().toISOString(), Object.entries(this.DOMs));

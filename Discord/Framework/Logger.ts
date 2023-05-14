@@ -25,6 +25,7 @@ export class Logger {
 
         this.Client = client;
         this.Log = logMessage;
+        this.Messages = [];
     }
 
     public static append(message: string) {
@@ -35,17 +36,19 @@ export class Logger {
     }
 
     public async publish(timeout: number = 5000) {
-        const line = this.Messages.shift();
-        const validMessage = this.Log && this.Log.content && this.Log.content.length < 1800
-        const validNewLine = line && validMessage && this.Log.content.length + line.length < 1900
+        if (this.Messages.length) {
+            const line = this.Messages.shift();
+            const validMessage = this.Log && this.Log.content && this.Log.content.length < 1800
+            const validNewLine = line && validMessage && this.Log.content.length + line.length < 1900
 
 
-        if (validMessage && validNewLine && this.Messages.length) {
-            const newContent = `${this.Log.content.slice(0, this.Log.content.length - 3)} \n ${line} \`\`\``
-            this.Log = await this.Log.edit(newContent)
+            if (validMessage && validNewLine && this.Messages.length) {
+                const newContent = `${this.Log.content.slice(0, this.Log.content.length - 3)} \n ${line} \`\`\``
+                this.Log = await this.Log.edit(newContent)
 
-        } else {
-            this.Log = await this.Log.channel.send(`\`\`\`scala\n ${line} \`\`\``)
+            } else {
+                this.Log = await this.Log.channel.send(`\`\`\`scala\n ${line} \`\`\``)
+            }
         }
 
         setTimeout(() => {
