@@ -34,16 +34,11 @@ export class LayoutWatcher extends Watcher {
                 startTime.setHours(layout.StartTime)
                 endTime.setHours(layout.EndTime)
 
-                if (startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
-                    changeLayout = true
-                }
-
-
                 if (higherThanMin && lowerThanMax && mapUnchanged) {
                     changeLayout = true
-                }
+                } 
 
-                if (startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
+                if (!changeLayout && startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
                     changeLayout = true
                 }
 
@@ -56,6 +51,28 @@ export class LayoutWatcher extends Watcher {
                     }
 
                 }  
+
+                if (changeLayout) {
+                    const otherLayouts = layouts.filter(lt => lt.Id !== layout.Id)
+                    //conflicts with schedules of other layouts
+                    otherLayouts.every(lt => {
+                        startTime.setHours(lt.StartTime)
+                        endTime.setHours(lt.EndTime)
+                        if (startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
+                            changeLayout = false
+                        }
+
+                        if (layout.Name === Layout.Stock.DisplayName) {
+                            const startTimeNight = this.addHours(startTime, 12)
+                            const endTimeNight = this.addHours(startTime, 12)
+
+                            if (startTimeNight.getHours() <= date.getHours() && endTimeNight.getHours() >= date.getHours()) {
+                                changeLayout = false
+                            }
+
+                        } 
+                    })
+                }
 
                 if (changeLayout) {
 
