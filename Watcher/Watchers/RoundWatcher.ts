@@ -17,6 +17,7 @@ import { hexToDec } from 'hex2dec'
 import { Role, Team } from '../../SMERSH/ValueObjects';
 import { stat } from 'fs';
 import { Logger } from '../../Discord/Framework';
+import { ActivityType } from 'discord.js';
 
 export class RoundWatcher extends Watcher {
 
@@ -148,12 +149,27 @@ export class RoundWatcher extends Watcher {
                 }
 
                 if ((lastLogTime.getMinutes() + 5) === new Date().getMinutes() && !(new Date().getMinutes() % 5)) {
+                    const env = JSON.parse(process.argv[process.argv.length - 1]);
+                    let crossedSwords = `\u2694`
+                    let shield = `\u26CA`
+                    let axisIcon = `\u2720`
+                    let alliesIcon = '\u262D'
+
+                    if (env["GAME"] === "RS1") {
+                        axisIcon = `\u6698`
+                        alliesIcon = `\u272A`
+                    }
+
                     const axisPlayers = status.Players.filter(p => !p.Team).length
                     const alliesPlayers = status.Players.filter(p => !p.Team).length
-                    const attacking = status.Teams.map(team => team.Attacking ? `\u2694` : `\u26CA`).join('')
+                    const attacking = status.Teams.map(team => team.Attacking ? crossedSwords : shield).join('')
                     lastLogTime = new Date();
-                    Logger.append(`there are currently ${status.Players.filter(p => !p.Bot).length} players \u2720${axisPlayers}${attacking}${alliesPlayers}\u262D`)
+                    Logger.append(`there are currently ${status.Players.filter(p => !p.Bot).length} players ${axisIcon}${axisPlayers}${attacking}${alliesPlayers}${alliesIcon}`)
 
+                }
+
+                if (!(new Date().getSeconds() % 5)) {
+                    this.handleDiscordStatus(status)
                 }
             } else {
                 const mapId = map && map.Id ? Guid.parse(map.Id) : Guid.create();
@@ -167,5 +183,113 @@ export class RoundWatcher extends Watcher {
         setTimeout(() => {
             this.Watch(timeout, { status: status ?? prevStatus, mapTime, lastLogTime })
         }, timeout)
+    }
+
+    public handleDiscordStatus(status: Status) {
+        const env = JSON.parse(process.argv[process.argv.length - 1]);
+        let crossedSwords = `\u2694`
+        let shield = `\u26CA`
+        let axisIcon = `\u2720`
+        let alliesIcon = '\u262D'
+
+        if (env["GAME"] === "RS1") {
+            axisIcon = `\u6698`
+            alliesIcon = `\u272A`
+        }
+        const attacking = status.Teams.map(team => team.Attacking ? `\u2694` : `\u26CA`).join('')
+        let statusMap,
+            timeLeft,
+            territories
+
+        statusMap = status.Game.Map.replace('\'', '')
+        statusMap = statusMap.slice(statusMap.indexOf('|') + 2, statusMap.length)
+        timeLeft = this.secToMin(status.Rules.TimeLeft)
+
+        territories = `\u2720${status.Teams[0].Territories}/${status.Teams[1].Territories}\u262D`
+
+        let stats = status.Players.reduce((stats, player) => {
+            const team = player.Team ? 'allies' : 'axis'
+            stats.scores[team] += player.Score
+            stats.count[team].total += 1
+
+            if (player.Bot) {
+                stats.count[team].bots += 1
+                stats.count.bots += 1
+            } else {
+                stats.count[team].players += 1
+                stats.count.players += 1
+            }
+
+            stats.count.total++
+            return stats
+        }, {
+            scores: { axis: 0, allies: 0 },
+            count: {
+                bots: 0,
+                players: 0,
+                total: 0,
+                axis: { bots: 0, players: 0, total: 0 },
+                allies: { bots: 0, players: 0, total: 0 }
+            }
+        })
+        const scores = `\u2720${stats.scores.axis}/${stats.scores.allies}\u262D`
+        const teamCount = `\u2720${stats.count.axis.players}${attacking}${stats.count.allies.players}\u262D`
+        let discordStatus = ''
+
+
+
+        if (stats.count.total === 1) {
+            discordStatus += `${stats.count.total} player`
+        } else if (stats.count.players && stats.count.players > stats.count.bots) {
+            discordStatus += `${stats.count.players} players`
+        } else if (!stats.count.players && stats.count.bots > 1) {
+            discordStatus = `${stats.count.bots} bots`
+        } else {
+            discordStatus += `${stats.count.players} players`
+        }
+
+        if (statusMap.length) {
+            discordStatus += ` on ${statusMap}`
+        }
+
+        if (timeLeft.length) {
+            discordStatus += ` ${timeLeft}`
+        }
+
+        if (teamCount.length && stats.count.players > stats.count.bots) {
+            discordStatus += ` ${teamCount}`
+        }
+
+        if (territories.length) {
+            discordStatus += `${territories}`
+        }
+
+        if (scores.length) {
+            discordStatus += ` ${scores}`
+        }
+
+
+
+
+        this.client.user.setPresence({
+            activities: [{
+                name: discordStatus,
+                type: ActivityType.Watching
+            }],
+            status: 'online'
+        })
+    }
+
+    public secToMin(sec : number) {
+        let minutesLeft,
+            secondsLeft,
+            timeLeft
+
+        secondsLeft = sec % 60 <= 9 ? '0'.concat((sec % 60).toString()) : sec % 60
+        minutesLeft = `${secondsLeft.toString().includes('-') ? '-' : ''}${(sec - sec % 60) / 60 <= 9 ? '0'.concat(((sec - sec % 60) / 60).toString()) : (sec - sec % 60) / 60}`
+        secondsLeft = secondsLeft.toString().replace('-', '')
+        timeLeft = `${minutesLeft}:${secondsLeft}`
+
+        return timeLeft
     }
 }

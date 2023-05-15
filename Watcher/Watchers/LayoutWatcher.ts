@@ -11,25 +11,32 @@ import { Watcher } from '../Watcher'
 export class LayoutWatcher extends Watcher {
 
 
-    public override async Watch(timeout = 60000, ...args: Array<{ status: Status, playerCountTrend: Array<number> }>) {
+    public override async Watch(timeout = 60000, ...args: Array<{ status: Status, activeLayout: string, playerCountTrend: Array<number> }>) {
         const status = await StatusQuery.Get();
         const prevStatus = args[0] && args[0].status;
+        let activeLayout = ''
         let playerCountTrend = []
 
         if (status) {
-            if (args[0] && args[0].playerCountTrend) {
-                const oldTrend = args[0].playerCountTrend.length > 2 ? args[0].playerCountTrend.slice(1) : args[0].playerCountTrend;
-                playerCountTrend = [...oldTrend, status.Players.filter(p => !p.Bot).length];
-            } else {
-               playerCountTrend =  [status.Players.filter(p => !p.Bot).length]
-            }
             const layouts = await SearchClient.Search<LayoutSearchReport>(LayoutSearchReport, {
                 "query": {
                     "match_all": {}
                 }
             })
 
-            if (playerCountTrend.length > 3) {
+            if (args[0] && args[0].playerCountTrend) {
+                const oldTrend = args[0].playerCountTrend.length > 2 ? args[0].playerCountTrend.slice(1) : args[0].playerCountTrend;
+                playerCountTrend = [...oldTrend, status.Players.filter(p => !p.Bot).length];
+            } else {
+               playerCountTrend =  [status.Players.filter(p => !p.Bot).length]
+            }
+
+            if (args[0] && args[0].activeLayout) {
+                activeLayout = args[0].activeLayout;
+            }
+            
+
+            if (playerCountTrend.length > 2) {
                 layouts.every(async layout => {
                     let changeLayout = false;
                     const date = new Date();
@@ -44,10 +51,12 @@ export class LayoutWatcher extends Watcher {
 
                     if (higherThanMin && lowerThanMax && mapUnchanged) {
                         changeLayout = true
+                        activeLayout = layout.Name;
                     }
 
                     if (!changeLayout && startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
                         changeLayout = true
+                        activeLayout = layout.Name;
                     }
 
                     if (layout.Name === Layout.Stock.DisplayName) {
@@ -56,6 +65,7 @@ export class LayoutWatcher extends Watcher {
 
                         if (startTimeNight.getHours() <= date.getHours() && endTimeNight.getHours() >= date.getHours()) {
                             changeLayout = true
+                            activeLayout = layout.Name;
                         }
 
                     }
@@ -68,6 +78,9 @@ export class LayoutWatcher extends Watcher {
                             endTime.setHours(lt.EndTime)
                             if (startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
                                 changeLayout = false
+                                if (args[0] && args[0].activeLayout) {
+                                    activeLayout = args[0].activeLayout;
+                                }
                             }
 
                             if (layout.Name === Layout.Stock.DisplayName) {
@@ -76,6 +89,9 @@ export class LayoutWatcher extends Watcher {
 
                                 if (startTimeNight.getHours() <= date.getHours() && endTimeNight.getHours() >= date.getHours()) {
                                     changeLayout = false
+                                    if (args[0] && args[0].activeLayout) {
+                                        activeLayout = args[0].activeLayout;
+                                    }
                                 }
 
                             }
@@ -128,7 +144,7 @@ export class LayoutWatcher extends Watcher {
 
 
         setTimeout(() => {
-            this.Watch(timeout, { status: status ?? prevStatus, playerCountTrend })
+            this.Watch(timeout, { status: status ?? prevStatus, playerCountTrend, activeLayout })
         }, timeout)
     }
 
