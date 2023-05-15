@@ -17,7 +17,8 @@ export class LayoutWatcher extends Watcher {
         let playerCountTrend = []
 
         if (status) {
-            playerCountTrend = args[0] && args[0].playerCountTrend ? [...args[0].playerCountTrend.slice(1), status.Players.filter(p => !p.Bot).length] : [];
+            const oldTrend = args[0] && args[0].playerCountTrend && args[0].playerCountTrend.length > 2 ? args[0].playerCountTrend.slice(1) : args[0].playerCountTrend;
+            playerCountTrend = args[0] && args[0].playerCountTrend ? [...oldTrend, status.Players.filter(p => !p.Bot).length] : [status.Players.filter(p => !p.Bot).length];
             const layouts = await SearchClient.Search<LayoutSearchReport>(LayoutSearchReport, {
                 "query": {
                     "match_all": {}

@@ -43,7 +43,7 @@ export class Logger {
             const validNewLine = line && validMessage && this.Log.content.length + line.length < 1900
 
 
-            if (validMessage && validNewLine && this.Messages.length) {
+            if (validMessage && validNewLine) {
                 const newContent = `${this.Log.content.slice(0, this.Log.content.length - 3)} \n ${line} \`\`\``
                 this.Log = await this.Log.edit(newContent)
 
