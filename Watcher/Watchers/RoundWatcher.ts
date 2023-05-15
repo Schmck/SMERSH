@@ -196,16 +196,15 @@ export class RoundWatcher extends Watcher {
             axisIcon = `\u6698`
             alliesIcon = `\u272A`
         }
-        const attacking = status.Teams.map(team => team.Attacking ? `\u2694` : `\u26CA`).join('')
+        const attacking = status.Teams.map(team => team.Attacking ? crossedSwords : shield).join('')
         let statusMap,
             timeLeft,
             territories
 
-        statusMap = status.Game.Map.replace('\'', '')
-        statusMap = statusMap.slice(statusMap.indexOf('|') + 2, statusMap.length)
+        statusMap = this.findDuplicateWords(status.Game.Map.replaceAll('\'', '').replaceAll('_', ' ').replace(/(^\w{1})|(\s{1}\w{1})|(?:- |\d\. ).*/g, match => match.toUpperCase()).match(/[A-Z][a-z]+/g).join(' '))
         timeLeft = this.secToMin(status.Rules.TimeLeft)
 
-        territories = `\u2720${status.Teams[0].Territories}/${status.Teams[1].Territories}\u262D`
+        territories = `${axisIcon}${status.Teams[0].Territories}/${status.Teams[1].Territories}${alliesIcon}`
 
         let stats = status.Players.reduce((stats, player) => {
             const team = player.Team ? 'allies' : 'axis'
@@ -232,8 +231,8 @@ export class RoundWatcher extends Watcher {
                 allies: { bots: 0, players: 0, total: 0 }
             }
         })
-        const scores = `\u2720${stats.scores.axis}/${stats.scores.allies}\u262D`
-        const teamCount = `\u2720${stats.count.axis.players}${attacking}${stats.count.allies.players}\u262D`
+        const scores = `${axisIcon}${stats.scores.axis}/${stats.scores.allies}${alliesIcon}`
+        const teamCount = `${axisIcon}${stats.count.axis.players}${attacking}${stats.count.allies.players}${alliesIcon}`
         let discordStatus = ''
 
 
@@ -292,4 +291,22 @@ export class RoundWatcher extends Watcher {
 
         return timeLeft
     }
+
+
+
+    public findDuplicateWords(str: string) {
+        const strArr = str.split(" ");
+        let res = [];
+        for (let i = 0; i < strArr.length; i++) {
+            if (strArr.indexOf(strArr[i]) !== strArr.lastIndexOf(strArr[i]) || strArr.lastIndexOf(strArr[i])) {
+                if (!res.includes(strArr[i])) {
+                    res.push(strArr[i]);
+                } else if (strArr.includes('The') || strArr.includes('Red')) {
+                    res = res.filter(str => str !== strArr[i]);
+                    res.push(strArr[i]);
+                };
+            };
+        };
+        return res.join(" ");
+    };
 }
