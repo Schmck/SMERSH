@@ -17,8 +17,12 @@ export class LayoutWatcher extends Watcher {
         let playerCountTrend = []
 
         if (status) {
-            const oldTrend = args[0] && args[0].playerCountTrend && args[0].playerCountTrend.length > 2 ? args[0].playerCountTrend.slice(1) : args[0].playerCountTrend;
-            playerCountTrend = args[0] && args[0].playerCountTrend ? [...oldTrend, status.Players.filter(p => !p.Bot).length] : [status.Players.filter(p => !p.Bot).length];
+            if (args[0] && args[0].playerCountTrend) {
+                const oldTrend = args[0].playerCountTrend.length > 2 ? args[0].playerCountTrend.slice(1) : args[0].playerCountTrend;
+                playerCountTrend = [...oldTrend, status.Players.filter(p => !p.Bot).length];
+            } else {
+               playerCountTrend =  [status.Players.filter(p => !p.Bot).length]
+            }
             const layouts = await SearchClient.Search<LayoutSearchReport>(LayoutSearchReport, {
                 "query": {
                     "match_all": {}
@@ -98,7 +102,7 @@ export class LayoutWatcher extends Watcher {
 
                         const client = Api.axios();
 
-                        Object.fromEntries(Object.values(layout).map((territory: string[], index) => {
+                        Object.fromEntries(Object.values(layout.Maps).map((territory: string[], index) => {
                             const key = env["GAME"] && env["GAME"] === 'RO2' ? `sg_territory_` : `pt_territory_`
 
                             urlencoded.append(key + index, territory.join('\n'))
