@@ -48,12 +48,14 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     discord.client.once('ready', async (client: Client) => {
     const channel = await client.channels.fetch(logChannelId) as TextChannel;
     const logger = await Logger.set(discord.client, channel);
-    logger.publish();
+
+        logger.publish();
+        chat.Watch();
+        round.Watch();
+        policy.Watch();
+        layout.Watch();
     })
-    chat.Watch();
-    round.Watch();
-    policy.Watch();
-    layout.Watch();
+    
     
 
     steam.steam.on('friendMessage', async (steamID, message) => {
