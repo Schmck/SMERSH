@@ -30,8 +30,8 @@ export class RoundWatcher extends Watcher {
         }
 
         const prevStatus = args[0] && args[0].status;
-        let lastLogTime = args[0] && args[0].lastLogTime || this.nearestFiveMin();
-        let lastStatusTime = args[0] && args[0].lastStatusTime || this.nearestFiveSec();
+        let lastLogTime = (args[0] && args[0].lastLogTime) || this.nearestFiveMin();
+        let lastStatusTime = (args[0] && args[0].lastStatusTime) || this.nearestFiveSec();
         let prevMapTime = args[0] && args[0].mapTime
         let mapTime = (prevStatus && prevStatus.Rules && prevStatus.Rules.TimeLeft) || 0
 
