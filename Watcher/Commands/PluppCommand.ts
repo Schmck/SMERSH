@@ -38,7 +38,7 @@ export const PluppCommand: Command = {
         }
 
         if (player) {
-           const message = `${player.Playername}just got plupp'd!`
+           const message = `${player.Playername} just got plupp'd!`
                 const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(chatUrl, chatUrlencoded, config)

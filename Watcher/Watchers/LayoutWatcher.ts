@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
+import { Logger } from '../../Discord/Framework';
 import { SearchClient } from '../../Elastic';
 import { LayoutSearchReport } from '../../Reports/Entities/layout';
 import { Status } from '../../Services/WebAdmin/Models'
@@ -132,8 +133,12 @@ export class LayoutWatcher extends Watcher {
                             urlencoded.append(`${altKey}1${i}`, ['', '', ''].join('\n'))
 
                         }
+
+                        Logger.append(`switching to ${layout.Name} layout`)
                         urlencoded.append('save', 'save')
                         await client.post(url, urlencoded, config);
+                        Logger.append(`changed to ${layout.Name} layout`)
+
                     }
 
                     return !changeLayout

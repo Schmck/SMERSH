@@ -1,5 +1,5 @@
 const SteamUser = require('steam-user');
-import { hexToDec } from 'hex2dec'
+import { hexToDec, decToHex } from 'hex2dec'
 import { ChatGPT } from '../openai'
 
 export class SteamBot {
@@ -55,41 +55,47 @@ export class SteamBot {
         const env = JSON.parse(process.argv[process.argv.length - 1])
         const steamId64 = hexToDec(id);
         const online = this.steam.logOnResult && this.steam.logOnResult.eresult;
+        let friends = Object.keys(this.steam.myFriends).filter(steamId => this.steam.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);
+        let isFriend = friends.includes(decToHex(steamId64));
 
-        try {
-            const isFriend = await new Promise<any>((resolve) => {
-                let friends = Object.keys(this.steam.myFriends).filter(steamId => this.steam.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);
-                resolve(friends.includes(steamId64))
-            })
+        if (!online) {
+            await this.login(env["STEAM_ACCOUNT_NAME"], env["STEAM_ACCOUNT_PASSWORD"])
+        }
 
-            if (!online) {
-                await this.login(env["STEAM_ACCOUNT_NAME"], env["STEAM_ACCOUNT_PASSWORD"])
+        if (!isFriend) {
+            try {
+                await this.steam.addFriend(steamId64, () => { });
+            } catch (error) {
+                console.log('could not add friend ', steamId64, error)
             }
 
-            if (!isFriend) {
-                await this.steam.addFriend(steamId64, () => { });
-
-                const addFriendResult = await new Promise<any>((resolve) => {
+            let addFriendResult;
+            try {
+                addFriendResult = await new Promise<any>((resolve) => {
                     this.steam.on('friendRelationship', (steamId: any, relationship: any) => {
                         if (relationship === SteamUser.EFriendRelationship.Friend && steamId.getSteamID64() === steamId64) {
+                            friends[decToHex(steamId64)] = SteamUser.EFriendRelationship.Friend;
                             resolve(SteamUser.EResult.OK);
                         } else {
                             resolve(SteamUser.EResult.AccountNotFriends)
                         }
                     });
                 });
+            } catch (error) {
+                console.log('add friend result', error)
+            }
+               
 
                 if (addFriendResult !== SteamUser.EResult.OK) {
                     console.log(`Failed to add user with ID ${id} as a friend`);
                 }
-            }
-
-            await this.steam.chat.sendFriendMessage(steamId64, message, { chatEntryType: SteamUser.EChatEntryType.ChatMsg }, () => { });
-        } catch (error) {
-            console.trace(error)
         }
-        
 
+        isFriend = friends.includes(decToHex(steamId64));
+
+        if (isFriend) {
+            await this.steam.chat.sendFriendMessage(steamId64, message, { chatEntryType: SteamUser.EChatEntryType.ChatMsg }, () => { });
+        }
     }
 
     public async respondToFriend(id: string, policies: Array<{ action: string, reason?: string, duration?: string, active?: boolean }>, message: string, name?: string) {

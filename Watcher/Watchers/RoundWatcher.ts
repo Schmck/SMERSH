@@ -21,12 +21,20 @@ import { ActivityType } from 'discord.js';
 
 export class RoundWatcher extends Watcher {
 
-    public override async Watch(timeout = 100, ...args: Array<{status: Status, mapTime: number, lastLogTime:Date}>) {
-        const status = await StatusQuery.Get();
+    public override async Watch(timeout = 100, ...args: Array<{status: Status, mapTime: number, lastLogTime:Date, lastStatusTime:Date}>) {
+        let status;
+        try {
+            status = await StatusQuery.Get();
+        } catch (error) {
+            console.log(error);
+        }
+
         const prevStatus = args[0] && args[0].status;
         let lastLogTime = args[0] && args[0].lastLogTime || new Date();
+        let lastStatusTime = args[0] && args[0].lastStatusTime || new Date();
         let prevMapTime = args[0] && args[0].mapTime
         let mapTime = (prevStatus && prevStatus.Rules && prevStatus.Rules.TimeLeft) || 0
+
 
         if (status) { 
             let oldMap = prevStatus && prevStatus.Game && prevStatus.Game.Map;
@@ -168,8 +176,9 @@ export class RoundWatcher extends Watcher {
 
                 }
 
-                if (!(new Date().getSeconds() % 5)) {
+                if ((lastStatusTime.getSeconds() + 5) === new Date().getSeconds() && !(new Date().getSeconds() % 5)) {
                     this.handleDiscordStatus(status)
+                    lastStatusTime = new Date();
                 }
             } else {
                 const mapId = map && map.Id ? Guid.parse(map.Id) : Guid.create();
@@ -177,11 +186,10 @@ export class RoundWatcher extends Watcher {
 
                 await this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
             }
-            
     }
 
         setTimeout(() => {
-            this.Watch(timeout, { status: status ?? prevStatus, mapTime, lastLogTime })
+            this.Watch(timeout, { status: status ?? prevStatus, mapTime, lastLogTime, lastStatusTime })
         }, timeout)
     }
 
@@ -279,7 +287,11 @@ export class RoundWatcher extends Watcher {
         })
     }
 
-    public secToMin(sec : number) {
+    public secToMin(sec: number) {
+        if (sec === undefined || sec === null) {
+            return '00:00';
+        }
+
         let minutesLeft,
             secondsLeft,
             timeLeft
@@ -289,6 +301,13 @@ export class RoundWatcher extends Watcher {
         secondsLeft = secondsLeft.toString().replace('-', '')
         timeLeft = `${minutesLeft}:${secondsLeft}`
 
+        if (!minutesLeft) {
+            return `00:${secondsLeft}`
+        }
+
+        if (!secondsLeft) {
+            return `${minutesLeft}:00`
+        }
         return timeLeft
     }
 
