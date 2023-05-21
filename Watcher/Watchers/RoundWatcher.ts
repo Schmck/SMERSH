@@ -30,8 +30,8 @@ export class RoundWatcher extends Watcher {
         }
 
         const prevStatus = args[0] && args[0].status;
-        let lastLogTime = args[0] && args[0].lastLogTime || new Date();
-        let lastStatusTime = args[0] && args[0].lastStatusTime || new Date();
+        let lastLogTime = args[0] && args[0].lastLogTime || this.nearestFiveMin();
+        let lastStatusTime = args[0] && args[0].lastStatusTime || this.nearestFiveSec();
         let prevMapTime = args[0] && args[0].mapTime
         let mapTime = (prevStatus && prevStatus.Rules && prevStatus.Rules.TimeLeft) || 0
 
@@ -328,4 +328,16 @@ export class RoundWatcher extends Watcher {
         };
         return res.join(" ");
     };
+
+    public nearestFiveMin(date = new Date()) : Date {
+        const coeff = 1000 * 60 * 5
+        let newDate = new Date(Math.round(date.getTime() / coeff) * coeff)
+        return newDate
+    }
+
+    public nearestFiveSec(date = new Date()) : Date {
+        let newDate = new Date(date)
+        newDate.setSeconds(Math.ceil(newDate.getSeconds() / 5) * 5)
+        return newDate
+    }
 }
