@@ -171,14 +171,14 @@ export class RoundWatcher extends Watcher {
                     const axisPlayers = status.Players.filter(p => !p.Team).length
                     const alliesPlayers = status.Players.filter(p => !p.Team).length
                     const attacking = status.Teams.map(team => team.Attacking ? crossedSwords : shield).join('')
-                    lastLogTime = new Date();
+                    lastLogTime = this.nearestFiveMin();
                     Logger.append(`there are currently ${status.Players.filter(p => !p.Bot).length} players ${axisIcon}${axisPlayers}${attacking}${alliesPlayers}${alliesIcon}`)
 
                 }
 
                 if ((lastStatusTime.getSeconds() + 5) === new Date().getSeconds() && !(new Date().getSeconds() % 5)) {
                     this.handleDiscordStatus(status)
-                    lastStatusTime = new Date();
+                    lastStatusTime = this.nearestFiveSec();
                 }
             } else {
                 const mapId = map && map.Id ? Guid.parse(map.Id) : Guid.create();
