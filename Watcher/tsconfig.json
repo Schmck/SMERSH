@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "target": "esnext",
-    "lib": [ "esnext", "es2017.object", "ES2021" ],
+    "lib": [ "esnext", "es2017.object", "es2021", "ES2021.String" ],
     "sourceMap": true
   },
   "exclude": [
