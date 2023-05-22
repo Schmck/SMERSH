@@ -33,12 +33,12 @@ before you can start the bot you will need to do a few things:
   1. create a steam account for the bot
   2. create an account with openai for a chatgpt token (https://platform.openai.com/account/api-keys)
   3. generate a steam api token (https://steamcommunity.com/dev/apikey)
-  4. get authcred token for the webadmin
-    a. login to the webadmin in a browser
-    b. open devtools (typically f12)
-    c. navigate to the application tab
-    d. find the cookies
-    e. copy the authcred value
+  4. get authcred token for the webadmin  
+    a. login to the webadmin in a browser  
+    b. open devtools (typically f12)  
+    c. navigate to the application tab  
+    d. find the cookies  
+    e. copy the authcred value  
 5. create a discord bot and copy the token (https://discord.com/developers/applications)
 6. create a command channel to use the bot in and copy the id.
 7. create a log channel and copy the id.
