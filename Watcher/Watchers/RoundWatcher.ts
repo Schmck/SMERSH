@@ -175,9 +175,9 @@ export class RoundWatcher extends Watcher {
                     Logger.append(`there are currently ${status.Players.filter(p => !p.Bot).length} players ${axisIcon}${axisPlayers}${attacking}${alliesPlayers}${alliesIcon}`)
 
                 }
-
-                if ((lastStatusTime.getSeconds() + 5) === new Date().getSeconds() && !(new Date().getSeconds() % 5)) {
-                    this.handleDiscordStatus(status)
+                const nextStatusTime = lastStatusTime.getSeconds() === 55 ? 0 : lastStatusTime.getSeconds() + 5
+                if (new Date().getSeconds() >= nextStatusTime) {
+                    this.handleDiscordStatus(status);
                     lastStatusTime = this.nearestFiveSec();
                 }
             } else {
