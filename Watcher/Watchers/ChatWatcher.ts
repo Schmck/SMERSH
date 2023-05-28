@@ -94,14 +94,14 @@ export class ChatWatcher extends Watcher {
                                 const val = options[opt]
                                 const perc = (100 / opt.length) * val
 
-                                if (perc > 40 && perc < 70) {
+                                if (perc > 33 && perc < 66) {
                                     const message = `did you mean !${opt}`
                                     const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                                     await axios.post(chatUrl, chatUrlencoded, config)
                                     return false;
                                 }
 
-                                if (perc > 70) {
+                                if (perc > 66) {
                                     const player = await SearchClient.Get(msg.id as any, PlayerSearchReport)
                                     const command = Commands.find(comm => comm.name === opt || comm.aliases.includes(opt))
                                   
