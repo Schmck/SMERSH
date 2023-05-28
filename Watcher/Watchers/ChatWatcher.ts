@@ -21,6 +21,7 @@ export class ChatWatcher extends Watcher {
 
     public override async Watch(timeout: number = 100, ...args: any[]) {
         const commandNames = Commands.map(command => [command.name, ...command.aliases]).flat()
+        const commands = Commands.map(command => command.name).flat()
         const messages = await ChatQuery.Get();
         const lastMessage = messages[messages.length - 1];
         const lastMessageDate = messages.length ? new Date(lastMessage.timestamp) : false;
@@ -74,14 +75,14 @@ export class ChatWatcher extends Watcher {
                         } else {
                             const commandName = msg.message.split(' ')[0].slice(1)
                             const chars = commandName.split('');
-                            const options = commandNames.reduce((opts, opt) => {
+                            const options = commands.reduce((opts, opt) => {
                                 return { ...opts, [opt]: 0 }
                             }, {})
 
 
                             for (let i = 0; i < chars.length; i++) {
                                 let char = chars[i]
-                                commandNames.forEach(cmd => {
+                                commands.forEach(cmd => {
                                     if (cmd.includes(char)) {
                                         options[cmd] = options[cmd] + 1
                                     }
