@@ -43,7 +43,7 @@ export const KickCommand: Command = {
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
         const reason = interaction.options.get('reason');
-        const id = input.value.toString().slice(input.value.toString().indexOf('_') + 1, input.value.toString().lastIndexOf('_'))
+        let id = input.value.toString().slice(input.value.toString().indexOf('_') + 1, input.value.toString().lastIndexOf('_'))
         let match
         let regexp
 
@@ -53,8 +53,9 @@ export const KickCommand: Command = {
                     "Id": id
                 }
             } else if (input.value.match(/[A-Z0-9]{9,10}/)) {
+                id = `0x0110000${id}`
                 match = {
-                    "Id": `0x0110000${id}`
+                    "Id": id,
                 }
             } else {
                 regexp = {
@@ -76,7 +77,7 @@ export const KickCommand: Command = {
             }
         })
         const player = players.shift();
-        let name = interaction.options.get('input').name
+        let name = input.name
         let playerKey = input.value.toString();
 
 
@@ -97,6 +98,9 @@ export const KickCommand: Command = {
             if (!playerKey.match(/[0-9]{4}\_0x011[0]{4}[A-Z0-9]{9,10}\_\d\.[0-9]{4}/)) {
                 const playa = await PlayerQuery.GetById(player.Id);
                 playerKey = playa.PlayerKey;
+                if (name !== playa.Playername) {
+                    name = playa.Playername;
+                }
             }
         }
 

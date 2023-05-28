@@ -41,6 +41,7 @@ export class ChatWatcher extends Watcher {
         const roundDate = round ? new Date(round.Date) : false
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
+        const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
         const config: AxiosRequestConfig =
         {
             headers: {
@@ -64,17 +65,61 @@ export class ChatWatcher extends Watcher {
                                 command.run(this.commandBus, msg.username, name, id, reason, duration)
                             } else if (typeof (player.Role) === 'number') {
                                 const frown = (Math.floor(Math.random() * (32 - 1 + 1) + 1)) === 32 ? '. :/ ' : ''
-                              
+
                                 const message = `you do not have the required permissions to use this command ${msg.username}[${msg.id.slice(9)}]${frown}`
-                                const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                                 const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                                 await axios.post(chatUrl, chatUrlencoded, config)
                             }
 
+                        } else {
+                            const commandName = msg.message.split(' ')[0].slice(1)
+                            const chars = commandName.split('');
+                            const options = commandNames.reduce((opts, opt) => {
+                                return { ...opts, [opt]: 0 }
+                            }, {})
+
+
+                            for (let i = 0; i < chars.length; i++) {
+                                let char = chars[i]
+                                commandNames.forEach(cmd => {
+                                    if (cmd.includes(char)) {
+                                        options[cmd] = options[cmd] + 1
+                                    }
+                                })
+                            }
+
+                            Object.keys(options).every(async opt => {
+                                const val = options[opt]
+                                const perc = (100 / opt.length) * val
+                                console.log(perc)
+                                if (perc > 40 && perc < 70) {
+                                    const message = `did you mean !${opt}`
+                                    const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
+                                    await axios.post(chatUrl, chatUrlencoded, config)
+                                    return false;
+                                }
+
+                                if (perc > 70) {
+                                    const player = await SearchClient.Get(msg.id as any, PlayerSearchReport)
+                                    const command = Commands.find(comm => comm.name === opt || comm.aliases.includes(opt))
+                                  
+                                    if (typeof (player.Role) === 'number' && command.permissions.find(perm => perm.Value === player.Role)) {
+                                        const input = msg.message.match(/\#[A-Z0-9]{0,4}\:/) ? msg.message.slice(0, msg.message.match(/\#[A-Z0-9]{0,4}\:/).index) : msg.message
+                                        const { name, id, reason, duration } = this.parseCommand(input.split(' ').slice(1))
+                                        command.run(this.commandBus, msg.username, name, id, reason, duration)
+                                    } else if (typeof (player.Role) === 'number') {
+                                        const frown = (Math.floor(Math.random() * (32 - 1 + 1) + 1)) === 32 ? '. :/ ' : ''
+
+                                        const message = `you do not have the required permissions to use this command ${msg.username}[${msg.id.slice(9)}]${frown}`
+                                        const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
+                                        await axios.post(chatUrl, chatUrlencoded, config)
+                                    }
+                                    return false;
+                                }
+                            })
                         }
                     } else if (msg.message.includes(':/') && msg.username !== 'admin' && (Math.random() * (32 - 1 + 1) + 1) === 32) {
                         const message = `:/`
-                        const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                         const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                         await axios.post(chatUrl, chatUrlencoded, config)
                     }
