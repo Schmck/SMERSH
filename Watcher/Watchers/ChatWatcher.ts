@@ -92,7 +92,7 @@ export class ChatWatcher extends Watcher {
                             Object.keys(options).every(async opt => {
                                 const val = options[opt]
                                 const perc = (100 / opt.length) * val
-                                console.log(perc)
+
                                 if (perc > 40 && perc < 70) {
                                     const message = `did you mean !${opt}`
                                     const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
