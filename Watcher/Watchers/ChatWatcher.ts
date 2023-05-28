@@ -89,7 +89,8 @@ export class ChatWatcher extends Watcher {
                                 })
                             }
 
-                            Object.keys(options).every(async opt => {
+                            const sorted = Object.entries(options).sort((optA, optB) => (optB[1] as number) - (optA[1] as number)).map(opt => opt[0]) 
+                            sorted.every(async opt => {
                                 const val = options[opt]
                                 const perc = (100 / opt.length) * val
 
@@ -117,6 +118,8 @@ export class ChatWatcher extends Watcher {
                                     }
                                     return false;
                                 }
+
+                                return true;
                             })
                         }
                     } else if (msg.message.includes(':/') && msg.username !== 'admin' && (Math.random() * (32 - 1 + 1) + 1) === 32) {
