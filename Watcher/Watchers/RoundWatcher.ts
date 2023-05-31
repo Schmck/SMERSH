@@ -294,7 +294,8 @@ export class RoundWatcher extends Watcher {
         })
     }
 
-    public battleDesc(oldStatus: Status, status: Status) : string {
+    public battleDesc(oldStatus: Status, status: Status): string {
+        const env = JSON.parse(process.argv[process.argv.length - 1]);
         let teams = oldStatus.Teams.map(team => {
             let nextRound = status.Teams.find(tm => tm.Name === team.Name)
             let description = []
@@ -319,13 +320,24 @@ export class RoundWatcher extends Watcher {
                 }
 
             } else {
-                if (team.Name === 'Allies') {
-                    description[2] = 'the american '
-                }
+                if (env["GAME"] === "RO2") {
+                    if (team.Name === 'Allies') {
+                        description[2] = 'the soviet '
+                    }
 
-                if (team.Name === 'Axis') {
-                    description[2] = 'the japanese '
+                    if (team.Name === 'Axis') {
+                        description[2] = 'the german '
+                    }
+                } else {
+                    if (team.Name === 'Allies') {
+                        description[2] = 'the american '
+                    }
+
+                    if (team.Name === 'Axis') {
+                        description[2] = 'the japanese '
+                    }
                 }
+             
 
                 if (team.Attacking) {
                     description[2] += 'attack'
