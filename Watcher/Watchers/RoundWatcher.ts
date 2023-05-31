@@ -56,7 +56,7 @@ export class RoundWatcher extends Watcher {
                 const allies = status.Teams.find(team => team.Name === Team.Allies.DisplayName).Attacking ? 'attacking' : 'defending'
               
                 await this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
-                Logger.append(`${this.findDuplicateWords(newMap)} started with Axis ${axis} and Allies ${allies}`)
+                Logger.append(`${this.findDuplicateWords(newMap.replaceAll('\'', '').replaceAll('_', ' ').replace(/(^\w{1})|(\s{1}\w{1})|(?:- |\d\. ).*/g, match => match.toUpperCase()).match(/[A-Z][a-z]+/g).join(' ')) } started with Axis ${axis} and Allies ${allies}`)
 
             }
 
@@ -349,9 +349,9 @@ export class RoundWatcher extends Watcher {
 
             return description
         })
-        let map = this.findDuplicateWords(oldStatus.Game.Map)
+        let map = this.findDuplicateWords(oldStatus.Game.Map.replaceAll('\'', '').replaceAll('_', ' ').replace(/(^\w{1})|(\s{1}\w{1})|(?:- |\d\. ).*/g, match => match.toUpperCase()).match(/[A-Z][a-z]+/g).join(' '))
         let timeLeft = this.secToMin(oldStatus.Rules.TimeLeft)
-        teams[1][3] = ` at${map}`
+        teams[1][3] = ` at ${map}`
         teams[1][6] = ` with ${timeLeft} left`
         teams = teams.reduce((keys, arr) => [...Object.keys(arr), ...keys].flat().sort((a, b) => a - b), []).map((key, index) => teams.find(item => item[key])[key])
         const description = teams.join('')
