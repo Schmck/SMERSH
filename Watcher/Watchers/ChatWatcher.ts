@@ -74,7 +74,7 @@ export class ChatWatcher extends Watcher {
 
                         } else {
                             const commandName = msg.message.split(' ')[0].slice(1)
-                            const chars = commandName.split('');
+                            const chars = commandName.split('').filter((char, i, self) => (self.indexOf(char) === i) || Math.abs(self.indexOf(char) - i) === 1);
                             const options = commands.reduce((opts, opt) => {
                                 return { ...opts, [opt]: 0 }
                             }, {})
@@ -90,18 +90,18 @@ export class ChatWatcher extends Watcher {
                             }
 
                             const sorted = Object.entries(options).sort((optA, optB) => (optB[1] as number) - (optA[1] as number)).map(opt => opt[0]) 
-                            sorted.every(async opt => {
+                            sorted.some(async opt => {
                                 const val = options[opt]
                                 const perc = (100 / opt.length) * val
 
-                                if (perc > 33 && perc < 66) {
+                                if (perc > 30 && perc < 60) {
                                     const message = `did you mean !${opt}`
                                     const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                                     await axios.post(chatUrl, chatUrlencoded, config)
-                                    return false;
+                                    return true;
                                 }
 
-                                if (perc > 66) {
+                                if (perc >= 60) {
                                     const player = await SearchClient.Get(msg.id as any, PlayerSearchReport)
                                     const command = Commands.find(comm => comm.name === opt || comm.aliases.includes(opt))
                                   
@@ -116,10 +116,10 @@ export class ChatWatcher extends Watcher {
                                         const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                                         await axios.post(chatUrl, chatUrlencoded, config)
                                     }
-                                    return false;
+                                    return true;
                                 }
 
-                                return true;
+                                return false;
                             })
                         }
                     } else if (msg.message.includes(':/') && msg.username !== 'admin' && (Math.random() * (32 - 1 + 1) + 1) === 32) {

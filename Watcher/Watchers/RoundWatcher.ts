@@ -22,7 +22,7 @@ import { ActivityType } from 'discord.js';
 export class RoundWatcher extends Watcher {
 
     public override async Watch(timeout = 100, ...args: Array<{status: Status, mapTime: number, lastLogTime:Date, lastStatusTime:Date}>) {
-        let status;
+        let status : Status;
         try {
             status = await StatusQuery.Get();
         } catch (error) {
@@ -52,8 +52,12 @@ export class RoundWatcher extends Watcher {
             if (oldMap && newMap && oldMap !== newMap) {
                 const mapId = map && map.Id ? Guid.parse(map.Id) : Guid.create();
                 const roundId = Guid.create();
-
+                const axis = status.Teams.find(team => team.Name === Team.Axis.DisplayName)
+                const allies = status.Teams.find(team => team.Name === Team.Allies.DisplayName)
+              
                 await this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
+                Logger.append(`${newMap} started with Axis ${axis} and Allies ${allies}`)
+
             }
 
             if (map) {
@@ -97,6 +101,9 @@ export class RoundWatcher extends Watcher {
 
                 if (round && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
                     await this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds));
+                    const battleDesc = this.battleDesc(prevStatus, status)
+                    Logger.append(battleDesc)
+
                 }
 
 
@@ -285,6 +292,60 @@ export class RoundWatcher extends Watcher {
             }],
             status: 'online'
         })
+    }
+
+    public battleDesc(oldStatus: Status, status: Status) : string {
+        if (oldStatus.Teams.some(team => team.Score && (team.Attacking || team.RoundsWon))) {
+            let teams = oldStatus.Teams.map(team => {
+                let nextRound = status.Teams.find(tm => tm.Name === team.Name)
+                let description = []
+                if (team.RoundsWon) {
+                    description[0] = `${team.Name} `
+                    description[1] = 'has crushed '
+
+                    if (nextRound.Territories === team.Territories) {
+                        description[4] = ' and has taken the territory'
+                    }
+
+                    if (nextRound.Territories > team.Territories) {
+                        description[4] = ' and has taken the territory'
+                    }
+
+                    if (!team.Attacking) {
+                        description[4] = ' and keeps the territory'
+
+                        if (oldStatus.Rules.TimeLeft === -1) {
+                            description[1] = 'has withstood '
+                        }
+                    }
+
+                } else {
+                    if (team.Name === 'Allies') {
+                        description[2] = 'the american '
+                    }
+
+                    if (team.Name === 'Axis') {
+                        description[2] = 'the japanese '
+                    }
+
+                    if (team.Attacking) {
+                        description[2] += 'attack'
+                    } else {
+                        description[2] += 'defense'
+                    }
+                }
+
+
+                return description
+            })
+            let map = this.findDuplicateWords(oldStatus.Game.Map)
+            let timeLeft = this.secToMin(oldStatus.Rules.TimeLeft)
+            teams[1][3] = ` at${map}`
+            teams[1][6] = ` with ${timeLeft} left`
+            console.log(teams, oldStatus.Teams, status.Teams)
+            teams = teams.reduce((keys, arr) => [...Object.keys(arr), ...keys].flat().sort((a, b) => a - b), []).map((key, index) => teams.find(item => item[key])[key])
+            return teams.join('')
+        }
     }
 
     public secToMin(sec: number) {
