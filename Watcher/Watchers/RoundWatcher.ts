@@ -296,6 +296,13 @@ export class RoundWatcher extends Watcher {
 
     public battleDesc(oldStatus: Status, status: Status): string {
         const env = JSON.parse(process.argv[process.argv.length - 1]);
+        let axisIcon = `\u2720`
+        let alliesIcon = '\u262D'
+
+        if (env["GAME"] === "RS1") {
+            axisIcon = `\u6698`
+            alliesIcon = `\u272A`
+        }
         let teams = oldStatus.Teams.map(team => {
             let nextRound = status.Teams.find(tm => tm.Name === team.Name)
             let description = []
@@ -361,7 +368,7 @@ export class RoundWatcher extends Watcher {
         const alliesScore = players.reduce((total, player) => { return player && player.Team === Team.Allies.Value ? total + player.Score : total }, 0)
         const axisPlayers = oldStatus.Teams.find(team => team.Name === Team.Axis.DisplayName)
         const alliesPlayers = oldStatus.Teams.find(team => team.Name === Team.Allies.DisplayName)
-        const scores = `?${axisPlayers.Territories}? ${axisScore}/${alliesScore} ?${alliesPlayers.Territories}?`
+        const scores = `${axisIcon}${axisPlayers.Territories}${axisIcon} ${axisScore}/${alliesScore} ${alliesIcon}${alliesPlayers.Territories}${alliesIcon}`
         return `${description} ${scores}`
     }
 
