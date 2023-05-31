@@ -353,7 +353,6 @@ export class RoundWatcher extends Watcher {
         let timeLeft = this.secToMin(oldStatus.Rules.TimeLeft)
         teams[1][3] = ` at${map}`
         teams[1][6] = ` with ${timeLeft} left`
-        console.log(teams, oldStatus.Teams, status.Teams)
         teams = teams.reduce((keys, arr) => [...Object.keys(arr), ...keys].flat().sort((a, b) => a - b), []).map((key, index) => teams.find(item => item[key])[key])
         const description = teams.join('')
 
@@ -363,7 +362,7 @@ export class RoundWatcher extends Watcher {
         const axisPlayers = oldStatus.Teams.find(team => team.Name === Team.Axis.DisplayName)
         const alliesPlayers = oldStatus.Teams.find(team => team.Name === Team.Allies.DisplayName)
         const scores = `?${axisPlayers.Territories}? ${axisScore}/${alliesScore} ?${alliesPlayers.Territories}?`
-        return `${teams.join('')} ${scores}`
+        return `${description} ${scores}`
     }
 
     public secToMin(sec: number) {
