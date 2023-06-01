@@ -104,7 +104,7 @@ export class LayoutWatcher extends Watcher {
                             })
                         }
 
-                        if (changeLayout) {
+                        if (changeLayout && activeLayout !== lastLayout) {
                             const env = JSON.parse(process.argv[process.argv.length - 1]);
                             const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action
                             const theater = env["GAME"] && env["GAME"] === 'RO2' ? '0' : '1'
