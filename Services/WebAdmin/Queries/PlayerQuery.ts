@@ -8,7 +8,7 @@ import { Player, PlayerInfo } from '../Models';
 
 export class PlayerQuery extends Query {
 
-    public static async Get() {
+    public static async Get() : Promise<Array<PlayerInfo>> {
         const session = WebAdminSession.get();
 
         const status = await session.navigate(StatusRoute.GetStatus.Action)
@@ -46,64 +46,25 @@ export class PlayerQuery extends Query {
            
             return players;
         }
-        return null;
-    }
-
-    public static async GetByName(name: string) : Promise<PlayerInfo> {
-        const session = WebAdminSession.get();
-
-        const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
-
-        if (admin && admin.window && admin.window.document) {
-            const table = admin.window.document.querySelector("#players");
-            let playas;
-
-            if (table) {
-                playas = Parsers.playerTable(table as HTMLTableElement)
-                return playas.find(playa => playa && playa.Playername && playa.Playername.toString() && playa.Playername.toString().toLowerCase().includes(name.toLowerCase()))
-            }
-
-        }
-        return null;
-    }
-
-    public static async GetMultipleByName(name: string) : Promise<Array<PlayerInfo>> {
-        const session = WebAdminSession.get();
-
-        const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
-
-        if (admin && admin.window && admin.window.document) {
-            const table = admin.window.document.querySelector("#players");
-            let playas;
-
-            if (table) {
-                playas = Parsers.playerTable(table as HTMLTableElement)
-                return playas.filter(playa => playa && playa.Playername && playa.Playername.toString() && playa.Playername.toString().toLowerCase().includes(name.toLowerCase()))
-            }
-
-        }
         return [];
     }
 
+    public static async GetByName(name: string): Promise<PlayerInfo> {
+        const players = await this.Get();
+        const player = players.find(playa => playa && playa.Playername && playa.Playername.toString() && playa.Playername.toString().toLowerCase().includes(name.toLowerCase()))
+        return player;
+    }
+
+    public static async GetMultipleByName(name: string): Promise<Array<PlayerInfo>> {
+        let players = await this.Get();
+        players = players.filter(playa => playa && playa.Playername && playa.Playername.toString() && playa.Playername.toString().toLowerCase().includes(name.toLowerCase()))
+        return players;
+    }
+
     public static async GetById(id: string) : Promise<PlayerInfo> {
-        const session = WebAdminSession.get();
-
-        if (id && (id.match(/[A-Z0-9]{9,10}/) || id.match('/0x011[0]{4}[A-Z0-9]{9,10}/'))) {
-            const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
-
-            if (admin && admin.window && admin.window.document) {
-                const table = admin.window.document.querySelector("#players");
-                let playas;
-
-                if (table) {
-                    playas = Parsers.playerTable(table as HTMLTableElement)
-                    return playas.find(playa => playa.UniqueID === id)
-                }
-
-            }
-        }
-        
-        return null;
+        const players = await this.Get();
+        const player = players.find(playa => playa && playa.Id === id)
+        return player;
     }
 
     public static async GetPlayer(name: string) : Promise<Player> {
