@@ -30,7 +30,12 @@ export const RoastCommand: Command = {
             },
         }
   
-        let player = id && await PlayerQuery.GetByName(id);
+        let player = id && await PlayerQuery.GetById(id);
+
+        if (!player) {
+            player = await PlayerQuery.GetByName(name)
+        }
+
         if (!player) {
             const players = await PlayerQuery.GetMultipleByName(name);
             player = players.shift();
@@ -45,7 +50,7 @@ export const RoastCommand: Command = {
 
         if (player) {
             const prompt = `
-            We are the admins of a server in red orchestra 2 called the EU community server.
+        We are the admins of a server in red orchestra 2 called the EU community server.
 
             a player has asked you to make a joke about '${player.Playername}' make it something ww2 related, the darker the humour the better.
 

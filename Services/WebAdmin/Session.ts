@@ -24,12 +24,16 @@ export class WebAdminSession {
         this.CookieJar = cookieJar;
         this.CookieJar.setCookie(cookie, url)
 
-        this.log = new FileLogger('../logs/info.log')
+        this.BaseUrl = JSON.parse(process.argv[process.argv.length - 1])["BASE_URL"]
+
+        this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
         this.DOMs[url] = new JSDOM(url)
         this.DOMs[url].window.document.cookie += authCookiePart
     }
 
     public DOMs: Record<string, JSDOM> = {};
+
+    public BaseUrl: string;
 
     private CookieJar: CookieJar;
 
@@ -40,10 +44,9 @@ export class WebAdminSession {
 
     public async navigate(url: string) : Promise<JSDOM> {
         let navUrl = url;
-        let baseUrl = JSON.parse(process.argv[process.argv.length - 1])["BASE_URL"];
 
-        if (!navUrl.includes(baseUrl)) {
-            navUrl = baseUrl + url
+        if (!navUrl.includes(this.BaseUrl)) {
+            navUrl = this.BaseUrl + url
             //this.log.info(url, navUrl)
         }
         this.log.info(`navigating to: `, navUrl)
