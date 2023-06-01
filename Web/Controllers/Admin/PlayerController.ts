@@ -29,7 +29,7 @@ export class PlayerController extends SmershController {
                             if (guid.match(/[A-Z0-9]{9,10}/) && !guid.startsWith('0x011')) {
                                 guid = `0x0110000${guid}`;
                             }
-                            return player && player.UniqueID && player.UniqueID === guid
+                            return player && player.Id && player.Id === guid
                         } else {
                             return player && player.Playername && player.Playername.includes(playerName)
                         }
