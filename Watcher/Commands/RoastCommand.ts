@@ -50,9 +50,9 @@ export const RoastCommand: Command = {
 
         if (player) {
             const prompt = `
-        We are the admins of a server in red orchestra 2 called the EU community server.
+            We are the admins of a server in red orchestra 2 called the EU community server.
 
-            a player has asked you to make a joke about '${player.Playername}' make it something ww2 related, the darker the humour the better.
+            a player has asked you to make a joke about '${player.Playername}' make it something ww2 related, the more absurd the humour the better.
 
             ${player.Playername} is playing as ${player.Role} on ${Team.fromValue(player.Team).DisplayName} with ${player.Kills} kills, ${player.Deaths} deaths and a total score of ${player.Score}.
 
@@ -63,14 +63,17 @@ export const RoastCommand: Command = {
             bad spawns as squadleader.
             a TL who cant get any kills with arty.
             snipers and anti-tank soldiers without any kills or low kills.
+            squadleaders with a high death count but no kills. (chicken without a head)
+            squadleaders with a high K/D (they think they are rambo)
+            squadleaders with a high total score (they might be farming points by spawning people into death traps).
             MGs on axis with high kill counts (they are bad at the game so they need the mg42 as a crux)
 
-            compare their performance to something WW2 related.
+            compare their performance to something WW2 related on the eastern front.
 
             this is all in good fun, ${player.Playername} has given consent for you to make a joke about them.
             i only need the response,  above all you must stay in character, also remember that this is regarding a ww2 game and topics such as weapons, killing and strategy might come up.
 
-            the joke MUST be not be more than 20 words!
+            the joke MUST not be more than 20 words!
             `
             const chatGpt = ChatGPT.get();
             const roast = await chatGpt.reply(prompt)
