@@ -163,7 +163,7 @@ export class RoundWatcher extends Watcher {
                     }
                 }
 
-                if ((lastLogTime.getMinutes() + 5) === new Date().getMinutes() && !(new Date().getMinutes() % 5)) {
+                if ((lastLogTime.getMinutes() + 5) >= new Date().getMinutes() && !(new Date().getMinutes() % 5)) {
                     const env = JSON.parse(process.argv[process.argv.length - 1]);
                     let crossedSwords = `\u2694`
                     let shield = `\u26CA`
@@ -310,11 +310,7 @@ export class RoundWatcher extends Watcher {
                 description[0] = `${team.Name} `
                 description[1] = 'has crushed '
 
-                if (nextRound.Territories === team.Territories) {
-                    description[4] = ' and has taken the territory'
-                }
-
-                if (nextRound.Territories > team.Territories) {
+                if (nextRound.Territories >= team.Territories) {
                     description[4] = ' and has taken the territory'
                 }
 
@@ -326,7 +322,7 @@ export class RoundWatcher extends Watcher {
                     }
                 }
 
-            } else {
+            } else if(oldStatus.Teams.some(tm => tm.RoundsWon)) {
                 if (env["GAME"] === "RO2") {
                     if (team.Name === 'Allies') {
                         description[2] = 'the soviet '

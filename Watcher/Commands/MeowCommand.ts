@@ -24,7 +24,7 @@ export const MeowCommand: Command = {
                 "Cookie": `authcred="${env["AUTHCRED"]}"`
             },
         }
-        let player = await PlayerQuery.GetById(id);
+        let player = id && await PlayerQuery.GetById(id);
         if (!player) {
             const players = await PlayerQuery.GetMultipleByName(name);
             player = players.shift();

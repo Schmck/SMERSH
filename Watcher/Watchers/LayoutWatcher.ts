@@ -42,105 +42,108 @@ export class LayoutWatcher extends Watcher {
             if (playerCountTrend.length > 2) {
                 dormantLayouts.every(async layout => {
                     let changeLayout = false;
-                    const date = new Date();
-                    const startTime = new Date();
-                    const endTime = new Date();
-                    const higherThanMin = this.atLeastTwo(playerCountTrend[0] >= layout.MinimumPlayerCount, playerCountTrend[1] >= layout.MinimumPlayerCount, playerCountTrend[2] >= layout.MinimumPlayerCount)
-                    const lowerThanMax = this.atLeastTwo(playerCountTrend[0] <= layout.MaximumPlayerCount, playerCountTrend[1] <= layout.MaximumPlayerCount, playerCountTrend[2] <= layout.MaximumPlayerCount)
-                    const mapUnchanged = this.atLeastTwo(playerCountTrend[0] !== 0, playerCountTrend[1] !== 0, playerCountTrend[2] !== 0)
 
-                    startTime.setHours(layout.StartTime)
-                    endTime.setHours(layout.EndTime)
+                    if (activeLayout !== layout.Name) {
+                        const date = new Date();
+                        const startTime = new Date();
+                        const endTime = new Date();
+                        const higherThanMin = this.atLeastTwo(playerCountTrend[0] >= layout.MinimumPlayerCount, playerCountTrend[1] >= layout.MinimumPlayerCount, playerCountTrend[2] >= layout.MinimumPlayerCount)
+                        const lowerThanMax = this.atLeastTwo(playerCountTrend[0] <= layout.MaximumPlayerCount, playerCountTrend[1] <= layout.MaximumPlayerCount, playerCountTrend[2] <= layout.MaximumPlayerCount)
+                        const mapUnchanged = this.atLeastTwo(playerCountTrend[0] !== 0, playerCountTrend[1] !== 0, playerCountTrend[2] !== 0)
 
-                    if (higherThanMin && lowerThanMax && mapUnchanged) {
-                        changeLayout = true
-                        activeLayout = layout.Name;
-                    }
+                        startTime.setHours(layout.StartTime)
+                        endTime.setHours(layout.EndTime)
 
-                    if (!changeLayout && startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
-                        changeLayout = true
-                        activeLayout = layout.Name;
-                    }
-
-                    if (layout.Name === Layout.Stock.DisplayName) {
-                        const startTimeNight = this.addHours(startTime, 12)
-                        const endTimeNight = this.addHours(startTime, 12)
-
-                        if (startTimeNight.getHours() <= date.getHours() && endTimeNight.getHours() >= date.getHours()) {
+                        if (higherThanMin && lowerThanMax && mapUnchanged) {
                             changeLayout = true
                             activeLayout = layout.Name;
                         }
 
-                    }
+                        if (!changeLayout && startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
+                            changeLayout = true
+                            activeLayout = layout.Name;
+                        }
 
-                    if (changeLayout && activeLayout && activeLayout !== lastLayout) {
-                        const otherLayouts = layouts.filter(lt => lt.Id !== layout.Id)
-                        //conflicts with schedules of other layouts
-                        otherLayouts.every(lt => {
-                            startTime.setHours(lt.StartTime)
-                            endTime.setHours(lt.EndTime)
-                            if (startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
-                                changeLayout = false
-                                if (args[0] && args[0].activeLayout) {
-                                    activeLayout = args[0].activeLayout;
-                                }
+                        if (layout.Name === Layout.Stock.DisplayName) {
+                            const startTimeNight = this.addHours(startTime, 12)
+                            const endTimeNight = this.addHours(startTime, 12)
+
+                            if (startTimeNight.getHours() <= date.getHours() && endTimeNight.getHours() >= date.getHours()) {
+                                changeLayout = true
+                                activeLayout = layout.Name;
                             }
 
-                            if (layout.Name === Layout.Stock.DisplayName) {
-                                const startTimeNight = this.addHours(startTime, 12)
-                                const endTimeNight = this.addHours(startTime, 12)
+                        }
 
-                                if (startTimeNight.getHours() <= date.getHours() && endTimeNight.getHours() >= date.getHours()) {
+                        if (changeLayout && activeLayout && activeLayout !== lastLayout) {
+                            const otherLayouts = layouts.filter(lt => lt.Id !== layout.Id)
+                            //conflicts with schedules of other layouts
+                            otherLayouts.every(lt => {
+                                startTime.setHours(lt.StartTime)
+                                endTime.setHours(lt.EndTime)
+                                if (startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
                                     changeLayout = false
                                     if (args[0] && args[0].activeLayout) {
                                         activeLayout = args[0].activeLayout;
                                     }
                                 }
 
+                                if (layout.Name === Layout.Stock.DisplayName) {
+                                    const startTimeNight = this.addHours(startTime, 12)
+                                    const endTimeNight = this.addHours(startTime, 12)
+
+                                    if (startTimeNight.getHours() <= date.getHours() && endTimeNight.getHours() >= date.getHours()) {
+                                        changeLayout = false
+                                        if (args[0] && args[0].activeLayout) {
+                                            activeLayout = args[0].activeLayout;
+                                        }
+                                    }
+
+                                }
+                                return changeLayout;
+                            })
+                        }
+
+                        if (changeLayout) {
+                            const env = JSON.parse(process.argv[process.argv.length - 1]);
+                            const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action
+                            const theater = env["GAME"] && env["GAME"] === 'RO2' ? '0' : '1'
+                            const config: AxiosRequestConfig =
+                            {
+                                headers: {
+                                    "Content-type": "application/x-www-form-urlencoded"
+                                },
                             }
-                            return changeLayout;
-                        })
-                    }
 
-                    if (changeLayout) {
-                        const env = JSON.parse(process.argv[process.argv.length - 1]);
-                        const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action
-                        const theater = env["GAME"] && env["GAME"] === 'RO2' ? '0' : '1'
-                        const config: AxiosRequestConfig =
-                        {
-                            headers: {
-                                "Content-type": "application/x-www-form-urlencoded"
-                            },
-                        }
+                            const urlencoded = new URLSearchParams();
+                            urlencoded.append('campaignname', '')
+                            urlencoded.append('territoryCount', '20')
+                            urlencoded.append('currentTheater', theater)
+                            urlencoded.append('viewingTheater', theater)
 
-                        const urlencoded = new URLSearchParams();
-                        urlencoded.append('campaignname', '')
-                        urlencoded.append('territoryCount', '20')
-                        urlencoded.append('currentTheater', theater)
-                        urlencoded.append('viewingTheater', theater)
+                            const client = Api.axios();
 
-                        const client = Api.axios();
+                            Object.fromEntries(Object.values(layout.Maps).map((territory: string[], index) => {
+                                const key = env["GAME"] && env["GAME"] === 'RO2' ? `sg_territory_` : `pt_territory_`
 
-                        Object.fromEntries(Object.values(layout.Maps).map((territory: string[], index) => {
-                            const key = env["GAME"] && env["GAME"] === 'RO2' ? `sg_territory_` : `pt_territory_`
+                                urlencoded.append(key + index, territory.join('\n'))
+                                urlencoded.append(`${key}1${index}`, ['', '', ''].join('\n'))
+                                return [key + index, territory]
+                            }))
 
-                            urlencoded.append(key + index, territory.join('\n'))
-                            urlencoded.append(`${key}1${index}`, ['', '', ''].join('\n'))
-                            return [key + index, territory]
-                        }))
+                            for (let i = 0; i < 10; i++) {
+                                const altKey = env["GAME"] && env["GAME"] === 'RO2' ? `pt_territory_` : `sg_territory_`
 
-                        for (let i = 0; i < 10; i++) {
-                            const altKey = env["GAME"] && env["GAME"] === 'RO2' ? `pt_territory_` : `sg_territory_`
+                                urlencoded.append(`${altKey}1${i}`, ['', '', ''].join('\n'))
 
-                            urlencoded.append(`${altKey}1${i}`, ['', '', ''].join('\n'))
+                            }
+
+                            Logger.append(`switching to ${layout.Name} layout`)
+                            urlencoded.append('save', 'save')
+                            await client.post(url, urlencoded, config);
+                            Logger.append(`changed to ${layout.Name} layout`)
 
                         }
-
-                        Logger.append(`switching to ${layout.Name} layout`)
-                        urlencoded.append('save', 'save')
-                        await client.post(url, urlencoded, config);
-                        Logger.append(`changed to ${layout.Name} layout`)
-
                     }
 
                     return !changeLayout

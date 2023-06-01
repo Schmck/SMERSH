@@ -49,7 +49,7 @@ export class PlayerQuery extends Query {
         return null;
     }
 
-    public static async GetByName(name: string) {
+    public static async GetByName(name: string) : Promise<PlayerInfo> {
         const session = WebAdminSession.get();
 
         const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
@@ -67,7 +67,7 @@ export class PlayerQuery extends Query {
         return null;
     }
 
-    public static async GetMultipleByName(name: string) {
+    public static async GetMultipleByName(name: string) : Promise<Array<PlayerInfo>> {
         const session = WebAdminSession.get();
 
         const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
@@ -85,7 +85,7 @@ export class PlayerQuery extends Query {
         return [];
     }
 
-    public static async GetById(id: string) {
+    public static async GetById(id: string) : Promise<PlayerInfo> {
         const session = WebAdminSession.get();
 
         if (id && (id.match(/[A-Z0-9]{9,10}/) || id.match('/0x011[0]{4}[A-Z0-9]{9,10}/'))) {
@@ -106,7 +106,7 @@ export class PlayerQuery extends Query {
         return null;
     }
 
-    public static async GetPlayer(name: string) {
+    public static async GetPlayer(name: string) : Promise<Player> {
         const session = WebAdminSession.get();
 
         const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
@@ -125,7 +125,7 @@ export class PlayerQuery extends Query {
         return null;
     }
 
-    public static async GetPlayers() {
+    public static async GetPlayers() : Promise<Array<Player>> {
         const session = WebAdminSession.get();
 
         const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
