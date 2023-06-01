@@ -30,7 +30,7 @@ export const KickCommand: Command = {
             const players = await PlayerQuery.GetMultipleByName(name);
             player = players.shift();
             if (players.length > 1) {
-                const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Playername}[${player.UniqueID.slice(9)}]`).join('\, ')}]`
+                const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Playername}[${player.Id.slice(9)}]`).join('\, ')}]`
                 const url = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const urlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(url, urlencoded, config)
@@ -41,7 +41,7 @@ export const KickCommand: Command = {
         if (player) {
             const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
             const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
-            await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.UniqueID, env["COMMAND_CHANNEL_ID"], Action.Kick, player.Playername, reason, new Date()))
+            await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, env["COMMAND_CHANNEL_ID"], Action.Kick, player.Playername, reason, new Date()))
 
             await axios.post(url, urlencoded, config)
             const message = `${player.Playername} was kicked for ${reason ? reason : 'no reason'}`

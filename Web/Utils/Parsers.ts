@@ -74,6 +74,11 @@ export class Parsers {
                 if(Number.isInteger(parseInt(vl)) && !header.includes('Player name') && !header.includes('PlayerKey') && !header.includes('Unique ID') && !header.includes('IP')) {
                     vl = parseInt(vl)
                 }
+
+                if (header.includes('Unique ID')) {
+                    return [['Id'], vl]
+
+                }
                 return [[header.replace(' ', '')], vl]
             }))
         }).sort((a, b) => a.Playername.toString().localeCompare(b.Playername.toString()))

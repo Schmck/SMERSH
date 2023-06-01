@@ -29,7 +29,7 @@ export const MeowCommand: Command = {
             const players = await PlayerQuery.GetMultipleByName(name);
             player = players.shift();
             if (players.length > 1) {
-                const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Playername}[${player.UniqueID.slice(9)}]`).join('\, ')}]`
+                const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Playername}[${player.Id.slice(9)}]`).join('\, ')}]`
                 const url = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const urlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(url, urlencoded, config)
