@@ -32,7 +32,7 @@ export class PlayerQuery extends Query {
                             players = players.map((player, i) => {
                                  const playa = playas.find(playa => playa.Playername === player.Playername)
                                  if(playa) {
-                                 return Object.assign({}, player, { Id: playa.UniqueID, IpAddress: playa.IP, PlayerKey: playa.PlayerKey })
+                                 return Object.assign({}, player, { Id: playa.Id, IpAddress: playa.IP, PlayerKey: playa.PlayerKey })
                                  }
                                  return player
                              });
