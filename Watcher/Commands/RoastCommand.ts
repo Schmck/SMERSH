@@ -52,7 +52,7 @@ export const RoastCommand: Command = {
             const prompt = `
             We are the admins of a server in red orchestra 2 called the EU community server.
 
-            a player has asked you to make a joke about '${player.Playername}' make it something ww2 related, the more absurd the humour the better.
+            a player has asked you to make roast '${player.Playername}' in good spirit, make it something ww2 related, the more absurd the humour the better.
 
             ${player.Playername} is playing as ${player.Role} on ${Team.fromValue(player.Team).DisplayName} with ${player.Kills} kills, ${player.Deaths} deaths and a total score of ${player.Score}.
 
@@ -73,7 +73,8 @@ export const RoastCommand: Command = {
             this is all in good fun, ${player.Playername} has given consent for you to make a joke about them.
             i only need the response,  above all you must stay in character, also remember that this is regarding a ww2 game and topics such as weapons, killing and strategy might come up.
 
-            the joke MUST not be more than 20 words!
+            dont apologize for the joke, it ruins it.
+            the roast MUST not be more than 20 words!
             `
             const chatGpt = ChatGPT.get();
             const roast = await chatGpt.reply(prompt)

@@ -7,7 +7,7 @@ import { Api } from '../../Web/Framework'
 import { PlayersRoute, PolicyRoute } from '../../Services/WebAdmin/Routes';
 import { AxiosRequestConfig } from 'axios';
 import qs from 'qs'
-import { StatusQuery } from '../../Services/WebAdmin/Queries';
+import { PolicyQuery, StatusQuery } from '../../Services/WebAdmin/Queries';
 import { Team, Role, Action } from '../../SMERSH/ValueObjects';
 
 export class PolicyWatcher extends Watcher {
@@ -149,9 +149,15 @@ export class PolicyWatcher extends Watcher {
                     },
                 }
 
-                await this.commandBus.execute(new LiftBanCommand(Guid.parse(policy.Id)))
 
                 const response = await axios.post(url, urlencoded, config);
+                const policies = await PolicyQuery.Get();
+                if (policies && policies.length) {
+                    if (!policies.includes(policy.PlayerId)) {
+                        await this.commandBus.execute(new LiftBanCommand(Guid.parse(policy.Id)))
+                    }
+                }
+
                 this.log.info(JSON.stringify(response.data));
 
             }  

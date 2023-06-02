@@ -75,7 +75,7 @@ export class LayoutWatcher extends Watcher {
 
                         }
 
-                        if (changeLayout && activeLayout && activeLayout !== lastLayout) {
+                        if (changeLayout) {
                             const otherLayouts = layouts.filter(lt => lt.Id !== layout.Id)
                             //conflicts with schedules of other layouts
                             otherLayouts.every(lt => {
@@ -83,8 +83,8 @@ export class LayoutWatcher extends Watcher {
                                 endTime.setHours(lt.EndTime)
                                 if (startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
                                     changeLayout = false
-                                    if (args[0] && args[0].activeLayout) {
-                                        activeLayout = args[0].activeLayout;
+                                    if (lastLayout) {
+                                        activeLayout = lastLayout;
                                     }
                                 }
 
@@ -94,8 +94,8 @@ export class LayoutWatcher extends Watcher {
 
                                     if (startTimeNight.getHours() <= date.getHours() && endTimeNight.getHours() >= date.getHours()) {
                                         changeLayout = false
-                                        if (args[0] && args[0].activeLayout) {
-                                            activeLayout = args[0].activeLayout;
+                                        if (lastLayout) {
+                                            activeLayout = lastLayout;
                                         }
                                     }
 
@@ -104,7 +104,7 @@ export class LayoutWatcher extends Watcher {
                             })
                         }
 
-                        if (changeLayout && activeLayout !== lastLayout) {
+                        if (changeLayout && (!activeLayout || (activeLayout !== lastLayout))) {
                             const env = JSON.parse(process.argv[process.argv.length - 1]);
                             const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action
                             const theater = env["GAME"] && env["GAME"] === 'RO2' ? '0' : '1'

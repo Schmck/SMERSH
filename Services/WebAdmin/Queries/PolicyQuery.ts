@@ -9,6 +9,17 @@ import { Query } from './Query';
 
 export class PolicyQuery extends Query {
 
+
+    public static async Get() {
+        const session = WebAdminSession.get();
+        const policy = await session.navigate(PolicyRoute.GetBans.Action)
+        if (policy && policy.window && policy.window.document) {
+            const bannedIds = Object.values(policy.window.document.querySelector('table.grid').querySelectorAll('td')).filter((td, i) => !(i % 3)).map(tr => tr.innerText);
+            return bannedIds;
+        }
+        return [];
+    }
+
     public static async Post(playerId: string) {
         const session = WebAdminSession.get();
         const policy = await session.navigate(PolicyRoute.GetBans.Action)

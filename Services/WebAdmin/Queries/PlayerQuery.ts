@@ -12,7 +12,6 @@ export class PlayerQuery extends Query {
         const session = WebAdminSession.get();
 
         const status = await session.navigate(StatusRoute.GetStatus.Action)
-        const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
 
       
         let players : Array<PlayerInfo>
@@ -21,6 +20,7 @@ export class PlayerQuery extends Query {
             const playerTable = status.window.document.querySelector("#players");
          
             if (playerTable) {
+                const admin = await session.navigate(PlayersRoute.GetPlayers.Action)
                 players = Parsers.playerTable(playerTable as HTMLTableElement);
                 if (admin && admin.window && admin.window.document) {
                     const table = admin.window.document.querySelector("#players");
