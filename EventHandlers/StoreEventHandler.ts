@@ -17,13 +17,13 @@ import {
     LayoutSavedEvent,
     MuteLiftedEvent,
     DiscordRoleAppliedEvent,
-    LayoutRequirementsChangedEvent
+    LayoutRequirementsChangedEvent,
+    PlayerIpAddressChangedEvent,
 } from '../Events'
 import { SearchClient } from '../Elastic'
 import { EventSearchReport } from '../Reports/Entities/eventStore';
 import { Guid } from 'guid-typescript';
 import { CommandBus } from '@nestjs/cqrs';
-import { Player, Policy } from '../Reports/Entities';
 let cls: { new(id?: Guid, event?: Event): EventSearchReport } = EventSearchReport;
 
 
@@ -43,7 +43,8 @@ let cls: { new(id?: Guid, event?: Event): EventSearchReport } = EventSearchRepor
     LayoutSavedEvent,
     MuteLiftedEvent,
     DiscordRoleAppliedEvent,
-    LayoutRequirementsChangedEvent
+    LayoutRequirementsChangedEvent,
+    PlayerIpAddressChangedEvent
 )
 export class StoreEventHandler implements
     IEventHandler<PlayerRegisteredEvent>,
@@ -60,7 +61,8 @@ export class StoreEventHandler implements
     IEventHandler<LayoutSavedEvent>,
     IEventHandler<MuteLiftedEvent>,
     IEventHandler<DiscordRoleAppliedEvent>,
-    IEventHandler<LayoutRequirementsChangedEvent>
+    IEventHandler<LayoutRequirementsChangedEvent>,
+    IEventHandler<PlayerIpAddressChangedEvent>
 {
     public constructor(protected readonly commandBus: CommandBus) {
         }
@@ -81,6 +83,7 @@ export class StoreEventHandler implements
     async handle(event: MuteLiftedEvent)
     async handle(event: DiscordRoleAppliedEvent)
     async handle(event: LayoutRequirementsChangedEvent)
+    async handle(event: PlayerIpAddressChangedEvent)
     async handle(event: Event) {
 
 
