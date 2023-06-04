@@ -56,7 +56,7 @@ export class SteamBot {
         const steamId64 = hexToDec(id);
         const online = this.steam.logOnResult && this.steam.logOnResult.eresult;
         let friends = Object.keys(this.steam.myFriends).filter(steamId => this.steam.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);
-        let isFriend = friends.includes(decToHex(steamId64));
+        let isFriend = friends.includes(steamId64);
 
         if (!online) {
             await this.login(env["STEAM_ACCOUNT_NAME"], env["STEAM_ACCOUNT_PASSWORD"])
@@ -91,7 +91,7 @@ export class SteamBot {
                 }
         }
 
-        isFriend = friends.includes(decToHex(steamId64));
+        isFriend = friends.includes(steamId64);
 
         if (isFriend) {
             await this.steam.chat.sendFriendMessage(steamId64, message, { chatEntryType: SteamUser.EChatEntryType.ChatMsg }, () => { });
