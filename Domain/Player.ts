@@ -1,6 +1,6 @@
 import { Guid } from "guid-typescript";
 import { Domain } from './Domain'
-import { PlayerRegisteredEvent, PlayerNameChangedEvent, PolicyAppliedEvent, DiscordRoleAppliedEvent } from '../Events/Player'
+import { PlayerRegisteredEvent, PlayerNameChangedEvent, PolicyAppliedEvent, DiscordRoleAppliedEvent, PlayerIpAddressChangedEvent } from '../Events/Player'
 import { Action } from '../SMERSH/ValueObjects/player'
 
 export class Player extends Domain {
@@ -35,7 +35,7 @@ export class Player extends Domain {
     public async changeIpAddress(ip: string) {
         const oldIp = this.Ip;
         this.Ip = ip;
-        this.apply(new PlayerNameChangedEvent(this.Id, this.Ip, oldIp));
+        this.apply(new PlayerIpAddressChangedEvent(this.Id, this.Ip, oldIp));
         return;
 
     }

@@ -28,7 +28,12 @@ export class PlayerIpAddressChangedEventHandler implements IEventHandler<PlayerI
         player.Ip = event.IpAddress;
         await SearchClient.Update(player)
 
-        Logger.append(`[${(event.Id as any as string).slice(9)}] Ip Address change detected: ${event.PrevIpAddress} -> ${event.IpAddress}`)
+        if (event.PrevIpAddress) {
+            Logger.append(`[${(event.Id as any as string).slice(9)}] Ip Address change detected: ${event.PrevIpAddress} -> ${event.IpAddress}`)
+
+        } else {
+            Logger.append(`[${(event.Id as any as string).slice(9)}] Ip Address registered: ${event.IpAddress}`)
+        }
 
         return;
     }
