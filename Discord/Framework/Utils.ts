@@ -1,16 +1,17 @@
+import { PlayerSearchReport } from "../../Reports/Entities/player"
 import { PolicySearchReport} from "../../Reports/Entities/policy"
 import { Role, Team, RoleBan } from "../../SMERSH/ValueObjects"
 
 export class Utils {
 
-    public static async generatePlayerTable(players, showIpAddress = true) {
+    public static async generatePlayerTable(players : Array<PlayerSearchReport>, showIpAddress = true) {
         const longestPlayerName = players.reduce((longestName, player) => longestName >= player.Name.length ? longestName : player.Name.length, 0)
         const longestPlayerIp = players.reduce((longestIp, player) => !player.Ip || longestIp >= player.Ip.length ? longestIp : player.Ip.length, 0)
         let playerNames = `\nPlayer`
         playerNames = `${playerNames}${' '.repeat(longestPlayerName + 4 - playerNames.length)}`
         let ipAddressLine = showIpAddress ? `${`\u2500`.repeat(18 - longestPlayerIp)}\u253C` : ''
         let ipAddressHeader = showIpAddress ? `    IP address ${' '.repeat(Math.abs(longestPlayerIp - 12))}\u2502` : ''
-        let playerTable = [`${playerNames}\u2502 0x0110000 \u2502${ipAddressHeader} `, `${'\u2500'.repeat(longestPlayerName + 3) }\u253C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253C`]
+        let playerTable = [`${playerNames}\u2502 0x0110000 \u2502${ipAddressHeader} `, `${'\u2500'.repeat(longestPlayerName + 3)}\u253C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253C`, ipAddressLine]
         return [playerTable, players.map((player, index) => {
             let playerName = `${player.Name}${' '.repeat(longestPlayerName + 3 - player.Name.length)}`
             let playerId = player && player.Id ? player.Id.slice(9) : ""

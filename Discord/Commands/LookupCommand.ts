@@ -100,7 +100,7 @@ export const LookupCommand: Command = {
         })
 
         if (players.length) {
-            let playerTable: string = await Utils.generatePlayerTable(players, false)
+            let playerTable: string = await Utils.generatePlayerTable(players, true)
             await interaction.followUp({
                 ephemeral: true,
                 content: `\`\`\`prolog

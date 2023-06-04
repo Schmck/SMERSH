@@ -4,7 +4,7 @@ import { Action, Role } from "../../SMERSH/ValueObjects/player"
 import { Team } from "../../SMERSH/ValueObjects";
 
 export class ApplyRoleBanCommand extends Command {
-	constructor(actionId: Guid, playerId: string, channelId: string, name: string, reason: string, role: Role, team: Team, side: string, banDate: Date, unbanDate?: Date) {
+	constructor(actionId: Guid, playerId: string, channelId: string, name: string, reason: string, role: Role, team: Team, side: string, executioner: string, banDate: Date, unbanDate?: Date) {
 		super(actionId)
 
 		this.PlayerId = playerId;
@@ -14,6 +14,7 @@ export class ApplyRoleBanCommand extends Command {
 		this.Role = role;
 		this.Team = team;
 		this.Side = side;
+		this.Executioner = executioner;
 		this.BanDate = banDate;
 		this.UnbanDate = unbanDate;
 	}
@@ -25,6 +26,8 @@ export class ApplyRoleBanCommand extends Command {
 	public Name: string;
 
 	public Reason: string;
+
+	public Executioner: string;
 
 	public Role: Role;
 

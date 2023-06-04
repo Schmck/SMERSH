@@ -35,7 +35,7 @@ export class LayoutWatcher extends Watcher {
             }
 
             if (activeLayout) {
-                layouts = layouts.filter(layout => layout.Name !== activeLayout)
+                dormantLayouts = layouts.filter(layout => layout.Name !== activeLayout)
             }
             
 
@@ -108,35 +108,36 @@ export class LayoutWatcher extends Watcher {
                             const env = JSON.parse(process.argv[process.argv.length - 1]);
                             const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action
                             const theater = env["GAME"] && env["GAME"] === 'RO2' ? '0' : '1'
+                            const gametype = env["GAME"] && env["GAME"] === 'RO2' ? 'ROGame.ROGameInfoTerritories' : 'RSGame.RSGameInfoTerritories'
+                            const altKey = env["GAME"] && env["GAME"] === 'RO2' ? `pt_territory_` : `sg_territory_`
+                            const altMaps = env["GAME"] && env["GAME"] === 'RO2' ? ['RSTE-Hanto', 'RSTE-Kwajalein', 'RSTE-Kobura_MCP'] : ['TE-Coldsteel_MCP', 'TE-CommissarsHouse', 'TE-Station']
+
                             const config: AxiosRequestConfig =
                             {
                                 headers: {
-                                    "Content-type": "application/x-www-form-urlencoded"
+                                    "Content-Type": "application/x-www-form-urlencoded"
                                 },
                             }
 
                             const urlencoded = new URLSearchParams();
-                            urlencoded.append('campaignname', '')
+                            urlencoded.append('campaignname', null)
                             urlencoded.append('territoryCount', '20')
                             urlencoded.append('currentTheater', theater)
                             urlencoded.append('viewingTheater', theater)
+                            urlencoded.append('gametype', gametype)
 
                             const client = Api.axios();
 
-                            Object.fromEntries(Object.values(layout.Maps).map((territory: string[], index) => {
+                            Object.values(layout.Maps).forEach((territory: string[], index) => {
                                 const key = env["GAME"] && env["GAME"] === 'RO2' ? `sg_territory_` : `pt_territory_`
 
-                                urlencoded.append(key + index, territory.join('\n'))
-                                urlencoded.append(`${key}1${index}`, ['', '', ''].join('\n'))
-                                return [key + index, territory]
-                            }))
+                                urlencoded.append(key + index, territory.join('%0D%0A'))
+                            })
 
-                            for (let i = 0; i < 10; i++) {
-                                const altKey = env["GAME"] && env["GAME"] === 'RO2' ? `pt_territory_` : `sg_territory_`
-
-                                urlencoded.append(`${altKey}1${i}`, ['', '', ''].join('\n'))
-
+                            for (let i = 10; i < 20; i++) {
+                                urlencoded.append(`${altKey}${i}`, altMaps.join('%0D%0A'))
                             }
+
 
                             Logger.append(`switching to ${layout.Name} layout`)
                             urlencoded.append('save', 'save')

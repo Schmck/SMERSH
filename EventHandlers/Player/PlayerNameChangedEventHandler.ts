@@ -26,9 +26,9 @@ export class PlayerNameChangedEventHandler implements IEventHandler<PlayerNameCh
     async handle(event: PlayerNameChangedEvent) {
         let player = new cls(event.Id);
         player.Name = event.Name;
-        await SearchClient.Put(player)
+        await SearchClient.Update(player)
 
-        Logger.append(`Name change detected: ${event.PrevName} -> ${event.Name}`)
+        Logger.append(`[${(event.Id as any as string).slice(9)}] Name change detected: ${event.PrevName} -> ${event.Name}`)
 
         return;
     }

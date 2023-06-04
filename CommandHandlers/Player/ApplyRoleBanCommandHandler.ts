@@ -14,11 +14,11 @@ export class ApplyRoleBanCommandHandler implements ICommandHandler<ApplyRoleBanC
     }
 
     async execute(command: ApplyRoleBanCommand) {
-        const { Id, PlayerId, ChannelId, Name, Reason, Role, Team, Side, BanDate, UnbanDate } = command
+        const { Id, PlayerId, ChannelId, Name, Reason, Role, Team, Side, Executioner, BanDate, UnbanDate } = command
         const props = await this.repository.Get<PolicySearchReport, Policy>(Id, PolicySearchReport, Policy)
         const domain = this.publisher.mergeObjectContext(props)
 
-        await domain.applyRoleBan(PlayerId, ChannelId, Name, Reason, Role, Team, Side, BanDate, UnbanDate);
+        await domain.applyRoleBan(PlayerId, ChannelId, Name, Reason, Role, Team, Side, Executioner, BanDate, UnbanDate);
         await domain.commit()
         return;
 

@@ -6,6 +6,7 @@ import { ApplyRoleBanCommandHandler } from './ApplyRoleBanCommandHandler'
 import { LiftRoleBanCommandHandler } from './LiftRoleBanCommandHandler'
 import { LiftMuteCommandHandler } from './LiftMuteCommandHandler'
 import { ApplyDiscordRoleCommandHandler } from './ApplyDiscordRoleCommandHandler'
+import { ChangePlayerIpAddressCommandHandler } from './ChangePlayerIpAddressCommandHandler'
 
 
 export const PlayerCommandHandlers = [
@@ -16,5 +17,6 @@ export const PlayerCommandHandlers = [
     ApplyRoleBanCommandHandler,
     LiftRoleBanCommandHandler,
     LiftMuteCommandHandler,
-    ApplyDiscordRoleCommandHandler
+    ApplyDiscordRoleCommandHandler,
+    ChangePlayerIpAddressCommandHandler
 ]

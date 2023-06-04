@@ -58,6 +58,7 @@ export const RoastCommand: Command = {
 
             
             here are some things you could make use to make a joke depending on the role, the joke MUST be related to the role they are playing.
+            compare their performance to something WW2 related on the ${env["GAME"]  === "RO2"? 'eastern' : 'pacific'} front.
 
             they have a bad K/D ratio as RIFLEMAN, ELITE RIFLEMAN, ASSAULT, ELITE ASSAULT or ENGINEER.
             bad spawns as squadleader.
@@ -68,7 +69,7 @@ export const RoastCommand: Command = {
             squadleaders with a high total score (they might be farming points by spawning people into death traps).
             MGs on axis with high kill counts (they are bad at the game so they need the mg42 as a crux)
 
-            compare their performance to something WW2 related on the eastern front.
+            
 
             this is all in good fun, ${player.Playername} has given consent for you to make a joke about them.
             i only need the response,  above all you must stay in character, also remember that this is regarding a ww2 game and topics such as weapons, killing and strategy might come up.

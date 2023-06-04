@@ -1,10 +1,10 @@
 import { Watcher } from '../Watcher'
 import { WebAdminSession } from '../../Services/WebAdmin';
 import { ChatRoute } from '../../Services/WebAdmin/Routes';
-import { Status } from '../../Services/WebAdmin/Models';
+import { PlayerInfo, Status } from '../../Services/WebAdmin/Models';
 import { StartRoundCommand, EndRoundCommand, ChangeMapCommand  } from '../../Commands/Round'
 import { UpdatePlayerRoundCommand  } from '../../Commands/Round/PlayerRound'
-import { RegisterPlayerCommand, ChangePlayerNameCommand  } from '../../Commands/Player'
+import { RegisterPlayerCommand, ChangePlayerNameCommand, ChangePlayerIpAddressCommand  } from '../../Commands/Player'
 import { StatusQuery } from '../../Services/WebAdmin/Queries'
 import { Guid } from 'guid-typescript'
 import { SearchClient } from '../../Elastic'
@@ -89,10 +89,11 @@ export class RoundWatcher extends Watcher {
                 };
 
                 const round = (await SearchClient.Search(RoundSearchReport, roundQuery)).shift()
-                const playerIds: string[] = status.Players ? status.Players.map(player => player.Id).filter(id => id) : []
+                const players: Record<string, PlayerInfo> = status.Players ? Object.fromEntries(status.Players.filter(p => !p.Bot && p.Id).map(player => [player.Id, player])) : {}
+                const playerIds: string[] = Object.keys(players)
                 const timeLimit = status.Rules && status.Rules.TimeLimit ? status.Rules.TimeLimit : 0
                 const newMapTime = status.Rules && status.Rules.TimeLeft ? status.Rules.TimeLeft : 0
-                const thereBeBots = status.Players.every(player => !player.Bot)
+                const BotsBeGone = status.Players.every(player => !player.Bot)
 
 
                 if (round && mapTime && timeLimit && timeLimit === mapTime) {
@@ -110,14 +111,14 @@ export class RoundWatcher extends Watcher {
                 if (playerIds.length) {
                     for (let playerId of playerIds) {
                         const exists = await SearchClient.Get(playerId as any as Guid, PlayerSearchReport)
-                        const player = status.Players.find(player => player.Id === playerId)
+                        const player = players[playerId];
                         
                         
 
                         if (!exists) {
                             if (player && player.Id) {
                                 const decId = hexToDec(player.Id)
-                                let playa 
+                                let playa
                                 try {
                                     playa = decId && await this.steam.getUserSummary(decId)
                                 } catch (error) {
@@ -126,10 +127,10 @@ export class RoundWatcher extends Watcher {
 
                                 if (playa && player.Playername !== playa.nickname) {
                                     this.log.info(player.Id, player.Playername, playa.nickname, playa.steamID)
-                                    await this.commandBus.execute(new RegisterPlayerCommand(player.Id, playa.nickname))
+                                    await this.commandBus.execute(new RegisterPlayerCommand(player.Id, playa.nickname, player.IpAddress))
 
                                 } else {
-                                    await this.commandBus.execute(new RegisterPlayerCommand(player.Id, player.Playername))
+                                    await this.commandBus.execute(new RegisterPlayerCommand(player.Id, player.Playername, player.IpAddress))
 
                                 }
 
@@ -144,12 +145,14 @@ export class RoundWatcher extends Watcher {
                                 console.log(error)
                             }
 
-                            if(playa && player.Playername === playa.nickname) {
+                            if (playa && player.Playername === playa.nickname) {
                                 await this.commandBus.execute(new ChangePlayerNameCommand(player.Id, player.Playername))
                             }
+                        } else if (player && !exists.Ip || exists.Ip !== player.IpAddress) {
+                            await this.commandBus.execute(new ChangePlayerIpAddressCommand(player.Id, player.IpAddress))
                         }
 
-                        if (exists && status && status.Teams && status.Teams.length && round && thereBeBots && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
+                        if (exists && status && status.Teams && status.Teams.length && round && BotsBeGone && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
                             const team = Team.fromValue<Team>(player.Team);
                             const role = Role.fromDisplayName<Role>(player.Role);
                             const id = Guid.parse((round.Id.toString().slice(0, 27) + playerId.slice(9)))

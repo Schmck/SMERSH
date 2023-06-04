@@ -38,6 +38,7 @@ export class PolicyAppliedEventHandler implements IEventHandler<PolicyAppliedEve
         policy.Action = event.Action;
         policy.Name = event.Name;
         policy.Reason = event.Reason;
+        policy.Executioner = event.Executioner;
         policy.BanDate = event.BanDate;
         policy.UnbanDate = event.UnbanDate;
         policy.PlainId = event.PlainId;
@@ -77,7 +78,7 @@ export class PolicyAppliedEventHandler implements IEventHandler<PolicyAppliedEve
         const discord = event.Action !== Action.Kick.DisplayName ? `\nplease make a ticket on our discord if you disagree with this decision: https://discord.gg/43XsqZB` : ''
         const message = `\nYou have been ${action}${reason}${duration}.${discord}`
 
-        Logger.append(`${event.Name} was ${action}${reason}${duration}`)
+        Logger.append(`${event.Name} was ${action}${event.Executioner ? `by ${event.Executioner}` : ''}${reason}${duration}`)
 
         await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message integrated with ChatGPT`)
         await this.steam.sendMessageToFriend(event.PlayerId, message)

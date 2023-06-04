@@ -59,7 +59,7 @@ export class RoleBanController extends SmershController {
                 for(let team of teams) {
                     for(let side of sides) {
                         const timer = ms => new Promise(res => setTimeout(res, ms))
-                        this.commandBus.execute(new ApplyRoleBanCommand(actionId, id, ban.channelId, ban.aliases[0], "", role, team, side, new Date()))
+                        this.commandBus.execute(new ApplyRoleBanCommand(actionId, id, ban.channelId, ban.aliases[0], "", role, team, side, "", new Date()))
                         await timer(3000);
                         console.log(new Date(), ban.aliases)
 

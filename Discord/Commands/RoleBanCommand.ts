@@ -1,4 +1,4 @@
-import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteFocusedOption, AutocompleteInteraction } from "discord.js";
+import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteFocusedOption, AutocompleteInteraction, GuildMember } from "discord.js";
 import { Command } from "../Framework/Command"
 import { SearchClient } from '../../Elastic'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
@@ -170,7 +170,7 @@ export const RoleBanCommand: Command = {
                 policyId = Guid.parse(roleBan.Id);
             }
 
-            client.commandBus.execute(new ApplyRoleBanCommand(policyId, player.Id, interaction.channelId, player.Name, reason.value.toString(), Role.fromDisplayName<Role>(role.value.toString()), Team.fromDisplayName<Team>(team.value.toString()), side.value.toString(), new Date()))
+            client.commandBus.execute(new ApplyRoleBanCommand(policyId, player.Id, interaction.channelId, player.Name, reason.value.toString(), Role.fromDisplayName<Role>(role.value.toString()), Team.fromDisplayName<Team>(team.value.toString()), side.value.toString(), (interaction.member as GuildMember).displayName, new Date()))
 
             await interaction.followUp({
                 ephemeral: true,

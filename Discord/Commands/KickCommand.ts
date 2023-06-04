@@ -1,4 +1,4 @@
-import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteInteraction } from "discord.js";
+import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteInteraction, GuildMember } from "discord.js";
 import { Client, Utils } from '../Framework'
 import { Command } from "../Framework/Command"
 import { SearchClient } from '../../Elastic'
@@ -103,8 +103,7 @@ export const KickCommand: Command = {
                 }
             }
         }
-
-        await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), id, interaction.channelId, Action.Kick, name, reason.value.toString(), new Date()))
+        await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), id, interaction.channelId, Action.Kick, name, reason.value.toString(), (interaction.member as GuildMember).displayName, new Date()))
 
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const axios = Api.axios();

@@ -21,6 +21,8 @@ export class Policy extends Domain {
 
     public IsActive: boolean;
 
+    public Executioner: string;
+
     public BanDate: Date;
 
     public UnbanDate?: Date;
@@ -32,7 +34,7 @@ export class Policy extends Domain {
         super(id)
     }
 
-    public async applyRoleBan(playerId: string, channelId: string, name: string, reason: string, role: Role, team: Team, side: string, banDate: Date, unbanDate?: Date) {
+    public async applyRoleBan(playerId: string, channelId: string, name: string, reason: string, role: Role, team: Team, side: string, executioner: string, banDate: Date, unbanDate?: Date) {
         if (this.RoleBans) {
             let roleBan = this.RoleBans[role.Value]
 
@@ -66,8 +68,9 @@ export class Policy extends Domain {
             this.RoleBans[role.Value] = roleBan
             
         }
+        this.Executioner = executioner;
 
-        this.apply(new RoleBanAppliedEvent(this.Id, playerId, channelId, Action.RoleBan.DisplayName, name, reason, this.RoleBans, role.Value, banDate, unbanDate));
+        this.apply(new RoleBanAppliedEvent(this.Id, playerId, channelId, Action.RoleBan.DisplayName, name, reason, this.Executioner, this.RoleBans, role.Value, banDate, unbanDate));
         return;
     }
 

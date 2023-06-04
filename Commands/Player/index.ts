@@ -6,6 +6,7 @@ import { ApplyRoleBanCommand } from './ApplyRoleBanCommand'
 import { LiftRoleBanCommand } from './LiftRoleBanCommand'
 import { LiftMuteCommand } from './LiftMuteCommand'
 import { ApplyDiscordRoleCommand } from './ApplyDiscordRoleCommand'
+import { ChangePlayerIpAddressCommand } from './ChangePlayerIpAddressCommand'
 
 
 export {
@@ -16,5 +17,6 @@ export {
     ApplyRoleBanCommand,
     LiftRoleBanCommand,
     LiftMuteCommand,
-    ApplyDiscordRoleCommand
+    ApplyDiscordRoleCommand,
+    ChangePlayerIpAddressCommand,
 }

@@ -2,7 +2,7 @@ import { Guid } from "guid-typescript"
 import { Event } from ".."
 
 export class PolicyAppliedEvent extends Event {
-	constructor(id: Guid, playerId: string, channelId: string, action: string, name: string, reason: string, banDate: Date, unbanDate?: Date, plainId?: number) {
+	constructor(id: Guid, playerId: string, channelId: string, action: string, name: string, reason: string, executioner: string, banDate: Date, unbanDate?: Date, plainId?: number) {
 		super(id)
 
 		this.PlayerId = playerId;
@@ -10,6 +10,7 @@ export class PolicyAppliedEvent extends Event {
 		this.Action = action;
 		this.Name = name;
 		this.Reason = reason;
+		this.Executioner = executioner;
 		this.BanDate = banDate;
 		this.UnbanDate = unbanDate;
 		this.PlainId = plainId;
@@ -23,7 +24,9 @@ export class PolicyAppliedEvent extends Event {
 
 	public Name: string;
 
-	public Reason: string
+	public Reason: string;
+
+	public Executioner: string;
 
 	public BanDate: Date
 

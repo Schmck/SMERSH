@@ -41,7 +41,7 @@ export const KickCommand: Command = {
         if (player) {
             const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
             const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
-            await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, env["COMMAND_CHANNEL_ID"], Action.Kick, player.Playername, reason, new Date()))
+            await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, env["COMMAND_CHANNEL_ID"], Action.Kick, player.Playername, reason, caller, new Date()))
 
             await axios.post(url, urlencoded, config)
             const message = `${player.Playername} was kicked for ${reason ? reason : 'no reason'}`

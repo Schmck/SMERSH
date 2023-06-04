@@ -26,6 +26,9 @@ export class PolicySearchReport extends SearchReport {
     @Field('text')
     public Action: string;
 
+    @Field('text')
+    public Executioner: string;
+
     @Field('boolean')
     public IsActive: boolean;
 

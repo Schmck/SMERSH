@@ -1,8 +1,7 @@
 import { Guid } from "guid-typescript";
 import { Domain } from './Domain'
-import { PlayerRegisteredEvent, PlayerNameChangedEvent, PolicyAppliedEvent, BanLiftedEvent, RoleBanAppliedEvent, RoleBanLiftedEvent, DiscordRoleAppliedEvent } from '../Events/Player'
+import { PlayerRegisteredEvent, PlayerNameChangedEvent, PolicyAppliedEvent, DiscordRoleAppliedEvent } from '../Events/Player'
 import { Action } from '../SMERSH/ValueObjects/player'
-import { Role, Team } from "../SMERSH/ValueObjects";
 
 export class Player extends Domain {
 
@@ -17,10 +16,11 @@ export class Player extends Domain {
     }
 
 
-    public async register(name: string) {
+    public async register(name: string, ip: string) {
         this.Name = name;
+        this.Ip = ip;
 
-        this.apply(new PlayerRegisteredEvent(this.Id, this.Name));
+        this.apply(new PlayerRegisteredEvent(this.Id, this.Name, this.Ip));
         return;
     }
 
@@ -32,6 +32,13 @@ export class Player extends Domain {
 
     }
 
+    public async changeIpAddress(ip: string) {
+        const oldIp = this.Ip;
+        this.Ip = ip;
+        this.apply(new PlayerNameChangedEvent(this.Id, this.Ip, oldIp));
+        return;
+
+    }
     public async applyDiscordRole(role: number) {
         if (typeof (this.Role) === 'number' && this.Role === role) {
             return;
@@ -40,8 +47,8 @@ export class Player extends Domain {
 
     }
 
-    public async applyPolicy(actionId: Guid, channelId: string, action: Action, name: string, reason: string, banDate: Date, unbanDate?: Date, plainId?: number) {
-        this.apply(new PolicyAppliedEvent(actionId, this.Id.toString(), channelId, action.DisplayName, name, reason, banDate, unbanDate, plainId));
+    public async applyPolicy(actionId: Guid, channelId: string, action: Action, name: string, reason: string, executioner: string, banDate: Date, unbanDate?: Date, plainId?: number) {
+        this.apply(new PolicyAppliedEvent(actionId, this.Id.toString(), channelId, action.DisplayName, name, reason, executioner, banDate, unbanDate, plainId));
         return;
     }
    

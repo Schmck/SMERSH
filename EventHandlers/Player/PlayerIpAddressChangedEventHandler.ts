@@ -1,19 +1,20 @@
 export { }
 import { IEventHandler } from '@nestjs/cqrs';
 import { EventsHandler } from '@nestjs/cqrs/dist/decorators/events-handler.decorator';
-import { PlayerRegisteredEvent } from '../../Events'
+import { PlayerIpAddressChangedEvent } from '../../Events'
 import { SearchClient } from '../../Elastic/app'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { RoundSearchReport } from '../../Reports/Entities/round'
 import { IndexedClass } from '../../SMERSH/Utilities/types';
 import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
-import { Client } from '../../Discord/Framework';
+import { Client, Logger } from '../../Discord/Framework';
 let cls: { new(id: Guid): PlayerSearchReport } = PlayerSearchReport;
 
-@EventsHandler(PlayerRegisteredEvent)
-export class PlayerRegisteredEventHandler implements IEventHandler<PlayerRegisteredEvent>
+@EventsHandler(PlayerIpAddressChangedEvent)
+export class PlayerIpAddressChangedEventHandler implements IEventHandler<PlayerIpAddressChangedEvent>
 {
+
     public client: Client;
     public constructor(protected readonly commandBus: CommandBus) {
         const token = JSON.parse(process.argv[process.argv.length - 1])["DISCORD_TOKEN"]
@@ -22,12 +23,12 @@ export class PlayerRegisteredEventHandler implements IEventHandler<PlayerRegiste
         }, commandBus)
     }
 
-    async handle(event: PlayerRegisteredEvent) {
+    async handle(event: PlayerIpAddressChangedEvent) {
         let player = new cls(event.Id);
-        player.Name = event.Name;
-        player.Ip = event.Ip;
+        player.Ip = event.IpAddress;
+        await SearchClient.Update(player)
 
-        await SearchClient.Put(player);
+        Logger.append(`[${(event.Id as any as string).slice(9)}] Ip Address change detected: ${event.PrevIpAddress} -> ${event.IpAddress}`)
 
         return;
     }

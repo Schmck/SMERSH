@@ -1,4 +1,4 @@
-import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteInteraction } from "discord.js";
+import { CommandInteraction, ApplicationCommandType, ApplicationCommandOptionType, AutocompleteInteraction, GuildMember } from "discord.js";
 import { Client } from '../Framework'
 import { Command } from "../Framework/Command"
 import { SearchClient } from '../../Elastic'
@@ -150,7 +150,7 @@ export const MuteCommand: Command = {
             })).shift()
 
             if (player) {
-                await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Mute, player.Name, reason.value.toString(), new Date(), unbanDate))
+                await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Mute, player.Name, reason.value.toString(), (interaction.member as GuildMember).displayName, new Date(), unbanDate))
 
                 await interaction.followUp({
                     ephemeral: true,
