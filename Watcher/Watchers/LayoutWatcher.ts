@@ -17,7 +17,7 @@ export class LayoutWatcher extends Watcher {
         const prevStatus = args[0] && args[0].status;
         let activeLayout = (args[0] && args[0].activeLayout) || ''
         let lastLayout = (args[0] && args[0].activeLayout) || '' 
-        let playerCountTrend = []
+        let playerCountTrend = (args[0] && args[0].playerCountTrend) || []
 
         if (status) {
             let layouts = await SearchClient.Search<LayoutSearchReport>(LayoutSearchReport, {
@@ -27,8 +27,8 @@ export class LayoutWatcher extends Watcher {
             })
             let dormantLayouts = layouts
 
-            if (args[0] && args[0].playerCountTrend) {
-                const oldTrend = args[0].playerCountTrend.length > 2 ? args[0].playerCountTrend.slice(1) : args[0].playerCountTrend;
+            if (playerCountTrend && playerCountTrend.length) {
+                const oldTrend = playerCountTrend.length > 2 ? playerCountTrend.slice(1) : playerCountTrend;
                 playerCountTrend = [...oldTrend, status.Players.filter(p => !p.Bot).length];
             } else {
                playerCountTrend =  [status.Players.filter(p => !p.Bot).length]
@@ -120,7 +120,7 @@ export class LayoutWatcher extends Watcher {
                             }
 
                             const urlencoded = new URLSearchParams();
-                            urlencoded.append('campaignname', null)
+                            urlencoded.append('campaignname', '')
                             urlencoded.append('territoryCount', '20')
                             urlencoded.append('currentTheater', theater)
                             urlencoded.append('viewingTheater', theater)
@@ -131,11 +131,11 @@ export class LayoutWatcher extends Watcher {
                             Object.values(layout.Maps).forEach((territory: string[], index) => {
                                 const key = env["GAME"] && env["GAME"] === 'RO2' ? `sg_territory_` : `pt_territory_`
 
-                                urlencoded.append(key + index, territory.join('%0D%0A'))
+                                urlencoded.append(key + index, `${territory.join('\n')}\n`)
                             })
 
                             for (let i = 10; i < 20; i++) {
-                                urlencoded.append(`${altKey}${i}`, altMaps.join('%0D%0A'))
+                                urlencoded.append(`${altKey}${i}`, `${altMaps.join('\n')}\n`)
                             }
 
 
