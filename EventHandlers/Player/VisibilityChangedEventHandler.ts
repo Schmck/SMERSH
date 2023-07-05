@@ -19,7 +19,7 @@ export class VisibilityChangedEventHandler implements IEventHandler<VisibilityCh
 
     async handle(event: VisibilityChangedEvent) {
         let player = new cls(event.Id);
-        player.Visible = event.Visible;
+        player.Invisible = event.Invisible;
         await SearchClient.Update(player)
 
         return;

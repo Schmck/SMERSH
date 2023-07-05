@@ -8,7 +8,5 @@ export class ChangeVisibilityCommand extends Command {
         this.Invisible = invisible;
     }
 
-    public Id: Guid;
-
     public Invisible: boolean;
 }

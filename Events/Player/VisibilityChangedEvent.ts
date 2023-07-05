@@ -4,11 +4,11 @@ import { Action, Role } from "../../SMERSH/ValueObjects/player"
 import { Team } from "../../SMERSH/ValueObjects";
 
 export class VisibilityChangedEvent extends Event {
-	constructor(id: Guid, visible: boolean) {
+	constructor(id: Guid, invisible: boolean) {
 		super(id)
 
-		this.Visible = visible;
+		this.Invisible = invisible;
 	}
 
-	public Visible: boolean;
+	public Invisible: boolean;
 }
