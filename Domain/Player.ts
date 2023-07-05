@@ -1,6 +1,6 @@
 import { Guid } from "guid-typescript";
 import { Domain } from './Domain'
-import { PlayerRegisteredEvent, PlayerNameChangedEvent, PolicyAppliedEvent, DiscordRoleAppliedEvent, PlayerIpAddressChangedEvent } from '../Events/Player'
+import { PlayerRegisteredEvent, PlayerNameChangedEvent, PolicyAppliedEvent, DiscordRoleAppliedEvent, PlayerIpAddressChangedEvent, VisibilityChangedEvent } from '../Events/Player'
 import { Action } from '../SMERSH/ValueObjects/player'
 
 export class Player extends Domain {
@@ -10,6 +10,8 @@ export class Player extends Domain {
     public Ip: string;
 
     public Role: number;
+
+    public Invisible: boolean;
 
     public constructor(id: Guid) {
         super(id)
@@ -45,6 +47,14 @@ export class Player extends Domain {
         }
         this.apply(new DiscordRoleAppliedEvent(this.Id, role))
 
+    }
+
+    public async changeVisibility(invisible: boolean) {
+        if (this.Invisible === invisible) {
+            return;
+        }
+
+        this.apply(new VisibilityChangedEvent(this.Id, invisible))
     }
 
     public async applyPolicy(actionId: Guid, channelId: string, action: Action, name: string, reason: string, executioner: string, banDate: Date, unbanDate?: Date, plainId?: number) {

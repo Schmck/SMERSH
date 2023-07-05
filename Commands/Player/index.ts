@@ -7,6 +7,7 @@ import { LiftRoleBanCommand } from './LiftRoleBanCommand'
 import { LiftMuteCommand } from './LiftMuteCommand'
 import { ApplyDiscordRoleCommand } from './ApplyDiscordRoleCommand'
 import { ChangePlayerIpAddressCommand } from './ChangePlayerIpAddressCommand'
+import { ChangeVisibilityCommand } from './ChangeVisibilityCommand'
 
 
 export {
@@ -19,4 +20,5 @@ export {
     LiftMuteCommand,
     ApplyDiscordRoleCommand,
     ChangePlayerIpAddressCommand,
+    ChangeVisibilityCommand,
 }

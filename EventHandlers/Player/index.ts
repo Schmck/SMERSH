@@ -7,6 +7,7 @@ import { RoleBanLiftedEventHandler } from './RoleBanLiftedEventHandler'
 import { MuteLiftedEventHandler } from './MuteLiftedEventHandler'
 import { DiscordRoleAppliedEventHandler } from './DiscordRoleAppliedEventHandler'
 import { PlayerIpAddressChangedEventHandler } from './PlayerIpAddressChangedEventHandler'
+import { VisibilityChangedEventHandler } from './VisibilityChangedEventHandler'
 
 
 export const PlayerEventHandlers = [
@@ -18,5 +19,6 @@ export const PlayerEventHandlers = [
     RoleBanLiftedEventHandler,
     MuteLiftedEventHandler,
     DiscordRoleAppliedEventHandler,
-    PlayerIpAddressChangedEventHandler
+    PlayerIpAddressChangedEventHandler,
+    VisibilityChangedEventHandler,
 ]

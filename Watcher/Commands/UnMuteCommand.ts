@@ -15,7 +15,7 @@ export const UnMuteCommand: Command = {
     name: "unmute",
     aliases: ["um"],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent],
-    run: async (commandBus: CommandBus, caller: string, name: string, id: string) => {
+    run: async (commandBus: CommandBus, callerId: string, caller: string, name: string, id: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const config: AxiosRequestConfig =
@@ -68,6 +68,7 @@ export const UnMuteCommand: Command = {
             }
         }
 
+        let executioner = callerId && await SearchClient.Get(callerId as any, PlayerSearchReport)
         const policy = (await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
             "query": {
                 "bool": {
@@ -93,6 +94,10 @@ export const UnMuteCommand: Command = {
 
         if (policy) {
             await commandBus.execute(new LiftMuteCommand(Guid.parse(policy.Id)))
+
+            if (executioner && executioner.Invisible) {
+                return;
+            } 
 
             const message = `${policy.Name} was unmuted`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action

@@ -14,7 +14,7 @@ export const MuteCommand: Command = {
     name: "mute",
     aliases: ["m"],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent],
-    run: async (commandBus: CommandBus, caller: string, name: string, id: string, reason: string, duration: string) => {
+    run: async (commandBus: CommandBus, callerId: string, caller: string, name: string, id: string, reason: string, duration: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const config: AxiosRequestConfig =
@@ -53,6 +53,7 @@ export const MuteCommand: Command = {
             }
         })
         const player = players.shift();
+        let executioner = callerId && await SearchClient.Get(callerId as any, PlayerSearchReport)
 
         if (players.length > 1) {
             const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Name}[${player.Id.slice(9)}]`).join('\, ')}]`
@@ -89,6 +90,10 @@ export const MuteCommand: Command = {
 
             if (player) {
                 await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, env["COMMAND_CHANNEL_ID"], Action.Mute, player.Name, reason, caller, new Date(), unbanDate))
+
+                if (executioner && executioner.Invisible) {
+                    return;
+                } 
 
                 const message = `${player.Name} was muted for ${untilString} for ${reason ? reason : 'no reason'} until ${unbanDate.toString().split(' GMT')[0]}`
                 const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action

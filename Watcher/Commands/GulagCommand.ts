@@ -14,7 +14,7 @@ export const GulagCommand: Command = {
     name: "gulag",
     aliases: [],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
-    run: async (commandBus: CommandBus, caller: string, name: string, id: string, reason: string) => {
+    run: async (commandBus: CommandBus, callerId: string, caller: string, name: string, id: string, reason: string, duration: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const config: AxiosRequestConfig =

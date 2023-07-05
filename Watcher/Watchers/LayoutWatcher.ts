@@ -88,7 +88,7 @@ export class LayoutWatcher extends Watcher {
                                     }
                                 }
 
-                                if (layout.Name === Layout.Stock.DisplayName) {
+                                if (lt.Name === Layout.Stock.DisplayName) {
                                     const startTimeNight = this.addHours(startTime, 12)
                                     const endTimeNight = this.addHours(startTime, 12)
 
@@ -99,6 +99,13 @@ export class LayoutWatcher extends Watcher {
                                         }
                                     }
 
+                                }
+
+                                if (layout.Name === Layout.Fill.DisplayName) {
+                                    if (higherThanMin && lowerThanMax && mapUnchanged) {
+                                        changeLayout = true
+                                        activeLayout = layout.Name;
+                                    }
                                 }
                                 return changeLayout;
                             })

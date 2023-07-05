@@ -63,7 +63,8 @@ export class ChatWatcher extends Watcher {
                             if (typeof (player.Role) === 'number' && command.permissions.find(perm => perm.Value === player.Role)) {
                                 const input = msg.message.match(/\#[A-Z0-9]{0,4}\:/) ? msg.message.slice(0, msg.message.match(/\#[A-Z0-9]{0,4}\:/).index) : msg.message
                                 const { name, id, reason, duration } = this.parseCommand(input.split(' ').slice(1))
-                                command.run(this.commandBus, msg.username, name, id, reason, duration)
+
+                                command.run(this.commandBus, msg.id, msg.username, name, id, reason, duration)
                             } else if (typeof (player.Role) === 'number') {
                                 const frown = (Math.floor(Math.random() * (32 - 1 + 1) + 1)) === 32 ? '. :/ ' : ''
 
@@ -122,7 +123,7 @@ export class ChatWatcher extends Watcher {
                                 return false;
                             })
                         }
-                    } else if (msg.message.includes(':/') && msg.username !== 'admin' && (Math.random() * (32 - 1 + 1) + 1) === 32) {
+                    } else if (msg.message.includes(':/') && msg.username !== 'admin' && (Math.random() * (32 - 1 + 1) + 1) >= 24) {
                         const message = `:/`
                         const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                         await axios.post(chatUrl, chatUrlencoded, config)

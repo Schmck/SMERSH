@@ -53,22 +53,22 @@ export const StatsCommand: Command = {
 
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
-        //const reason = interaction.options.get('reason');
-        //const role = interaction.options.get('role');
-        //const team = interaction.options.get('team');
-        //const side = interaction.options.get('side');
         let match
-
+        let id;
         if (input && typeof (input.value) === 'string') {
             if (input.value.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
                 match = {
                     "PlayerId": input.value
-                }
-            } else if (input.value.match(/[A-Z0-9]{9,10}/)) {
+                };
+                id = input.value;
+            }
+            else if (input.value.match(/[A-Z0-9]{9,10}/)) {
                 match = {
                     "PlayerId": `0x0110000${input.value}`
-                }
-            } else {
+                };
+                id = `0x0110000${input.value}`
+            }
+            else {
                 await interaction.followUp({
                     ephemeral: true,
                     content: `Please use the autocomplete instead`
@@ -78,7 +78,7 @@ export const StatsCommand: Command = {
         }
 
 
-        const player = await SearchClient.Get(input.value as any as Guid, PlayerSearchReport)
+        const player = await SearchClient.Get(id as any as Guid, PlayerSearchReport)
         const playerRounds = await SearchClient.Search<PlayerRoundSearchReport>(PlayerRoundSearchReport, {
             "query": {
                 match

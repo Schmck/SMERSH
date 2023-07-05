@@ -182,7 +182,7 @@ export class RoundWatcher extends Watcher {
                     const axisPlayers = status.Players.filter(p => !p.Team).length
                     const alliesPlayers = status.Players.filter(p => !p.Team).length
                     const attacking = status.Teams.map(team => team.Attacking ? crossedSwords : shield).join('')
-                    lastLogTime = this.nearestFiveMin();
+                    lastLogTime = lastLogTime.getMinutes() === 55 ? new Date(this.nearestFiveMin().getTime() + 300000) : this.nearestFiveMin();
                     Logger.append(`there are currently ${status.Players.filter(p => !p.Bot).length} players ${axisIcon}${axisPlayers}${attacking}${alliesPlayers}${alliesIcon}`)
 
                 }
@@ -399,6 +399,7 @@ export class RoundWatcher extends Watcher {
 
 
     public findDuplicateWords(str: string) {
+        const months = [...Array(11).keys()].map(key => new Date(0, key).toLocaleString('en', { month: 'long' }))
         const strArr = str.split(" ");
         let res = [];
         for (let i = 0; i < strArr.length; i++) {
@@ -411,6 +412,7 @@ export class RoundWatcher extends Watcher {
                 };
             };
         };
+        res = res.filter(w => !months.includes(w))
         return res.join(" ");
     };
 

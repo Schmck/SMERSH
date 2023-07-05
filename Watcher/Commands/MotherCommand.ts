@@ -14,7 +14,7 @@ export const MotherCommand: Command = {
     name: "mother",
     aliases: ["head"],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
-    run: async (commandBus: CommandBus, caller: string, name: string, id: string, reason: string) => {
+    run: async (commandBus: CommandBus, callerId: string, caller: string, name: string, id: string, reason: string, duration: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const config: AxiosRequestConfig =
@@ -37,7 +37,7 @@ export const MotherCommand: Command = {
             }
         }
         if (player) {
-            const message = `did your mother drop you on the head ${player.Playername}`
+            const message = `Did your mother drop you on the head ${player.Playername}?`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)

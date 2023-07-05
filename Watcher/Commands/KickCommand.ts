@@ -10,12 +10,13 @@ import { ChatRoute, PlayersRoute } from '../../Services/WebAdmin/Routes';
 import { PlayerQuery } from '../../Services/WebAdmin/Queries'
 import { CommandBus } from "@nestjs/cqrs";
 import { Player } from "../../Domain/Player";
+import { Elasticsearch } from "../../SMERSH/Utilities";
 
 export const KickCommand: Command = {
     name: "kick",
     aliases: ["k"],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent],
-    run: async (commandBus: CommandBus, caller: string, name: string, id: string, reason: string) => {
+    run: async (commandBus: CommandBus, callerId: string, caller: string, name: string, id: string, reason: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const config: AxiosRequestConfig =
@@ -25,6 +26,7 @@ export const KickCommand: Command = {
                 "Cookie": `authcred="${env["AUTHCRED"]}"`
             },
         }
+        let executioner = callerId && await SearchClient.Get(callerId as any, PlayerSearchReport)
         let player = await PlayerQuery.GetById(id);
         if (!player) {
             const players = await PlayerQuery.GetMultipleByName(name);
@@ -43,7 +45,14 @@ export const KickCommand: Command = {
             const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
             await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, env["COMMAND_CHANNEL_ID"], Action.Kick, player.Playername, reason, caller, new Date()))
 
+           
+
             await axios.post(url, urlencoded, config)
+
+            if (executioner && executioner.Invisible) {
+                return;
+            } 
+
             const message = `${player.Playername} was kicked for ${reason ? reason : 'no reason'}`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
