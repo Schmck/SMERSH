@@ -107,6 +107,10 @@ export class RoundWatcher extends Watcher {
 
                 }
 
+                if (round) {
+                    global.roundInfo = { roundId: round.Id, date: round.Date}
+                }
+
 
                 if (playerIds.length) {
                     for (let playerId of playerIds) {
@@ -197,7 +201,9 @@ export class RoundWatcher extends Watcher {
 
                 await this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
             }
-    }
+        }
+
+       
 
         setTimeout(() => {
             this.Watch(timeout, { status: status ?? prevStatus, mapTime, lastLogTime, lastStatusTime })

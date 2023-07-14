@@ -1,9 +1,10 @@
 import { Guid } from "guid-typescript";
+import { Message } from "../../SMERSH/ValueObjects/round";
 import { Command } from '../Command'
 
 export class ReceiveChatLinesCommand extends Command {
 
-    constructor(id: Guid, date: Date, lines: Array<Record<string, string>>) {
+    constructor(id: Guid, date: Date, lines: Array<Message>) {
         super(id)
    
         this.Date = date;
@@ -12,5 +13,5 @@ export class ReceiveChatLinesCommand extends Command {
 
     public readonly Date: Date;
 
-    public readonly Lines: Array<Record<string, string>>;
+    public readonly Lines: Array<Message>;
 }

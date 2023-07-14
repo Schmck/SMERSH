@@ -2,6 +2,7 @@
 import { Domain } from './Domain'
 import { ChatLinesReceivedEvent, RoundStartedEvent, RoundEndedEvent } from '../Events/Round'
 import { MapChangedEvent } from '../Events/Map'
+import { Message } from "../SMERSH/ValueObjects/round";
 
 export class Round extends Domain {
 
@@ -9,7 +10,7 @@ export class Round extends Domain {
 
     public Date: Date;
 
-    public Lines: Array<Record<string, string>>;
+    public Lines: Array<Message>;
 
     public Players: string[];
 
@@ -20,7 +21,7 @@ export class Round extends Domain {
         this.Players = []
     }
 
-    public async receiveChatLines(lines: Array<Record<string, string>>, date: Date) {
+    public async receiveChatLines(lines: Array<Message>, date: Date) {
         this.Date = date;
 
         if (this.Lines) {

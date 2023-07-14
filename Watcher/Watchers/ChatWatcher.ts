@@ -15,17 +15,18 @@ import { Commands } from '../Commands'
 import { PlayerSearchReport } from '../../Reports/Entities/player';
 import { AxiosRequestConfig } from 'axios';
 import { Api } from '../../Web/Framework';
-
+import { Message } from '../../SMERSH/ValueObjects/round';
 
 export class ChatWatcher extends Watcher {
 
-    public override async Watch(timeout: number = 50, ...args: any[]) {
+    public override async Watch(timeout: number = 50, ...args: Array<{ messages: Array<Message>, players: Array<PlayerSearchReport>}>) {
         const commandNames = Commands.map(command => [command.name, ...command.aliases]).flat()
         const commands = Commands.map(command => command.name).flat()
         const messages = await ChatQuery.Get();
         const lastMessage = messages[messages.length - 1];
         const lastMessageDate = messages.length ? new Date(lastMessage.timestamp) : false;
-        const round = await (await SearchClient.Search(RoundSearchReport, {
+        const roundInfo = global && global.roundInfo;
+        const round = !roundInfo && await (await SearchClient.Search(RoundSearchReport, {
             "query": {
                 "match_all": {}
             },
@@ -38,8 +39,8 @@ export class ChatWatcher extends Watcher {
                 }
             ]
         })).shift()
-
-        const roundDate = round ? new Date(round.Date) : false
+        const roundDate = round ? new Date(round.Date) : roundInfo && roundInfo.date && new Date(roundInfo.date)
+        const roundId = round ? round.Id : roundInfo && roundInfo.roundId;
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
@@ -50,6 +51,17 @@ export class ChatWatcher extends Watcher {
                 "Cookie": `authcred="${env["AUTHCRED"]}"`
             },
         }
+        let players = (args[0] && args[0].players) || []
+
+        if (!players.length) {
+            players = await SearchClient.Search(PlayerSearchReport, {
+                "query": {
+                    "exists": {
+                        "field": "Role"
+                    }
+                }
+            })
+        }
 
 
         if (roundDate && lastMessageDate && (roundDate.getDate() === lastMessageDate.getDate())) {
@@ -58,7 +70,10 @@ export class ChatWatcher extends Watcher {
                     if (msg.message.startsWith('/') || msg.message.startsWith('!') || msg.message.startsWith('\\') || msg.message.startsWith('>') || (msg.message.startsWith(':') && !msg.message.includes(':/'))){
                         const commandName = msg.message.split(' ')[0].slice(1)
                         if (commandNames.includes(commandName)) {
-                            const player = await SearchClient.Get(msg.id as any, PlayerSearchReport)
+                            let player = players.find(pl => pl.Id === msg.id)
+                            if (!player) {
+                                player = await SearchClient.Get(msg.id as any, PlayerSearchReport)
+                            }
                             const command = Commands.find(comm => comm.name === commandName || comm.aliases.includes(commandName))
                             if (typeof (player.Role) === 'number' && command.permissions.find(perm => perm.Value === player.Role)) {
                                 const input = msg.message.match(/\#[A-Z0-9]{0,4}\:/) ? msg.message.slice(0, msg.message.match(/\#[A-Z0-9]{0,4}\:/).index) : msg.message
@@ -66,7 +81,7 @@ export class ChatWatcher extends Watcher {
 
                                 command.run(this.commandBus, msg.id, msg.username, name, id, reason, duration)
                             } else if (typeof (player.Role) === 'number') {
-                                const frown = (Math.floor(Math.random() * (32 - 1 + 1) + 1)) === 32 ? '. :/ ' : ''
+                                const frown = Math.floor(Math.random() * 32) > 28 ? '. :/ ' : ''
 
                                 const message = `you do not have the required permissions to use this command ${msg.username}[${msg.id.slice(9)}]${frown}`
                                 const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
@@ -111,9 +126,9 @@ export class ChatWatcher extends Watcher {
                                         const { name, id, reason, duration } = this.parseCommand(input.split(' ').slice(1))
                                         command.run(this.commandBus, msg.username, name, id, reason, duration)
                                     } else if (typeof (player.Role) === 'number') {
-                                        const frown = (Math.floor(Math.random() * (32 - 1 + 1) + 1)) === 32 ? '. :/ ' : ''
+                                        const frown = Math.floor(Math.random() * 32) >= 16 ? '. :/ ' : ''
 
-                                        const message = `you do not have the required permissions to use this command ${msg.username}[${msg.id.slice(9)}]${frown}`
+                                        const message = `you do not have permission to use this command ${msg.username}[${msg.id.slice(9)}]${frown}`
                                         const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                                         await axios.post(chatUrl, chatUrlencoded, config)
                                     }
@@ -123,7 +138,7 @@ export class ChatWatcher extends Watcher {
                                 return false;
                             })
                         }
-                    } else if (msg.message.includes(':/') && msg.username !== 'admin' && (Math.random() * (32 - 1 + 1) + 1) >= 24) {
+                    } else if (msg.message.includes(':/') && msg.username !== 'admin' && Math.floor(Math.random() * 32) >= 28) {
                         const message = `:/`
                         const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                         await axios.post(chatUrl, chatUrlencoded, config)
@@ -131,11 +146,11 @@ export class ChatWatcher extends Watcher {
                     
                 })
 
-                await this.commandBus.execute(new ReceiveChatLinesCommand(Guid.parse(round.Id), new Date(), messages));
+                await this.commandBus.execute(new ReceiveChatLinesCommand(Guid.parse(roundId), new Date(), messages));
             }
         }
         setTimeout(async () => {
-            await this.Watch(timeout, [...args, messages])
+            await this.Watch(timeout, {...args[0], messages, players })
             return;
         }, timeout)
 

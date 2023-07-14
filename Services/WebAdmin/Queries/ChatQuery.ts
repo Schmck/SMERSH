@@ -4,10 +4,11 @@ import { Parsers } from "../../../Web/Utils";
 import { Query } from './Query';
 import { PlayerQuery } from './PlayerQuery';
 import { Player } from '../Models';
+import { Message } from '../../../SMERSH/ValueObjects/round';
 
 export class ChatQuery extends Query {
 
-    public static async Get(): Promise<Array<{username: string, id: string, message: string, visibility: string, team: string, timestamp: string}>> {
+    public static async Get(): Promise<Array<Message>> {
         const session = WebAdminSession.get();
         const dom = await session.navigate(ChatRoute.GetChat.Action)
         const players = await PlayerQuery.GetPlayers();

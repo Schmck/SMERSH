@@ -25,7 +25,8 @@ export class LayoutWatcher extends Watcher {
                     "match_all": {}
                 }
             })
-            let dormantLayouts = layouts
+            //make a copy of the array not a direct reference
+            let dormantLayouts = layouts.filter(l => l)
 
             if (playerCountTrend && playerCountTrend.length) {
                 const oldTrend = playerCountTrend.length > 2 ? playerCountTrend.slice(1) : playerCountTrend;
@@ -81,6 +82,7 @@ export class LayoutWatcher extends Watcher {
                             otherLayouts.every(lt => {
                                 startTime.setHours(lt.StartTime)
                                 endTime.setHours(lt.EndTime)
+
                                 if (startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
                                     changeLayout = false
                                     if (lastLayout) {
@@ -111,7 +113,7 @@ export class LayoutWatcher extends Watcher {
                             })
                         }
 
-                        if (changeLayout && (!activeLayout || (activeLayout !== lastLayout))) {
+                        if (changeLayout && activeLayout !== lastLayout) {
                             const env = JSON.parse(process.argv[process.argv.length - 1]);
                             const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action
                             const theater = env["GAME"] && env["GAME"] === 'RO2' ? '0' : '1'

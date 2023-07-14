@@ -21,8 +21,8 @@ export class RoundSearchReport extends SearchReport {
     @Field('date')
     public Date: Date;
 
-    @Field({nested: Array<Record<string, string>>})
-    public Lines: Array<Record<string, string>>;
+    @Field({nested: Array<Record<any, any>>})
+    public Lines: Array<Record<any, any>>;
 
     @Field('text')
     public Players: Array<string>;
