@@ -108,7 +108,8 @@ export class RoundWatcher extends Watcher {
                 }
 
                 if (round) {
-                    global.roundInfo = { roundId: round.Id, date: round.Date}
+                    global.roundInfo = { roundId: round.Id, date: round.Date }
+                    global.currentPlayers = status.Players.reduce((list, player) => { return { ...list, [player.Id]: player } }, {});
                 }
 
 
