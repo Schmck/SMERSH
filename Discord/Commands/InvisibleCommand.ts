@@ -45,6 +45,9 @@ export const InvisibleCommand: Command = {
         if (focusedValue.value) {
             const players = await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
                 query: {
+                    exists: {
+                        field: 'Role'
+                    },
                     regexp: {
                         "Name": {
                             "value": `.*${focusedValue.value}.*`,
@@ -52,9 +55,6 @@ export const InvisibleCommand: Command = {
                             "case_insensitive": true
                         }
                     },
-                    exists: {
-                        field: 'Role'
-                    }
                 },
                 size: 24,
             })
