@@ -28,6 +28,7 @@ import { ShipItCommand } from './ShipItCommand'
 import { PimPamPumCommand } from './PimPamPumCommand'
 import { GulagCommand } from './GulagCommand'
 import { LayoutCommand } from './LayoutCommand'
+import { InvisibleCommand } from './InvisibleCommand'
 export const Commands: Command[] = [
     LookupCommand,
     KickCommand,
@@ -41,6 +42,7 @@ export const Commands: Command[] = [
     ChatLogCommand,
     SaveCommand,
     LayoutCommand,
+    InvisibleCommand,
     StatsCommand,
     RankingsCommand,
     RankCommand,
