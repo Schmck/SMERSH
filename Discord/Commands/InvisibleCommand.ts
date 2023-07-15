@@ -5,7 +5,7 @@ import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { Client, Utils } from '../Framework'
 import { Role, Team } from "../../SMERSH/ValueObjects";
 import { PlayerQuery } from "../../Services/WebAdmin/Queries";
-import { ApplyDiscordRoleCommand, ApplyRoleBanCommand } from "../../Commands/Player";
+import { ApplyDiscordRoleCommand, ApplyRoleBanCommand, ChangeVisibilityCommand } from "../../Commands/Player";
 import { Guid } from "guid-typescript";
 import { PolicySearchReport } from "../../Reports/Entities/policy";
 import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
@@ -51,6 +51,9 @@ export const InvisibleCommand: Command = {
                             "flags": "ALL",
                             "case_insensitive": true
                         }
+                    },
+                    exists: {
+                        field: 'Role'
                     }
                 },
                 size: 24,
@@ -65,7 +68,7 @@ export const InvisibleCommand: Command = {
 
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
-        const role = DiscordRole.fromDisplayName(interaction.options.get('role').value.toString());
+        const invisible = interaction.options.get('invisible').value === 'true' ? true : false
         let match
         let regexp
 
@@ -111,7 +114,7 @@ export const InvisibleCommand: Command = {
             const player = players.shift();
 
 
-            client.commandBus.execute(new ApplyDiscordRoleCommand(player.Id as any, role.Value))
+            client.commandBus.execute(new ChangeVisibilityCommand(player.Id as any, invisible))
 
             await interaction.followUp({
                 ephemeral: true,
