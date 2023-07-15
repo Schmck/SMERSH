@@ -12,7 +12,7 @@ import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 import { PlayerInfo } from "../../Services/WebAdmin/Models";
 
 
-export const RoleCommand: Command = {
+export const InvisibleCommand: Command = {
     name: "invisible",
     description: "turn off the admin response in game for a specific user",
     permissions: [DiscordRole.Admin],
