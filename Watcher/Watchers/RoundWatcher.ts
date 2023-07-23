@@ -141,7 +141,7 @@ export class RoundWatcher extends Watcher {
 
 
                             }
-                        } else if (player && exists.Name !== player.Playername) {
+                        } else if (player && !exists.Name.includes(player.Playername)) {
                             const decId = hexToDec(player.Id)
                             let playa
                             try {
