@@ -9,14 +9,16 @@ import { AxiosRequestConfig } from 'axios';
 import { ChatRoute, PlayersRoute } from '../../Services/WebAdmin/Routes';
 import { PlayerQuery } from '../../Services/WebAdmin/Queries'
 import { CommandBus } from "@nestjs/cqrs";
+import { PlayerInfo } from "../../Services/WebAdmin/Models";
 
 export const LookupCommand: Command = {
     name: "lookup",
     aliases: ["l"],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent],
-    run: async (commandBus: CommandBus, caller: string, name: string, id: string) => {
+    run: async (commandBus: CommandBus, caller: PlayerSearchReport, player: PlayerInfo, name: string, id: string, reason: string, duration: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
+        const url = env["BASE_URL"] + ChatRoute.PostChat.Action
         const config: AxiosRequestConfig =
         {
             headers: {
@@ -26,6 +28,13 @@ export const LookupCommand: Command = {
         }
         let match
         let regexp
+
+
+        if (player) {
+            const urlencoded = `ajax=1&message=${player.Playername}[${player.Id.slice(9)}]&teamsay=-1`
+            await axios.post(url, urlencoded, config);
+            return;
+        }
 
         if (id && typeof (id) === 'string') {
             if (id.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
@@ -56,7 +65,6 @@ export const LookupCommand: Command = {
 
         if (players.length) {
             const playerIds = players.map(player => `${player.Name}[${player.Id.slice(9)}]`)
-            const url = env["BASE_URL"] + ChatRoute.PostChat.Action
             playerIds.forEach(async playerId => {
                 const urlencoded = `ajax=1&message=${playerId}&teamsay=-1`
                 await axios.post(url, urlencoded, config)

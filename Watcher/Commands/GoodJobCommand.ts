@@ -9,12 +9,13 @@ import { AxiosRequestConfig } from 'axios';
 import { ChatRoute, PlayersRoute } from '../../Services/WebAdmin/Routes';
 import { PlayerQuery } from '../../Services/WebAdmin/Queries'
 import { CommandBus } from "@nestjs/cqrs";
+import { PlayerInfo } from "../../Services/WebAdmin/Models";
 
 export const GoodJobCommand: Command = {
     name: "goodjob",
     aliases: ["gj"],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
-    run: async (commandBus: CommandBus, callerId: string, caller: string, name: string, id: string, reason: string, duration: string) => {
+    run: async (commandBus: CommandBus, caller: PlayerSearchReport, player: PlayerInfo, name: string, id: string, reason: string, duration: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const config: AxiosRequestConfig =
@@ -24,7 +25,6 @@ export const GoodJobCommand: Command = {
                 "Cookie": `authcred="${env["AUTHCRED"]}"`
             },
         }
-        let player = await PlayerQuery.GetById(id);
         if (!player) {
             const players = await PlayerQuery.GetMultipleByName(name);
             player = players.shift();

@@ -19,7 +19,7 @@ export const RoastCommand: Command = {
     name: "roast",
     aliases: ["r"],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
-    run: async (commandBus: CommandBus, callerId: string, caller: string, name: string, id: string, reason: string, duration: string) => {
+    run: async (commandBus: CommandBus, caller: PlayerSearchReport, player: PlayerInfo, name: string, id: string, reason: string, duration: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const config: AxiosRequestConfig =
@@ -30,7 +30,6 @@ export const RoastCommand: Command = {
             },
         }
   
-        let player = id && await PlayerQuery.GetById(id);
 
         if (!player) {
             player = await PlayerQuery.GetByName(name)
@@ -92,18 +91,3 @@ export const RoastCommand: Command = {
         
     }
 };
-
-const addMonths = (date, months) => {
-    date.setMonth(date.getMonth() + months);
-    return date;
-}
-
-const addDays = (date, days) => {
-    date.setDate(date.getDate() + days);
-    return date;
-}
-
-const addHours = (date, hours) => {
-    date.setHours(date.getHours() + hours);
-    return date;
-}

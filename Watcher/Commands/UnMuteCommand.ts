@@ -10,12 +10,13 @@ import { ChatRoute, PlayersRoute } from '../../Services/WebAdmin/Routes';
 import { PlayerQuery } from '../../Services/WebAdmin/Queries'
 import { CommandBus } from "@nestjs/cqrs";
 import { PolicySearchReport } from "../../Reports/Entities/policy";
+import { PlayerInfo } from "../../Services/WebAdmin/Models";
 
 export const UnMuteCommand: Command = {
     name: "unmute",
     aliases: ["um"],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent],
-    run: async (commandBus: CommandBus, callerId: string, caller: string, name: string, id: string) => {
+    run: async (commandBus: CommandBus, caller: PlayerSearchReport, player: PlayerInfo, name: string, id: string, reason: string, duration: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const config: AxiosRequestConfig =
@@ -25,23 +26,12 @@ export const UnMuteCommand: Command = {
                 "Cookie": `authcred="${env["AUTHCRED"]}"`
             },
         }
-        let unbanDate: Date;
         let match;
-        let regexp;
-
-        if (id && typeof (id) === 'string') {
-            if (id.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
-                match = {
-                    "PlayerId": id
-                }
-            }
-        } else {
-            regexp = {
-                "Name": {
-                    "value": `.*${name}.*`,
-                    "flags": "ALL",
-                    "case_insensitive": true
-                }
+        let regexp = {
+            "Name": {
+                "value": `.*${name}.*`,
+                "flags": "ALL",
+                "case_insensitive": true
             }
         }
 
@@ -67,8 +57,6 @@ export const UnMuteCommand: Command = {
                 }
             }
         }
-
-        let executioner = callerId && await SearchClient.Get(callerId as any, PlayerSearchReport)
         const policy = (await SearchClient.Search<PolicySearchReport>(PolicySearchReport, {
             "query": {
                 "bool": {
@@ -95,7 +83,7 @@ export const UnMuteCommand: Command = {
         if (policy) {
             await commandBus.execute(new LiftMuteCommand(Guid.parse(policy.Id)))
 
-            if (executioner && executioner.Invisible) {
+            if (caller && caller.Invisible) {
                 return;
             } 
 
@@ -111,18 +99,3 @@ export const UnMuteCommand: Command = {
         }
     }
 };
-
-const addMonths = (date, months) => {
-    date.setMonth(date.getMonth() + months);
-    return date;
-}
-
-const addDays = (date, days) => {
-    date.setDate(date.getDate() + days);
-    return date;
-}
-
-const addHours = (date, hours) => {
-    date.setHours(date.getHours() + hours);
-    return date;
-}

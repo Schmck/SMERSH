@@ -9,12 +9,13 @@ export class LayoutQuery extends Query {
         const session = WebAdminSession.get();
         const dom = await session.navigate(LayoutRoute.GetLayout.Action)
 
-        const campaign = Object.values(dom.window.document.querySelectorAll(`[id^='sgterritory_']`))
-        const layout: Record<string, string[]> = Object.fromEntries(campaign.map((item, index) => {
-            let territoryArray = item['value'].split('\n')
+        const campaign = Object.values(dom.window.document.querySelectorAll(`[id^='tcontainer_sg']`))
+        const layout: Record<string, string[]> = Object.fromEntries(Array.from(campaign).map(item => {
+            let key = item.querySelector('legend').innerText
+            let value = item.querySelector('textarea').innerText.split('\n')
 
-            return [item.parentElement.children[0]['innerHTML'], territoryArray]
-        }).filter(i => i))
+            return [key, value]
+        }, {}))
 
         return layout
     }

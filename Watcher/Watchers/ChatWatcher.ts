@@ -24,7 +24,6 @@ export class ChatWatcher extends Watcher {
         const commands = Commands.map(command => command.name).flat()
         const messages = await ChatQuery.Get();
         const lastMessage = messages[messages.length - 1];
-        const lastMessageDate = messages.length ? new Date(lastMessage.timestamp) : false;
         const roundInfo = global && global.roundInfo;
         const round = !roundInfo && await (await SearchClient.Search(RoundSearchReport, {
             "query": {
@@ -76,9 +75,11 @@ export class ChatWatcher extends Watcher {
                         const command = Commands.find(comm => comm.name === commandName || comm.aliases.includes(commandName))
                         if (typeof (player.Role) === 'number' && command.permissions.find(perm => perm.Value === player.Role)) {
                             const input = msg.message.match(/\#[A-Z0-9]{0,4}\:/) ? msg.message.slice(0, msg.message.match(/\#[A-Z0-9]{0,4}\:/).index) : msg.message
-                            const { name, id, reason, duration } = this.parseCommand(input.split(' ').slice(1))
+                            const caller = players[msg.id]
+                            const { player, name, id, reason, duration } = this.parseCommand(input.split(' ').slice(1))
 
-                            command.run(this.commandBus, msg.id, msg.username, name, id, reason, duration)
+                            //(commandBus: CommandBus, caller: PlayerSearchReport, player: PlayerInfo, name: string, reason: string, duration: string)
+                            command.run(this.commandBus, caller, player, name, id, reason, duration)
                         } else if (typeof (player.Role) === 'number') {
                             const frown = Math.floor(Math.random() * 32) > 28 ? '. :/ ' : ''
 
@@ -160,10 +161,27 @@ export class ChatWatcher extends Watcher {
         let formats = ['h', 'd', 'w', 'm']
         let duration
         let reason
+        let player;
         let name
         let id
 
         command.forEach((comm, i) => {
+            if (comm && comm.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
+                id = comm
+            } else if (comm && comm.match(/[A-Z0-9]{9,10}/)) {
+                id = `0x0110000${comm}`
+            } else {
+                name = comm
+                if (global.currentPlayers && global.currentPlayers.length) {
+                    const currentPlayer = (Object.values(global.currentPlayers) as any[]).find(pl => pl.Playername.includes(name))
+                    if (currentPlayer) {
+                        player = currentPlayer;
+                        id = player.Id;
+                    }
+                }
+
+            }
+
             if (comm.match(/^\d+[A-Za-z]$/) && formats.some(f => comm.endsWith(f))) {
                 duration = comm
                 if (!reason && (name || id)) {
@@ -173,24 +191,10 @@ export class ChatWatcher extends Watcher {
                 reason = command.slice(i).join(' ')
             }
 
-            if (comm && comm.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
-                id = comm
-            } else if (comm && comm.match(/[A-Z0-9]{9,10}/)) {
-                id = `0x0110000${comm}`
-            } else {
-                name = comm
-                if (global.currentPlayers && global.currentPlayers.length) {
-                    const player = (Object.values(global.currentPlayers) as any[]).find(pl => pl.Playername.includes(name))
-                    if (player) {
-                        id = player.Id;
-                    }
-                }
-
-            }
-
         })
 
         return {
+            player,
             name,
             id,
             duration,

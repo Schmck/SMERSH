@@ -10,12 +10,13 @@ import { AxiosRequestConfig } from 'axios';
 import { ChatRoute, PlayersRoute } from '../../Services/WebAdmin/Routes';
 import { PlayerQuery } from '../../Services/WebAdmin/Queries'
 import { CommandBus } from "@nestjs/cqrs";
+import { PlayerInfo } from "../../Services/WebAdmin/Models";
 
 export const TempbanCommand: Command = {
     name: "tempban",
     aliases: ["ban", "b"],
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent],
-    run: async (commandBus: CommandBus, callerId: string, caller: string, name: string, id: string, reason: string, duration: string) => {
+    run: async (commandBus: CommandBus, caller: PlayerSearchReport, player: PlayerInfo, name: string, id: string, reason: string, duration: string) => {
         const axios = Api.axios();
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const config: AxiosRequestConfig =
@@ -27,24 +28,13 @@ export const TempbanCommand: Command = {
         }
         let unbanDate: Date;
         let match;
-        let regexp;
-
-        if (id && typeof (id) === 'string') {
-            if (id.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
-                match = {
-                    "Id": id
-                }
-            }
-        } else {
-            regexp = {
-                "Name": {
-                    "value": `.*${name}.*`,
-                    "flags": "ALL",
-                    "case_insensitive": true
-                }
+        let regexp = {
+            "Name": {
+                "value": `.*${name}.*`,
+                "flags": "ALL",
+                "case_insensitive": true
             }
         }
-
 
 
         const players = await SearchClient.Search<PlayerSearchReport>(PlayerSearchReport, {
@@ -53,8 +43,6 @@ export const TempbanCommand: Command = {
                 regexp
             }
         })
-        const player = players.shift();
-        let executioner = callerId && await SearchClient.Get(callerId as any, PlayerSearchReport)
 
         if (players.length > 1) {
             const message = `Multiple players found matching ${name}: [${players.map(player => `${player.Name}[${player.Id.slice(9)}]`).join('\, ')}]`
@@ -90,12 +78,12 @@ export const TempbanCommand: Command = {
             }
 
             if (player) {
-                await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, env["COMMAND_CHANNEL_ID"], Action.Ban, player.Name, reason, caller, new Date(), unbanDate))
+                await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, env["COMMAND_CHANNEL_ID"], Action.Ban, player.Playername, reason, caller.Name, new Date(), unbanDate))
 
-                if (executioner && executioner.Invisible) {
+                if (caller && caller.Invisible) {
                     return;
                 } 
-                const message = `${player.Name} was banned for ${untilString} for ${reason ? reason : 'no reason'} until ${unbanDate.toString().split(' GMT')[0]}`
+                const message = `${player.Playername} was banned for ${untilString} for ${reason ? reason : 'no reason'} until ${unbanDate.toString().split(' GMT')[0]}`
                 const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
                 const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                 await axios.post(chatUrl, chatUrlencoded, config)
