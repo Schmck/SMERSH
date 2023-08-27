@@ -138,28 +138,9 @@ export class PolicyWatcher extends Watcher {
 
             if (policy.Action === Action.Ban.DisplayName && policy.UnbanDate && new Date(policy.UnbanDate) <= new Date()) {
 
-                const urlencoded = `banid=plainid%3A${policy.PlainId}&action=delete`
-                const url = argv["BASE_URL"] + PolicyRoute.DeleteBan.Action
+                await PolicyQuery.Delete(policy.PlayerId);
 
-                const config: AxiosRequestConfig =
-                {
-                    headers: {
-                        "Content-type": "application/x-www-form-urlencoded",
-                        "Cookie": `authcred="${argv["AUTHCRED"]}"`
-                    },
-                }
-
-
-                const response = await axios.post(url, urlencoded, config);
-                const policies = await PolicyQuery.Get();
-                if (policies && policies.length) {
-                    if (!policies.includes(policy.PlayerId)) {
-                        await this.commandBus.execute(new LiftBanCommand(Guid.parse(policy.Id)))
-                    }
-                }
-
-                this.log.info(JSON.stringify(response.data));
-
+                this.log.info(`${policy.PlayerId} was unbanned`)
             }  
         }
 

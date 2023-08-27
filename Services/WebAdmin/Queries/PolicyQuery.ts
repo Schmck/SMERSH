@@ -42,47 +42,19 @@ export class PolicyQuery extends Query {
     public static async Delete(playerId: string) {
         const session = WebAdminSession.get();
         const policy = await session.navigate(PolicyRoute.DeleteBan.Action)
-        const bans = policy && policy.window && policy.window.document && policy.window.document.querySelectorAll('tr>td>form')
-        let ban,
-            banId
+        const bans = policy && policy.window && policy.window.document && [].slice.call(policy.window.document.querySelector('table.grid>tbody').children)
+        let ban
 
         if (bans) {
-            bans.forEach(bn => {
-                if (bn.parentElement.parentElement.innerText.includes(playerId)) {
-                    ban = bn.parentElement.parentElement
-                }
-            })
+            ban = bans.find(row => row.innerText.includes(playerId))
         }
 
         if (ban) {
-            banId = ban.querySelector('input[name="banid"]').value
-
-
-            const client = Api.axios();
-            const env = JSON.parse(process.argv[process.argv.length - 1]);
-            const url = env["BASE_URL"] + PolicyRoute.DeleteBan.Action
-            const config: AxiosRequestConfig =
-            {
-                headers: {
-                    "Content-type": "application/x-www-form-urlencoded"
-                },
-            }
-            const urlencoded = new URLSearchParams();
-            urlencoded.append("banid", banId);
-            urlencoded.append("action", 'delete');
-
-            let response;
-
-            try {
-                response = await client.post(url, urlencoded, config).then(result => {
-                    return result
-                });
-            } catch (error) {
-                return 'worst luck'
-            }
+            ban.querySelector('button').click()
+            return true;
         }
 
-        return null;
+        return false;
     }
 
     public static async GetNextPlainId() {

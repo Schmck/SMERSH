@@ -129,7 +129,7 @@ export class RoundWatcher extends Watcher {
                                 } catch (error) {
                                     console.log(error)
                                 }
-
+                                  
                                 if (playa && player.Playername !== playa.nickname) {
                                     this.log.info(player.Id, player.Playername, playa.nickname, playa.steamID)
                                     await this.commandBus.execute(new RegisterPlayerCommand(player.Id, playa.nickname, player.IpAddress))
