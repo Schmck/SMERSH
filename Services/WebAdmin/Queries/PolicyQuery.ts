@@ -26,14 +26,13 @@ export class PolicyQuery extends Query {
 
         this.log.info(PolicyRoute.GetBans.Action, policy.window.document)
         if(policy && policy.window && policy.window.document){
-            const banForm = policy.window.document.querySelector('#addban')
+            const banForm : HTMLFormElement = policy.window.document.querySelector('#addban').parentElement as HTMLFormElement;
             const banInput : HTMLInputElement = banForm.querySelector('input#uniqueid')
-            const banSubmit = banForm.querySelector('button')
 
             banInput.value = playerId;
 
             console.log('banning ', playerId, banInput.value)
-            banSubmit.click()
+            banForm.submit();
         }
         return;
     }
