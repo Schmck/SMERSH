@@ -51,12 +51,18 @@ export class PlayerQuery extends Query {
 
     public static async GetByName(name: string): Promise<PlayerInfo> {
         const players = await this.Get();
+        if (!name) {
+            return null;
+        }
         const player = players.find(playa => playa && playa.Playername && playa.Playername.toString() && playa.Playername.toString().toLowerCase().includes(name.toLowerCase()))
         return player;
     }
 
     public static async GetMultipleByName(name: string): Promise<Array<PlayerInfo>> {
         let players = await this.Get();
+        if (!name) {
+            return null;
+        }
         players = players.filter(playa => playa && playa.Playername && playa.Playername.toString() && playa.Playername.toString().toLowerCase().includes(name.toLowerCase()))
         return players;
     }
