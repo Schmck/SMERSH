@@ -69,8 +69,7 @@ export class PolicyQuery extends Query {
             }
 
 
-            await axios.post(url, urlencoded, config).then(result => {
-            });
+            await axios.post(url, urlencoded, config);
             return true;
         }
 

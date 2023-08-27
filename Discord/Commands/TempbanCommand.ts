@@ -153,9 +153,7 @@ export const TempbanCommand: Command = {
                 }
 
 
-                await axios.post(url, urlencoded, config).then(result => {
-                    client.log.info(JSON.stringify(result.data))
-                });
+                await axios.post(url, urlencoded, config);
                 //await PolicyQuery.Post(player.Id)
                 
                 await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Ban, player.Name, reason.value.toString(), (interaction.member as GuildMember).displayName, new Date(), unbanDate, plainId))
