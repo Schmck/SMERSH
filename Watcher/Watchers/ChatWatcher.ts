@@ -45,8 +45,7 @@ export class ChatWatcher extends Watcher {
         const config: AxiosRequestConfig =
         {
             headers: {
-                "Content-type": "application/x-www-form-urlencoded",
-                "Cookie": `authcred="${env["AUTHCRED"]}"`
+                "Content-type": "application/x-www-form-urlencoded"
             },
         }
         let players = (args[0] && args[0].players) || {}

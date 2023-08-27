@@ -77,8 +77,7 @@ export class PolicyWatcher extends Watcher {
                                         const config: AxiosRequestConfig =
                                         {
                                             headers: {
-                                                "Content-type": "application/x-www-form-urlencoded",
-                                                "Cookie": `authcred="${argv["AUTHCRED"]}"`
+                                                "Content-type": "application/x-www-form-urlencoded"
                                             },
                                         }
 
@@ -103,8 +102,7 @@ export class PolicyWatcher extends Watcher {
                     const config: AxiosRequestConfig =
                     {
                         headers: {
-                            "Content-type": "application/x-www-form-urlencoded",
-                            "Cookie": `authcred="${argv["AUTHCRED"]}"`
+                            "Content-type": "application/x-www-form-urlencoded"
                         },
                     }
 
@@ -123,8 +121,7 @@ export class PolicyWatcher extends Watcher {
                     const config: AxiosRequestConfig =
                     {
                         headers: {
-                            "Content-type": "application/x-www-form-urlencoded",
-                            "Cookie": `authcred="${argv["AUTHCRED"]}"`
+                            "Content-type": "application/x-www-form-urlencoded"
                         },
                     }
 

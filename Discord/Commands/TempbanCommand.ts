@@ -147,8 +147,7 @@ export const TempbanCommand: Command = {
                 const config: AxiosRequestConfig =
                 {
                     headers: {
-                        "Content-type": "application/x-www-form-urlencoded",
-                        "Cookie": `authcred="${env["AUTHCRED"]}; path=/ServerAdmin/"`
+                        "Content-type": "application/x-www-form-urlencoded"
                     },
                 }
 
