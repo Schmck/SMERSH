@@ -6,6 +6,7 @@ import axios, { isCancel, AxiosError, AxiosRequestConfig, RawAxiosRequestHeaders
 import { SearchClient } from '../../../Elastic';
 import { PlayerSearchReport } from '../../../Reports/Entities/player'
 import { Query } from './Query';
+import qs from 'qs'
 
 export class PolicyQuery extends Query {
 
@@ -42,14 +43,34 @@ export class PolicyQuery extends Query {
         const session = WebAdminSession.get();
         const policy = await session.navigate(PolicyRoute.GetBans.Action)
         const bans = policy && policy.window && policy.window.document && [].slice.call(policy.window.document.querySelector('table.grid>tbody').children)
-        let ban
+        let ban,
+            banId
 
         if (bans) {
             ban = bans.find(row => row && row.textContent && row.textContent.includes(playerId))
         }
 
         if (ban) {
-            ban.querySelector('button').click()
+            banId = ban.querySelector('input[name="banid"]').value
+            const axios = Api.axios();
+            const env = JSON.parse(process.argv[process.argv.length - 1]);
+            const url = env["BASE_URL"] + PolicyRoute.DeleteBan.Action
+            const urlencoded = qs.stringify({
+                "banid": banId,
+                "action": 'delete'
+            })
+
+            const config: AxiosRequestConfig =
+            {
+                headers: {
+                    "Content-type": "application/x-www-form-urlencoded",
+                    "Cookie": `authcred="${env["AUTHCRED"]}"`
+                },
+            }
+
+
+            await axios.post(url, urlencoded, config).then(result => {
+            });
             return true;
         }
 
