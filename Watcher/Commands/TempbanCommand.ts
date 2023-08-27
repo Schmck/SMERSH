@@ -8,7 +8,7 @@ import { Action, DiscordRole } from "../../SMERSH/ValueObjects/player";
 import { Api } from '../../Web/Framework';
 import { AxiosRequestConfig } from 'axios';
 import { ChatRoute, PlayersRoute } from '../../Services/WebAdmin/Routes';
-import { PlayerQuery } from '../../Services/WebAdmin/Queries'
+import { PlayerQuery, PolicyQuery } from '../../Services/WebAdmin/Queries'
 import { CommandBus } from "@nestjs/cqrs";
 import { PlayerInfo } from "../../Services/WebAdmin/Models";
 
@@ -78,6 +78,7 @@ export const TempbanCommand: Command = {
             }
 
             if (player) {
+                await PolicyQuery.Post(player.Id)
                 await commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, env["COMMAND_CHANNEL_ID"], Action.Ban, player.Playername, reason, caller.Name, new Date(), unbanDate))
 
                 if (caller && caller.Invisible) {

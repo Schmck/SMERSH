@@ -72,6 +72,9 @@ export class LayoutWatcher extends Watcher {
                             if (startTimeNight.getHours() <= date.getHours() && endTimeNight.getHours() >= date.getHours()) {
                                 changeLayout = true
                                 activeLayout = layout.Name;
+                            } else {
+                                changeLayout = false;
+                                activeLayout = lastLayout;
                             }
 
                         }
@@ -101,13 +104,6 @@ export class LayoutWatcher extends Watcher {
                                         }
                                     }
 
-                                }
-
-                                if (layout.Name === Layout.Fill.DisplayName) {
-                                    if (higherThanMin && lowerThanMax && mapUnchanged) {
-                                        changeLayout = true
-                                        activeLayout = layout.Name;
-                                    }
                                 }
                                 return changeLayout;
                             })
