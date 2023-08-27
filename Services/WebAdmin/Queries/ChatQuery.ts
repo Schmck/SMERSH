@@ -24,15 +24,15 @@ export class ChatQuery extends Query {
                     let id
 
                     if (msg.querySelector('.username')) {
-                        username = msg.querySelector('.username').innerHTML
+                        username = msg.querySelector('.username').textContent
                     }
 
                     if (msg.querySelector('.message')) {
-                        message = msg.querySelector('.message').innerHTML
+                        message = msg.querySelector('.message').textContent
                     }
 
                     if (msg.querySelector('.teamnotice')) {
-                        visibility = msg.querySelector('.teamnotice').innerHTML
+                        visibility = msg.querySelector('.teamnotice').textContent
                     }
 
 

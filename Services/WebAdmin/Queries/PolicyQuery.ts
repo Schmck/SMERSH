@@ -14,7 +14,7 @@ export class PolicyQuery extends Query {
         const session = WebAdminSession.get();
         const policy = await session.navigate(PolicyRoute.GetBans.Action)
         if (policy && policy.window && policy.window.document) {
-            const bannedIds = Object.values(policy.window.document.querySelector('table.grid').querySelectorAll('td')).filter((td, i) => !(i % 3)).map(tr => tr.innerText);
+            const bannedIds = Object.values(policy.window.document.querySelector('table.grid').querySelectorAll('td')).filter((td, i) => !(i % 3)).map(tr => tr.textContent);
             return bannedIds;
         }
         return [];
@@ -41,12 +41,12 @@ export class PolicyQuery extends Query {
 
     public static async Delete(playerId: string) {
         const session = WebAdminSession.get();
-        const policy = await session.navigate(PolicyRoute.DeleteBan.Action)
+        const policy = await session.navigate(PolicyRoute.GetBans.Action)
         const bans = policy && policy.window && policy.window.document && [].slice.call(policy.window.document.querySelector('table.grid>tbody').children)
         let ban
 
         if (bans) {
-            ban = bans.find(row => row.innerText.includes(playerId))
+            ban = bans.find(row => row && row.textContent && row.textContent.includes(playerId))
         }
 
         if (ban) {

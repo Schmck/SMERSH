@@ -16,12 +16,12 @@ export class LayoutQuery extends Query {
             return null
         }
         const layout: Record<string, string[]> = Object.fromEntries(Array.from(campaign).map(item => {
-            let key = item.querySelector('legend').innerText
+            let key = item.querySelector('legend').textContent
             let values = item.querySelector('textarea');
-            if (!values.innerText) {
+            if (!values.textContent) {
                 return [key, []]
             }
-            let value = values && values.innerText && values.innerText.split('\n')
+            let value = values && values.textContent && values.textContent.split('\n')
 
             return [key, value]
         }, {}))

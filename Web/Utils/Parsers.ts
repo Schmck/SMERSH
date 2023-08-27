@@ -4,14 +4,14 @@ export class Parsers {
     public static parseTable(table: HTMLTableElement) {
         const headers = Object.values((table).tHead.children).map(row => {
             return Object.values(row.children).map(item => {
-                return item.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', 'Team')
+                return item.textContent.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', 'Team')
             })
 
 
         })[0]
         const values = Object.values((table).tBodies[0].children).map(item => {
             return Object.values(item.children).map(row => {
-                return row.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')
+                return row.textContent.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')
             })
         })
         const result: any = { headers, values }
@@ -39,7 +39,7 @@ export class Parsers {
     public static playerTable(table: HTMLTableElement) {
         const headers = Object.values((table).tHead.children).map(row => {
             return Object.values(row.children).map(item => {
-                return item.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', 'Team')
+                return item.textContent.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', 'Team')
             })
         })[0]
         headers.pop();
@@ -48,9 +48,9 @@ export class Parsers {
             return Object.values(item.children).map(row => {
                 if (row.querySelector("input[name='playerid']")) {
                     let input = row.querySelector("input[name='playerkey']")['value']
-                    return [input, row.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')]
+                    return [input, row.textContent.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')]
                 }
-                return row.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')
+                return row.textContent.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '')
             }).flat()
         }).map((val: any) => { val.pop(); return val })
         const result: any = { headers, values }
@@ -85,7 +85,7 @@ export class Parsers {
     }
 
     public static dlElement(dl: Element) {
-        const items = Array.prototype.slice.call(dl.children).map(item => item.innerHTML.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', ''))
+        const items = Array.prototype.slice.call(dl.children).map(item => item.textContent.replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', ''))
         const paired = Arrays.chunk(items, 2).map(([key, value]) => ([
             key.replace(/\s+/g, ""),
             value

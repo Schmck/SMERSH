@@ -23,7 +23,7 @@ export class LayoutController extends SmershController {
                 const layout = Object.fromEntries(campaign.map((item, index) => {
                     let territoryArray = item['value'].split('\n')
 
-                    return [item.parentElement.children[0]['innerHTML'], territoryArray]
+                    return [item.parentElement.children[0]['textContent'], territoryArray]
                 }).filter(i => i))
 
                 return layout
@@ -47,7 +47,7 @@ export class LayoutController extends SmershController {
                 const layout = Object.fromEntries(campaign.map(item => {
                     let territoryArray = item['value'].split('\n')
 
-                    return [item.parentElement.children[0]['innerHTML'], territoryArray]
+                    return [item.parentElement.children[0]['textContent'], territoryArray]
                 }).filter(i => i))
 
                 return this.callApi(layout)
