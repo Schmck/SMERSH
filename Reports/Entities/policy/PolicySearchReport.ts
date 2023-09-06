@@ -44,5 +44,9 @@ export class PolicySearchReport extends SearchReport {
     @Field({ nested: Object })
     public RoleBans: Record<number, RoleBan>   
 
+    public GetType(): IndexedClass<this> {
+        return this as unknown as IndexedClass<this>;
+    }
+
     UpdateCalculatedProperties(): void { }
 }

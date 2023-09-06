@@ -30,5 +30,9 @@ export class RoundSearchReport extends SearchReport {
     @Field('boolean')
     public IsActive: boolean;
 
+    public GetType(): IndexedClass<this> {
+        return this as unknown as IndexedClass<this>;
+    }
+
     public UpdateCalculatedProperties(): void { }
 }

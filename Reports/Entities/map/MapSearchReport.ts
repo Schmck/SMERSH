@@ -2,6 +2,7 @@
 import { SearchReport } from '../../Framework'
 import { Tickets, Team, Layout } from '../../../SMERSH/ValueObjects'
 import { Index, Field } from '../../../SMERSH/Utilities'
+import { IndexedClass } from "../../../SMERSH/Utilities/types";
 
 @Index()
 export class MapSearchReport extends SearchReport {
@@ -31,6 +32,10 @@ export class MapSearchReport extends SearchReport {
 
     @Field({ nested: Layout })
     public Layouts: Array<Layout>;
+
+    public GetType(): IndexedClass<this> {
+        return this as unknown as IndexedClass<this>;
+    }
 
     public UpdateCalculatedProperties(): void { }
 }

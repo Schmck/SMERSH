@@ -9,6 +9,7 @@ import { Logger, dummyLogger } from "ts-log/build/src/index";
 import { FileLogger } from "../../SMERSH/Utilities/FileLogger";
 import { Index, Field, Elasticsearch, Primary } from '../../SMERSH/Utilities';
 import { Guid } from "guid-typescript";
+import { AnyClass, IndexedClass } from '@gojob/ts-elasticsearch/dist/types';
 
 
 export class ClientBuilder {
@@ -30,10 +31,10 @@ export class ClientBuilder {
         })
   
         for (let report of reports) {
-            let exists = await client.indices.exists(report)
+            let exists = await client.indices.exists(report.GetType())
             if (!exists) {
-                await client.indices.create(report);
-                await client.indices.putMapping(report);
+                await client.indices.create(report.GetType());
+                await client.indices.putMapping(report.GetType());
             }
         }
 
@@ -51,8 +52,8 @@ export class ClientBuilder {
         return client;
     }
 
-    public static getReports(): Array<any> {
-        let reportz = Object.keys(reports).map(report => {
+    public static getReports(): Array<SearchReport> {
+        let rapports = Object.keys(reports).map(report => {
             let obj = reports[report][
                 Object.keys(reports[report])
                     .find(key => reports[report][key].prototype instanceof SearchReport)
@@ -62,7 +63,7 @@ export class ClientBuilder {
 
         })
 
-        return reportz;
+        return rapports;
     }
 
     public static getIndices(): Array<any> {
