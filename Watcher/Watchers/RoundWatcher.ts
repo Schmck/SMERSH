@@ -141,7 +141,7 @@ export class RoundWatcher extends Watcher {
 
 
                             }
-                        } else if (player && !exists.Name.includes(player.Playername)) {
+                        } else if (player && !exists.Name ||  !exists.Name.includes(player.Playername)) {
                             const decId = hexToDec(player.Id)
                             let playa
                             try {
@@ -227,7 +227,7 @@ export class RoundWatcher extends Watcher {
             timeLeft,
             territories
 
-        statusMap = this.findDuplicateWords(status.Game.Map.replaceAll('\'', '').replaceAll('_', ' ').replace(/(^\w{1})|(\s{1}\w{1})|(?:- |\d\. ).*/g, match => match.toUpperCase()).match(/[A-Z][a-z]+/g).join(' '))
+        statusMap = this.findDuplicateWords(status.Game.Map)
         timeLeft = this.secToMin(status.Rules.TimeLeft)
 
         territories = `${axisIcon}${status.Teams[0].Territories}/${status.Teams[1].Territories}${alliesIcon}`
@@ -363,7 +363,7 @@ export class RoundWatcher extends Watcher {
 
             return description
         })
-        let map = this.findDuplicateWords(oldStatus.Game.Map.replaceAll('\'', '').replaceAll('_', ' ').replace(/(^\w{1})|(\s{1}\w{1})|(?:- |\d\. ).*/g, match => match.toUpperCase()).match(/[A-Z][a-z]+/g).join(' '))
+        let map = this.findDuplicateWords(oldStatus.Game.Map)
         let timeLeft = this.secToMin(oldStatus.Rules.TimeLeft)
         teams[1][3] = ` at ${map}`
         teams[1][6] = ` with ${timeLeft} left`
@@ -405,7 +405,8 @@ export class RoundWatcher extends Watcher {
 
 
 
-    public findDuplicateWords(str: string) {
+    public findDuplicateWords(input: string) {
+        const str = input.replaceAll('\'', '').replaceAll('_', ' ').replace(/(^\w{1})|(\s{1}\w{1})|(?:- |\d\. ).*/g, match => match.toUpperCase()).match(/[A-Z][a-z]+/g).join(' ')
         const months = [...Array(11).keys()].map(key => new Date(0, key).toLocaleString('en', { month: 'long' }))
         const strArr = str.split(" ");
         let res = [];

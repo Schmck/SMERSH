@@ -165,19 +165,20 @@ export class ChatWatcher extends Watcher {
         let id
 
         command.forEach((comm, i) => {
-            if (comm && comm.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
+            if (!player && global.currentPlayers && Object.values(global.currentPlayers).length) {
+                player = (Object.values(global.currentPlayers) as any[]).find(pl => pl.Playername.includes(comm));
+            }
+
+
+            if (player) {
+                name = player.Playername;
+                id = player.Id;
+            } else if (comm && comm.match(/0x011[0]{4}[A-Z0-9]{9,10}/)) {
                 id = comm
             } else if (comm && comm.match(/[A-Z0-9]{9,10}/)) {
                 id = `0x0110000${comm}`
-            } else {
+            } else if (!name) {
                 name = comm
-                if (global.currentPlayers && global.currentPlayers.length) {
-                    const currentPlayer = (Object.values(global.currentPlayers) as any[]).find(pl => pl.Playername.includes(name))
-                    if (currentPlayer) {
-                        player = currentPlayer;
-                        id = player.Id;
-                    }
-                }
 
             }
 
@@ -186,7 +187,7 @@ export class ChatWatcher extends Watcher {
                 if (!reason && (name || id)) {
                     reason = command.slice(i + 1).join(' ')
                 }
-            } else if (!reason && (name || id)) {
+            } else if (command.find(cm => cm.match(/^\d+[A-Za-z]$/)) && !duration && !reason && (name || id)) {
                 reason = command.slice(i).join(' ')
             }
 
