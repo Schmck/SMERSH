@@ -52,7 +52,7 @@ export class ClientBuilder {
         return client;
     }
 
-    public static getReports(): Array<SearchReport> {
+    public static getReports<T extends SearchReport>(): Array<T> {
         let rapports = Object.keys(reports).map(report => {
             let obj = reports[report][
                 Object.keys(reports[report])
