@@ -1,6 +1,7 @@
 ﻿import { SearchReport } from '../../Framework'
 import { Guid } from "guid-typescript";
 import { Index, Field } from '@../../../SMERSH/Utilities'
+import { IndexedClass } from '../../../SMERSH/Utilities/types';
 
 
 @Index()

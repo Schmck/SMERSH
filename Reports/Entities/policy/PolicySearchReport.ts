@@ -2,6 +2,7 @@ import { Guid } from "guid-typescript";
 import { SearchReport } from '../../Framework'
 import { Index, Field } from '@../../../SMERSH/Utilities'
 import { RoleBan } from "../../../SMERSH/ValueObjects";
+import { IndexedClass } from "../../../SMERSH/Utilities/types";
 
 
 @Index()
