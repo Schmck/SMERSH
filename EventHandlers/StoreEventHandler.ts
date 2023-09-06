@@ -34,9 +34,9 @@ let cls: { new(id?: Guid, event?: Event): EventSearchReport } = EventSearchRepor
     PlayerNameChangedEvent,
     MapChangedEvent,
     RoundStartedEvent,
-    ChatLinesReceivedEvent,
+    //ChatLinesReceivedEvent,
     RoundEndedEvent,
-    PlayerRoundUpdatedEvent,
+    //PlayerRoundUpdatedEvent,
     PolicyAppliedEvent,
     BanLiftedEvent,
     RoleBanAppliedEvent,
@@ -50,12 +50,12 @@ let cls: { new(id?: Guid, event?: Event): EventSearchReport } = EventSearchRepor
 )
 export class StoreEventHandler implements
     IEventHandler<PlayerRegisteredEvent>,
-    IEventHandler<ChatLinesReceivedEvent>,
+    //IEventHandler<ChatLinesReceivedEvent>,
     IEventHandler<PlayerNameChangedEvent>,
     IEventHandler<RoundStartedEvent>,
     IEventHandler<RoundEndedEvent>,
     IEventHandler<MapChangedEvent>,
-    IEventHandler<PlayerRoundUpdatedEvent>,
+    //IEventHandler<PlayerRoundUpdatedEvent>,
     IEventHandler<PolicyAppliedEvent>,
     IEventHandler<BanLiftedEvent>,
     IEventHandler<RoleBanAppliedEvent>,
@@ -76,8 +76,8 @@ export class StoreEventHandler implements
     async handle(event: RoundStartedEvent)
     async handle(event: RoundEndedEvent)
     async handle(event: MapChangedEvent)
-    async handle(event: PlayerRoundUpdatedEvent) 
-    async handle(event: ChatLinesReceivedEvent)
+   // async handle(event: PlayerRoundUpdatedEvent) 
+   // async handle(event: ChatLinesReceivedEvent)
     async handle(event: PolicyAppliedEvent)
     async handle(event: BanLiftedEvent)
     async handle(event: RoleBanAppliedEvent)
