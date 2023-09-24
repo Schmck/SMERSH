@@ -68,19 +68,19 @@ export class ChatWatcher extends Watcher {
                 if (msg.message.startsWith('/') || msg.message.startsWith('!') || msg.message.startsWith('\\') || msg.message.startsWith('>') || (msg.message.startsWith(':') && !msg.message.includes(':/'))) {
                     const commandName = msg.message.split(' ')[0].slice(1)
                     if (commandNames.includes(commandName)) {
-                        let player = players[msg.id]
-                        if (!player) {
-                            player = await SearchClient.Get(msg.id as any, PlayerSearchReport)
+                        let caller = players[msg.id]
+                        if (!caller) {
+                            players[msg.id] = await SearchClient.Get(msg.id as any, PlayerSearchReport)
+                            caller = players[msg.id];
                         }
                         const command = Commands.find(comm => comm.name === commandName || comm.aliases.includes(commandName))
-                        if (typeof (player.Role) === 'number' && command.permissions.find(perm => perm.Value === player.Role)) {
+                        if (typeof (caller.Role) === 'number' && command.permissions.find(perm => perm.Value === caller.Role)) {
                             const input = msg.message.match(/\#[A-Z0-9]{0,4}\:/) ? msg.message.slice(0, msg.message.match(/\#[A-Z0-9]{0,4}\:/).index) : msg.message
-                            const caller = players[msg.id]
                             const { player, name, id, reason, duration } = this.parseCommand(input.split(' ').slice(1))
 
                             //(commandBus: CommandBus, caller: PlayerSearchReport, player: PlayerInfo, name: string, reason: string, duration: string)
                             command.run(this.commandBus, caller, player, name, id, reason, duration)
-                        } else if (typeof (player.Role) === 'number') {
+                        } else if (typeof (caller.Role) === 'number') {
                             const frown = Math.floor(Math.random() * 32) > 28 ? '. :/ ' : ''
 
                             const message = `you do not have the required permissions to use this command ${msg.username}[${msg.id.slice(9)}]${frown}`
@@ -258,19 +258,18 @@ export class ChatWatcher extends Watcher {
         const capitals = input.match(/[A-Z](?![A-Z])/g)
         const parts = []
 
-        console.log(input)
+     
         if (capitals && capitals.length) {
             if (capitals.length === 1 && input.indexOf(capitals[0]) === 0) {
                 parts.push(input)
                 return parts
             }
-            console.log(capitals)
+    
             for (let i = 0; i < capitals.length; i++) {
                 const capital = capitals[i]
                 const next = i < capitals.length && capitals[i + 1]
                 const index = input.indexOf(capital)
                 const end = next ? input.indexOf(next) : input.length
-                console.log(input, capital, index, end)
                 parts.push(input.slice(index, end))
 
             }

@@ -135,26 +135,8 @@ export const TempbanCommand: Command = {
             if (player) {
                 client.log.info('channelid', interaction.channelId as any as Guid);
                 client.log.info('playerid', player.Id as any as Guid);
-                const env = JSON.parse(process.argv[process.argv.length - 1]);
-
-                const axios = Api.axios();
-                const url = env["BASE_URL"] + PolicyRoute.AddBan.Action
-                const urlencoded = qs.stringify({
-                    "uniqueid": player.Id,
-                    "action": 'add'
-                })
-
-                const config: AxiosRequestConfig =
-                {
-                    headers: {
-                        "Content-type": "application/x-www-form-urlencoded"
-                    },
-                }
-
-
-                await axios.post(url, urlencoded, config);
-                //await PolicyQuery.Post(player.Id)
-                
+               
+                await PolicyQuery.Post(player.Id)
                 await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, interaction.channelId, Action.Ban, player.Name, reason.value.toString(), (interaction.member as GuildMember).displayName, new Date(), unbanDate, plainId))
 
                 await interaction.followUp({

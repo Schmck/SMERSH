@@ -27,13 +27,24 @@ export class PolicyQuery extends Query {
 
         this.log.info(PolicyRoute.GetBans.Action, policy.window.document)
         if(policy && policy.window && policy.window.document){
-            const banForm : HTMLFormElement = policy.window.document.querySelector('#addban').parentElement as HTMLFormElement;
-            const banInput : HTMLInputElement = banForm.querySelector('input#uniqueid')
+            const env = JSON.parse(process.argv[process.argv.length - 1]);
 
-            banInput.value = playerId;
+            const axios = Api.axios();
+            const url = env["BASE_URL"] + PolicyRoute.AddBan.Action
+            const urlencoded = qs.stringify({
+                "uniqueid": playerId,
+                "action": 'add'
+            })
 
-            console.log('banning ', playerId, banInput.value)
-            banForm.submit();
+            const config: AxiosRequestConfig =
+            {
+                headers: {
+                    "Content-type": "application/x-www-form-urlencoded"
+                },
+            }
+
+
+            await axios.post(url, urlencoded, config);
         }
         return;
     }
