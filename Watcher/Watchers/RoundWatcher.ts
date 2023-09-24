@@ -12,7 +12,6 @@ import { RoundSearchReport } from '../../Reports/Entities/round'
 import { MapSearchReport } from '../../Reports/Entities/map';
 import { PlayerSearchReport } from '../../Reports/Entities/player';
 import { stringify } from 'querystring';
-import SteamApi from 'steamapi'
 import { hexToDec } from 'hex2dec'
 import { Role, Team } from '../../SMERSH/ValueObjects';
 import { stat } from 'fs';
@@ -132,7 +131,7 @@ export class RoundWatcher extends Watcher {
                                   
                                 if (playa && player.Playername !== playa.nickname) {
                                     this.log.info(player.Id, player.Playername, playa.nickname, playa.steamID)
-                                    await this.commandBus.execute(new RegisterPlayerCommand(player.Id, playa.nickname, player.IpAddress))
+                                    await this.commandBus.execute(new RegisterPlayerCommand(player.Id, `(${player.Playername})${playa.nickname}`, player.IpAddress))
 
                                 } else {
                                     await this.commandBus.execute(new RegisterPlayerCommand(player.Id, player.Playername, player.IpAddress))
@@ -142,17 +141,8 @@ export class RoundWatcher extends Watcher {
 
                             }
                         } else if (player && !exists.Name ||  !exists.Name.includes(player.Playername)) {
-                            const decId = hexToDec(player.Id)
-                            let playa
-                            try {
-                                playa = decId && await this.steam.getUserSummary(decId)
-                            } catch (error) {
-                                console.log(error)
-                            }
+                            await this.commandBus.execute(new ChangePlayerNameCommand(player.Id, player.Playername))
 
-                            if (playa && player.Playername === playa.nickname) {
-                                await this.commandBus.execute(new ChangePlayerNameCommand(player.Id, player.Playername))
-                            }
                         } else if (player && !exists.Ip || exists.Ip !== player.IpAddress) {
                             await this.commandBus.execute(new ChangePlayerIpAddressCommand(player.Id, player.IpAddress))
                         }
