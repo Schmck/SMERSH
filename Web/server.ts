@@ -79,7 +79,13 @@ function boot() {
 boot();
 
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err : Error) => {
     console.trace(err);
+    if (err.message.includes('ECONNRESET')) {
+        setTimeout(() => {
+            boot();
+        }, 10000)
+    }
     console.log("Node NOT Exiting...");
 });
+
