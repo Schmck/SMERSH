@@ -31,10 +31,10 @@ export class ClientBuilder {
         })
   
         for (let report of reports) {
-            let exists = await client.indices.exists(report.GetType())
+            let exists = await client.indices.exists(report)
             if (!exists) {
-                await client.indices.create(report.GetType());
-                await client.indices.putMapping(report.GetType());
+                await client.indices.create(report);
+                await client.indices.putMapping(report);
             }
         }
 
@@ -52,7 +52,7 @@ export class ClientBuilder {
         return client;
     }
 
-    public static getReports<T extends SearchReport>(): Array<T> {
+    public static getReports<T extends IndexedClass<SearchReport>>(): Array<T> {
         let rapports = Object.keys(reports).map(report => {
             let obj = reports[report][
                 Object.keys(reports[report])
