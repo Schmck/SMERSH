@@ -4,6 +4,7 @@ import { Repository } from '../Framework'
 import { PlayerSearchReport } from '../../Reports/Entities/player'
 import { Player } from '../../Domain/Player'
 
+@CommandHandler(ChangeVisibilityCommand)
 export class ChangeVisibilityCommandHandler implements ICommandHandler<ChangeVisibilityCommand> {
     constructor(
         protected readonly publisher: EventPublisher,
