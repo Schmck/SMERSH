@@ -16,6 +16,7 @@ import { PlayerSearchReport } from '../../Reports/Entities/player';
 import { AxiosRequestConfig } from 'axios';
 import { Api } from '../../Web/Framework';
 import { Message } from '../../SMERSH/ValueObjects/round';
+import { PlayerInfo } from '../../Services/WebAdmin/Models';
 
 export class ChatWatcher extends Watcher {
 
@@ -166,7 +167,7 @@ export class ChatWatcher extends Watcher {
 
         command.forEach((comm, i) => {
             if (!player && global.currentPlayers && Object.values(global.currentPlayers).length) {
-                player = (Object.values(global.currentPlayers) as any[]).find(pl => pl.Playername.includes(comm));
+                player = this.match(comm, global.currentPlayers);
             }
 
 
@@ -187,8 +188,8 @@ export class ChatWatcher extends Watcher {
                 if (!reason && (name || id)) {
                     reason = command.slice(i + 1).join(' ')
                 }
-            } else if (command.find(cm => cm.match(/^\d+[A-Za-z]$/)) && !duration && !reason && (name || id)) {
-                reason = command.slice(i).join(' ')
+            } else if (!command.find(cm => cm.match(/^\d+[A-Za-z]$/)) && !duration && !reason && (name || id)) {
+                reason = command.slice(i + 1).join(' ')
             }
 
         })
@@ -204,4 +205,78 @@ export class ChatWatcher extends Watcher {
 
     }
 
+    public match(input: string, comparison: Record<string, PlayerInfo>) : PlayerInfo {
+        const comparisons = Object.values(comparison)
+        const chars = input.toLowerCase().split('')
+        const tracking = comparisons.reduce((opts, opt) => {
+            return { ...opts, [opt.Playername]: [opt.Id, opt.Playername.split('').map(char => true)] }
+        }, {})
+
+        comparisons.map(opt => opt.Playername).forEach(opt => {
+            for (let i = 0; i < chars.length; i++) {
+                let char = chars[i]
+                const last = (tracking[opt][1].includes(false) && tracking[opt][1].indexOf(false)) || 0
+                const start = (tracking[opt][1].indexOf(true) && tracking[opt][1].indexOf(true, last)) || 0
+                const index = opt.toLowerCase().indexOf(char, start)
+
+                if (index >= 0 && tracking[opt][1][index] && ((!last && !index) || (last === index - 1 && !tracking[opt][1][last]))) {
+                    tracking[opt][1][index] = false
+                }
+            }
+
+        })
+
+        let best
+        const sorted = Object.entries(tracking)
+            .filter((opt) => opt[1][1].includes(false))
+            .map(opt => [opt[0], (opt[1][1]).filter(o => !o).length])
+            .sort((optA, optB) => (optB[1]) - (optA[1])).map(opt => opt[0])
+
+        sorted.some((opt) => {
+            const parts = this.splitName(opt)
+            const val = tracking[opt][1].filter(o => !o).length
+            let perc = (100 / opt.length) * val
+            parts.forEach(part => {
+                if (part.toLowerCase().startsWith(input)) {
+                    perc = perc * part.length
+                }
+            })
+            if (perc >= 50) {
+                best = opt
+                return true
+            }
+            return false
+        })
+        if (best) {
+            return comparison[tracking[best][0]]
+
+        }
+        return null;
+}
+
+    public splitName(input: string) {
+        const capitals = input.match(/[A-Z](?![A-Z])/g)
+        const parts = []
+
+        console.log(input)
+        if (capitals && capitals.length) {
+            if (capitals.length === 1 && input.indexOf(capitals[0]) === 0) {
+                parts.push(input)
+                return parts
+            }
+            console.log(capitals)
+            for (let i = 0; i < capitals.length; i++) {
+                const capital = capitals[i]
+                const next = i < capitals.length && capitals[i + 1]
+                const index = input.indexOf(capital)
+                const end = next ? input.indexOf(next) : input.length
+                console.log(input, capital, index, end)
+                parts.push(input.slice(index, end))
+
+            }
+        } else {
+            parts.push(input)
+        }
+        return parts
+    }
 }

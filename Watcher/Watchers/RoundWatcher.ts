@@ -89,7 +89,7 @@ export class RoundWatcher extends Watcher {
                 };
 
                 const round = (await SearchClient.Search(RoundSearchReport, roundQuery)).shift()
-                const players: Record<string, PlayerInfo> = status.Players ? Object.fromEntries(status.Players.filter(p => !p.Bot && p.Id).map(player => [player.Id, player])) : {}
+                const players: Record<string, PlayerInfo> = status.Players && status.Players.length ? status.Players.filter(p => !p.Bot && p.Id).reduce((list, player) => { return { ...list, [player.Id]: player } }, {}) : {};
                 const playerIds: string[] = Object.keys(players)
                 const timeLimit = status.Rules && status.Rules.TimeLimit ? status.Rules.TimeLimit : 0
                 const newMapTime = status.Rules && status.Rules.TimeLeft ? status.Rules.TimeLeft : 0
@@ -100,7 +100,7 @@ export class RoundWatcher extends Watcher {
                     await this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
                 }
 
-                if (round && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
+                if (prevStatus &&  round && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
                     await this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds));
                     const battleDesc = this.battleDesc(prevStatus, status)
                     Logger.append(battleDesc)
@@ -109,11 +109,11 @@ export class RoundWatcher extends Watcher {
 
                 if (round) {
                     global.roundInfo = { roundId: round.Id, date: round.Date }
-                    global.currentPlayers = status.Players.reduce((list, player) => { return { ...list, [player.Id]: player } }, {});
                 }
 
 
                 if (playerIds.length) {
+                    global.currentPlayers = players;
                     for (let playerId of playerIds) {
                         const exists = await SearchClient.Get(playerId as any as Guid, PlayerSearchReport)
                         const player = players[playerId];
