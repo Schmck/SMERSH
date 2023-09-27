@@ -162,7 +162,8 @@ export class RoundWatcher extends Watcher {
                 }
 
                 const nextLogTime = lastLogTime.getMinutes() === 55 ? 0 : lastLogTime.getMinutes() + 5
-                if (new Date().getMinutes() >= nextLogTime && !(new Date().getMinutes() % 5)) {
+                const currentTime = new Date().getMinutes();
+                if (currentTime >= nextLogTime  && currentTime !== lastLogTime.getMinutes() && !(new Date().getMinutes() % 5)) {
                     const env = JSON.parse(process.argv[process.argv.length - 1]);
                     let crossedSwords = `\u2694`
                     let shield = `\u26CA`

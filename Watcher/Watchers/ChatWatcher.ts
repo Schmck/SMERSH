@@ -67,12 +67,12 @@ export class ChatWatcher extends Watcher {
             messages.forEach(async msg => {
                 if (msg.message.startsWith('/') || msg.message.startsWith('!') || msg.message.startsWith('\\') || msg.message.startsWith('>') || (msg.message.startsWith(':') && !msg.message.includes(':/'))) {
                     const commandName = msg.message.split(' ')[0].slice(1)
+                    let caller = players[msg.id]
+                    if (!caller) {
+                        players[msg.id] = await SearchClient.Get(msg.id as any, PlayerSearchReport)
+                        caller = players[msg.id];
+                    }
                     if (commandNames.includes(commandName)) {
-                        let caller = players[msg.id]
-                        if (!caller) {
-                            players[msg.id] = await SearchClient.Get(msg.id as any, PlayerSearchReport)
-                            caller = players[msg.id];
-                        }
                         const command = Commands.find(comm => comm.name === commandName || comm.aliases.includes(commandName))
                         if (typeof (caller.Role) === 'number' && command.permissions.find(perm => perm.Value === caller.Role)) {
                             const input = msg.message.match(/\#[A-Z0-9]{0,4}\:/) ? msg.message.slice(0, msg.message.match(/\#[A-Z0-9]{0,4}\:/).index) : msg.message
@@ -91,7 +91,16 @@ export class ChatWatcher extends Watcher {
                     } else {
                         const commandName = msg.message.split(' ')[0].slice(1)
                         const chars = commandName.split('').filter((char, i, self) => (self.indexOf(char) === i) || Math.abs(self.indexOf(char) - i) === 1);
-                        const options = commands.reduce((opts, opt) => {
+                        const options = Commands
+                            .filter(command => {
+                                if (typeof (caller.Role) === 'number') {
+                                    return command.permissions.find(perm => perm.Value === caller.Role)
+                                }
+                                return !command.permissions || !command.permissions.length
+                            })
+                            .map(command => command.name)
+                            .flat()
+                            .reduce((opts, opt) => {
                             return { ...opts, [opt]: 0 }
                         }, {})
 
@@ -118,16 +127,14 @@ export class ChatWatcher extends Watcher {
                             }
 
                             if (perc >= 60) {
-                                const player = await SearchClient.Get(msg.id as any, PlayerSearchReport)
                                 const command = Commands.find(comm => comm.name === opt || comm.aliases.includes(opt))
 
-                                if (typeof (player.Role) === 'number' && command.permissions.find(perm => perm.Value === player.Role)) {
+                                if (typeof (caller.Role) === 'number' && command.permissions.find(perm => perm.Value === caller.Role)) {
                                     const input = msg.message.match(/\#[A-Z0-9]{0,4}\:/) ? msg.message.slice(0, msg.message.match(/\#[A-Z0-9]{0,4}\:/).index) : msg.message
                                     const { name, id, reason, duration } = this.parseCommand(input.split(' ').slice(1))
                                     command.run(this.commandBus, msg.username, name, id, reason, duration)
-                                } else if (typeof (player.Role) === 'number') {
+                                } else if (typeof (caller.Role) === 'number') {
                                     const frown = Math.floor(Math.random() * 32) >= 16 ? '. :/ ' : ''
-
                                     const message = `you do not have permission to use this command ${msg.username}[${msg.id.slice(9)}]${frown}`
                                     const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                                     await axios.post(chatUrl, chatUrlencoded, config)
@@ -209,10 +216,10 @@ export class ChatWatcher extends Watcher {
         const comparisons = Object.values(comparison)
         const chars = input.toLowerCase().split('')
         const tracking = comparisons.reduce((opts, opt) => {
-            return { ...opts, [opt.Playername]: [opt.Id, opt.Playername.split('').map(char => true)] }
+            return { ...opts, [opt.Playername]: [opt.Id, opt.Playername.replace(/[^A-Za-z0-9]/g, '').split('').map(char => true)] }
         }, {})
 
-        comparisons.map(opt => opt.Playername).forEach(opt => {
+        comparisons.map(opt => opt.Playername.replace(/[^A-Za-z0-9]/g, '')).forEach(opt => {
             for (let i = 0; i < chars.length; i++) {
                 let char = chars[i]
                 const last = (tracking[opt][1].includes(false) && tracking[opt][1].indexOf(false)) || 0
@@ -255,27 +262,74 @@ export class ChatWatcher extends Watcher {
 }
 
     public splitName(input: string) {
-        const capitals = input.match(/[A-Z](?![A-Z])/g)
-        const parts = []
-
-     
-        if (capitals && capitals.length) {
-            if (capitals.length === 1 && input.indexOf(capitals[0]) === 0) {
-                parts.push(input)
-                return parts
+        let split = input.split(/(?=[A-Z ]+|$)/g).map(part => part.trim())
+        split.forEach((part, i) => {
+            if (part.length === 1) {
+                if (i === split.length - 1) {
+                    split[i - 1] = split[i - 1] + part
+                } else {
+                    split[i + 1] = part + split[i + 1]
+                }
             }
-    
-            for (let i = 0; i < capitals.length; i++) {
-                const capital = capitals[i]
-                const next = i < capitals.length && capitals[i + 1]
-                const index = input.indexOf(capital)
-                const end = next ? input.indexOf(next) : input.length
-                parts.push(input.slice(index, end))
-
-            }
-        } else {
-            parts.push(input)
-        }
-        return parts
+        })
+        return split.filter(a => a.length > 1)
     }
 }
+/*
+trying to prevent it from matching with a name when its already on the second char of the string eg
+input: larry, char: a
+possibilities = [arrow, larry thorne, artyr]
+because arr is contained in larry it will match with arrow first
+to prevent this check whether or not the first char in the match also starts at index 0 if the index found on the comparison is also 0
+function match(input, comparison) {
+    const comparisons = Object.values(comparison)
+    const chars = input.toLowerCase().split('')
+    const tracking = comparisons.reduce((opts, opt) => {
+        return { ...opts, [opt.Playername]: [opt.Id, opt.Playername.split('').map(char => true)] }
+    }, {})
+
+    comparisons.map(opt => opt.Playername).forEach(opt => {
+        for (let i = 0; i < chars.length; i++) {
+            let char = chars[i]
+            const last = (tracking[opt][1].includes(false) && tracking[opt][1].indexOf(false)) || 0
+            const start = (tracking[opt][1].indexOf(true) && tracking[opt][1].indexOf(true, last)) || 0
+            const index = opt.toLowerCase().indexOf(char, start)
+           
+            if (index >= 0 && tracking[opt][1][index] && ((!last && !index) || (last === index - 1 && !tracking[opt][1][last] && Math.abs(i - index) < 3))) {
+                if(!((index === 0 && i === 0 )|| index !== 0)) {
+                tracking[opt][1][index] = false
+                    
+                }
+            }
+        }
+
+    })
+
+    let best
+    const sorted = Object.entries(tracking)
+        .filter((opt) => opt[1][1].includes(false))
+        .map(opt => [opt[0], (opt[1]).filter(o => !o).length])
+        .sort((optA, optB) => (optB[1]) - (optA[1])).map(opt => opt[0])
+
+    sorted.some((opt) => {
+        const parts = this.splitName(opt)
+        const val = tracking[opt][1].filter(o => !o).length
+        let perc = (100 / opt.length) * val
+        parts.forEach(part => {
+            if (part.toLowerCase().startsWith(input)) {
+                perc = perc * part.length
+            }
+        })
+        if (perc >= 40) {
+            best = opt
+            return true
+        }
+        return false
+    })
+    if (best) {
+        return comparison[tracking[best][0]]
+
+    }
+    return null;
+}
+*/

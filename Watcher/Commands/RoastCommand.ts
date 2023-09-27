@@ -53,7 +53,7 @@ export const RoastCommand: Command = {
 
             a player has asked you to make roast '${player.Playername}' in good spirit, make it something ww2 related, the more absurd the humour the better.
 
-            ${player.Playername} is playing as ${player.Role} on ${Team.fromValue(player.Team).DisplayName} with ${player.Kills} kills, ${player.Deaths} deaths and a total score of ${player.Score}.
+            ${player.Playername} is playing as ${player.Role} ${typeof (player.Team) === 'number' ? ` on ${Team.fromValue(player.Team).DisplayName}` : ''} with ${player.Kills} kills, ${player.Deaths} deaths and a total score of ${player.Score}.
 
             
             here are some things you could make use to make a joke depending on the role, the joke MUST be related to the role they are playing.
