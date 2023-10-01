@@ -212,69 +212,22 @@ export class ChatWatcher extends Watcher {
 
     }
 
-    public match(input: string, comparison: Record<string, PlayerInfo>) : PlayerInfo {
-        const comparisons = Object.values(comparison)
-        const chars = input.toLowerCase().split('')
-        const tracking = comparisons.reduce((opts, opt) => {
-            return { ...opts, [opt.Playername]: [opt.Id, opt.Playername.replace(/[^A-Za-z0-9]/g, '').split('').map(char => true)] }
-        }, {})
+    public match(input: string, currentPlayers: Record<string, PlayerInfo>) {
+        const regex = input.split('').map((char, i, self) => {
+            const next = i < self.length - 1 && self[i + 1]
+            const last = i > 0 && self[i - 1]
 
-        comparisons.map(opt => opt.Playername.replace(/[^A-Za-z0-9]/g, '')).forEach(opt => {
-            for (let i = 0; i < chars.length; i++) {
-                let char = chars[i]
-                const last = (tracking[opt][1].includes(false) && tracking[opt][1].indexOf(false)) || 0
-                const start = (tracking[opt][1].indexOf(true) && tracking[opt][1].indexOf(true, last)) || 0
-                const index = opt.toLowerCase().indexOf(char, start)
-
-                if (index >= 0 && tracking[opt][1][index] && ((!last && !index) || (last === index - 1 && !tracking[opt][1][last]))) {
-                    tracking[opt][1][index] = false
-                }
+            if ((char === next && char === last) || char === last) {
+                return `${char}?`
             }
 
-        })
 
-        let best
-        const sorted = Object.entries(tracking)
-            .filter((opt) => opt[1][1].includes(false))
-            .map(opt => [opt[0], (opt[1][1]).filter(o => !o).length])
-            .sort((optA, optB) => (optB[1]) - (optA[1])).map(opt => opt[0])
-
-        sorted.some((opt) => {
-            const parts = this.splitName(opt)
-            const val = tracking[opt][1].filter(o => !o).length
-            let perc = (100 / opt.length) * val
-            parts.forEach(part => {
-                if (part.toLowerCase().startsWith(input)) {
-                    perc = perc * part.length
-                }
-            })
-            if (perc >= 50) {
-                best = opt
-                return true
-            }
-            return false
-        })
-        if (best) {
-            return comparison[tracking[best][0]]
-
-        }
-        return null;
-}
-
-    public splitName(input: string) {
-        let split = input.split(/(?=[A-Z ]+|$)/g).map(part => part.trim())
-        split.forEach((part, i) => {
-            if (part.length === 1) {
-                if (i === split.length - 1) {
-                    split[i - 1] = split[i - 1] + part
-                } else {
-                    split[i + 1] = part + split[i + 1]
-                }
-            }
-        })
-        return split.filter(a => a.length > 1)
+            return char
+        }).join('')
+        const selection = Object.values(currentPlayers).filter(player => player.Playername.toLowerCase().match(regex))
+        return selection
     }
-}
+
 /*
 trying to prevent it from matching with a name when its already on the second char of the string eg
 input: larry, char: a
