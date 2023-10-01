@@ -20,7 +20,7 @@ import { PlayerInfo } from '../../Services/WebAdmin/Models';
 
 export class ChatWatcher extends Watcher {
 
-    public override async Watch(timeout: number = 50, ...args: Array<{ messages: Array<Message>, players: Record<string, PlayerSearchReport>}>) {
+    public override async Watch(timeout: number = 50, ...args: Array<{ messages: Array<Message>, players: Record<string, PlayerSearchReport> }>) {
         const commandNames = Commands.map(command => [command.name, ...command.aliases]).flat()
         const commands = Commands.map(command => command.name).flat()
         const messages = await ChatQuery.Get();
@@ -101,8 +101,8 @@ export class ChatWatcher extends Watcher {
                             .map(command => command.name)
                             .flat()
                             .reduce((opts, opt) => {
-                            return { ...opts, [opt]: 0 }
-                        }, {})
+                                return { ...opts, [opt]: 0 }
+                            }, {})
 
 
                         for (let i = 0; i < chars.length; i++) {
@@ -157,7 +157,7 @@ export class ChatWatcher extends Watcher {
         }
 
         setTimeout(async () => {
-            await this.Watch(timeout, {...args[0], messages, players })
+            await this.Watch(timeout, { ...args[0], messages, players })
             return;
         }, timeout)
 
@@ -227,6 +227,7 @@ export class ChatWatcher extends Watcher {
         const selection = Object.values(currentPlayers).filter(player => player.Playername.toLowerCase().match(regex))
         return selection
     }
+}
 
 /*
 trying to prevent it from matching with a name when its already on the second char of the string eg
