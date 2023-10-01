@@ -22,30 +22,24 @@ export class PolicyQuery extends Query {
     }
 
     public static async Post(playerId: string) {
-        const session = WebAdminSession.get();
-        const policy = await session.navigate(PolicyRoute.GetBans.Action)
+        const env = JSON.parse(process.argv[process.argv.length - 1]);
 
-        this.log.info(PolicyRoute.GetBans.Action, policy.window.document)
-        if(policy && policy.window && policy.window.document){
-            const env = JSON.parse(process.argv[process.argv.length - 1]);
+        const axios = Api.axios();
+        const url = env["BASE_URL"] + PolicyRoute.AddBan.Action
+        const urlencoded = qs.stringify({
+            "uniqueid": playerId,
+            "action": 'add'
+        })
 
-            const axios = Api.axios();
-            const url = env["BASE_URL"] + PolicyRoute.AddBan.Action
-            const urlencoded = qs.stringify({
-                "uniqueid": playerId,
-                "action": 'add'
-            })
-
-            const config: AxiosRequestConfig =
-            {
-                headers: {
-                    "Content-type": "application/x-www-form-urlencoded"
-                },
-            }
-
-
-            await axios.post(url, urlencoded, config);
+        const config: AxiosRequestConfig =
+        {
+            headers: {
+                "Content-type": "application/x-www-form-urlencoded"
+            },
         }
+
+
+        await axios.post(url, urlencoded, config);
         return;
     }
 
