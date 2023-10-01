@@ -214,11 +214,16 @@ export class ChatWatcher extends Watcher {
 
     public match(input: string, currentPlayers: Record<string, PlayerInfo>) {
         const regex = input.split('').map((char, i, self) => {
+            const specials = [' ', '.', '_', '-', '|', '[', ']', '{', '}',] 
             const next = i < self.length - 1 && self[i + 1]
             const last = i > 0 && self[i - 1]
 
             if ((char === next && char === last) || char === last) {
                 return `${char}?`
+            }
+
+            if (specials.includes(char)) {
+                return '.*?'
             }
 
 
