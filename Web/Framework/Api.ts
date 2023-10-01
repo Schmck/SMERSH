@@ -20,7 +20,7 @@ export class Api {
         const url = env["BASE_URL"];
 
         const parsed = Api.parse(url);
-        const authCookiePart = `authcred=${authcred}`
+        const authCookiePart = global.cookie || `authcred=${authcred}`
         const cookie = Cookie.parse(authCookiePart);
         cookie.path = parsed.pathName;
         cookie.domain = parsed.hostname;

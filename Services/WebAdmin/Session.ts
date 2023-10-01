@@ -22,7 +22,7 @@ export class WebAdminSession {
         }
 
         this.CookieJar = cookieJar;
-        this.CookieJar.setCookie(cookie, url)
+        this.CookieJar.setCookie(cookie, url);
 
         this.BaseUrl = JSON.parse(process.argv[process.argv.length - 1])["BASE_URL"]
 
@@ -81,6 +81,9 @@ export class WebAdminSession {
         if (this.DOMs) {
             const DOM = this.DOMs[url]
 
+            if (!global.cookie && DOM.window && DOM.window.document && DOM.window.document.cookie) {
+                global.cookie = DOM.window.document.cookie;
+            }
             if (DOM.window) {
                 await DOM.window.close()
             }

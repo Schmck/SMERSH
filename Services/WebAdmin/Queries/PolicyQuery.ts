@@ -27,8 +27,8 @@ export class PolicyQuery extends Query {
         const axios = Api.axios();
         const url = env["BASE_URL"] + PolicyRoute.AddBan.Action
         const urlencoded = qs.stringify({
+            "action": 'add',
             "uniqueid": playerId,
-            "action": 'add'
         })
 
         const config: AxiosRequestConfig =
@@ -37,6 +37,7 @@ export class PolicyQuery extends Query {
                 "Content-type": "application/x-www-form-urlencoded"
             },
         }
+
 
 
         await axios.post(url, urlencoded, config);
