@@ -26,10 +26,7 @@ export class PolicyQuery extends Query {
 
         const axios = Api.axios();
         const url = env["BASE_URL"] + PolicyRoute.AddBan.Action
-        const urlencoded = qs.stringify({
-            "action": 'add',
-            "uniqueid": playerId,
-        })
+        const urlencoded = `action=add&uniqueid=${playerId}`
 
         const config: AxiosRequestConfig =
         {
@@ -40,7 +37,18 @@ export class PolicyQuery extends Query {
 
 
 
-        await axios.post(url, urlencoded, config);
+        let result = (await axios.post(url, urlencoded, config)).data;
+        let bans = (await axios.get(url, config)).data
+        let resolved = result.indexOf(playerId) && bans.indexOf(playerId)
+        let attempts = 0
+
+        while (!resolved && attempts < 10) {
+            result = (await axios.post(url, urlencoded, config)).data;
+            bans = (await axios.get(url, config)).data
+            resolved = result.indexOf(playerId) && bans.indexOf(playerId)
+            attempts = attempts + 1
+        }
+
         return;
     }
 
