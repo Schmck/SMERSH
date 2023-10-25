@@ -52,7 +52,7 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     const scoreboard = await dashboardchannel.messages.fetch(scoreboardId);
     const chatlog = await dashboardchannel.messages.fetch(chatLogId);
 
-    const logger = await Logger.set(discord.client, logChannel, dashboardchannel, chatlogchannel, scoreboard, chatlog);
+        const logger = await Logger.set(discord.client, logChannel, dashboardchannel, chatlogchannel, chatlog, scoreboard);
 
         logger.publish();
         logger.publishChatLog();
