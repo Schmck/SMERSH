@@ -91,19 +91,21 @@ export class Logger {
     }
 
     public async publishChatLog() {
-        const chatLog = this.generateChatLog()
+        if (this.ChatLines.flat().length) {
+            const chatLog = this.generateChatLog()
 
-        if (!this.ChatLog) {
-            this.ChatLog = await this.DashboardChannel.send(chatLog)
-        } else {
-            this.ChatLog = await this.ChatLog.edit(chatLog);
-        }
+            if (!this.ChatLog) {
+                this.ChatLog = await this.DashboardChannel.send(chatLog)
+            } else {
+                this.ChatLog = await this.ChatLog.edit(chatLog);
+            }
 
-        if (this.LastChatLog && this.LastChatLog.content.length > 1800) {
-            this.LastChatLog.edit(chatLog)
-        }
-        else if (this.ChatLogChannel) {
-            this.ChatLogChannel.send(chatLog)
+            if (this.LastChatLog && this.LastChatLog.content.length > 1800) {
+                this.LastChatLog.edit(chatLog)
+            }
+            else if (this.ChatLogChannel) {
+                this.ChatLogChannel.send(chatLog)
+            }
         }
         return;
     }

@@ -25,12 +25,14 @@ const args = process.argv;
 async function start(baseUrl: string, elasticUrl, authcred: string, discordToken: string, logChannelId: string, dashboardChannelId: string, chatlogChannelId: string, scoreboardId: string, chatLogId: string, steamToken: string, steamAccountName: string, steamPassword: string, ChatGPTApiKey: string, port: number) {
     const app = await NestFactory.create(AppModule)
     const session = await WebAdminSession.set(baseUrl, authcred)
+    const cookies = await session.CookieJar.getCookies(baseUrl);
     await app.listen(port, () => { console.log(`cqrs module running on port ${port}`) })
 
     await ClientBuilder.Build(elasticUrl)
     await ChatGPT.set(ChatGPTApiKey)
     await SteamBot.set(steamAccountName, steamPassword);
-    Api.axios((await session.CookieJar.getCookies(baseUrl))[0])
+    
+    Api.axios(cookies[0])
 
     const bus = app.get(CommandBus);
     const discord: Bot = new Bot(discordToken, bus);
