@@ -14,14 +14,14 @@ export class Api {
 
     public client: AxiosInstance;
 
-    public constructor() {
+    public constructor(authCookie?: Cookie) {
         const env = JSON.parse(process.argv[process.argv.length - 1]);
         const authcred = env['AUTHCRED'];
         const url = env["BASE_URL"];
 
         const parsed = Api.parse(url);
-        const authCookiePart = global.cookie || `authcred=${authcred}`
-        const cookie = Cookie.parse(authCookiePart);
+        const authCookiePart = `authcred=${authcred}`
+        const cookie = authCookie || Cookie.parse(authCookiePart);
         cookie.path = parsed.pathName;
         cookie.domain = parsed.hostname;
 
@@ -32,9 +32,9 @@ export class Api {
         this.client = client;
     }
 
-    public static axios() {
+    public static axios(authCookie?: Cookie) {
         if (!this._instance) {
-            this._instance = new Api();
+            this._instance = new Api(authCookie);
         }
 
         return this._instance.client;

@@ -10,7 +10,7 @@ import { Controller, Inject, Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs'
 import { SearchClient } from '../../Elastic'
 import { RoundSearchReport } from '../../Reports/Entities/round'
-import { Client } from '../../Discord/Framework';
+import { Client, Logger } from '../../Discord/Framework';
 import { Commands } from '../Commands'
 import { PlayerSearchReport } from '../../Reports/Entities/player';
 import { AxiosRequestConfig } from 'axios';
@@ -65,6 +65,7 @@ export class ChatWatcher extends Watcher {
 
         if (messages.length) {
             messages.forEach(async msg => {
+                Logger.appendChatLine(msg)
                 if (msg.message.startsWith('/') || msg.message.startsWith('!') || msg.message.startsWith('\\') || msg.message.startsWith('>') || (msg.message.startsWith(':') && !msg.message.includes(':/'))) {
                     const commandName = msg.message.split(' ')[0].slice(1)
                     let caller = players[msg.id]

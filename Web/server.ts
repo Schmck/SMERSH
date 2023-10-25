@@ -2,7 +2,7 @@ import 'stream/web'
 import 'reflect-metadata';
 import { WebAdminSession } from '../Services/WebAdmin';
 import "reflect-metadata";
-import { Config, ClientBuilder } from './Framework';
+import { Config, ClientBuilder, Api } from './Framework';
 import * as dotenv from 'dotenv';
 import { NestApplication, NestFactory } from '@nestjs/core';
 import { AppModule } from './Framework/app.module';
@@ -22,17 +22,15 @@ const config = process.env;
 const args = process.argv;
 
 
-async function start(baseUrl: string, elasticUrl, authcred: string, discordToken: string, logChannelId: string, steamToken: string, steamAccountName: string, steamPassword: string, ChatGPTApiKey: string, port: number) {
-    await ChatGPT.set(ChatGPTApiKey)
-    await SteamBot.set(steamAccountName, steamPassword);
-
+async function start(baseUrl: string, elasticUrl, authcred: string, discordToken: string, logChannelId: string, dashboardChannelId: string, chatlogChannelId: string, scoreboardId: string, chatLogId: string, steamToken: string, steamAccountName: string, steamPassword: string, ChatGPTApiKey: string, port: number) {
     const app = await NestFactory.create(AppModule)
+    const session = await WebAdminSession.set(baseUrl, authcred)
     await app.listen(port, () => { console.log(`cqrs module running on port ${port}`) })
 
     await ClientBuilder.Build(elasticUrl)
-
-
-    WebAdminSession.set(baseUrl, authcred)
+    await ChatGPT.set(ChatGPTApiKey)
+    await SteamBot.set(steamAccountName, steamPassword);
+    Api.axios((await session.CookieJar.getCookies(baseUrl))[0])
 
     const bus = app.get(CommandBus);
     const discord: Bot = new Bot(discordToken, bus);
@@ -46,10 +44,17 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 
 
     discord.client.once('ready', async (client: Client) => {
-    const channel = await client.channels.fetch(logChannelId) as TextChannel;
-    const logger = await Logger.set(discord.client, channel);
+    const logChannel = await client.channels.fetch(logChannelId) as TextChannel;
+    const dashboardchannel = await client.channels.fetch(dashboardChannelId) as TextChannel;
+    const chatlogchannel = await client.channels.fetch(chatlogChannelId) as TextChannel;
+    const scoreboard = await dashboardchannel.messages.fetch(scoreboardId);
+    const chatlog = await dashboardchannel.messages.fetch(chatLogId);
+
+    const logger = await Logger.set(discord.client, logChannel, dashboardchannel, chatlogchannel, scoreboard, chatlog);
 
         logger.publish();
+        logger.publishChatLog();
+        logger.publishDashboard();
         chat.Watch();
         round.Watch();
         policy.Watch();
@@ -73,7 +78,22 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 
 function boot() {
     const webAdmin = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
-    start(webAdmin.BASE_URL.toString(), webAdmin.ELASTIC_URL.toString(), webAdmin.AUTHCRED.toString(), webAdmin.DISCORD_TOKEN.toString(), webAdmin.LOG_CHANNEL_ID.toString(), webAdmin.STEAM_TOKEN.toString(), webAdmin.STEAM_ACCOUNT_NAME.toString(), webAdmin.STEAM_ACCOUNT_PASSWORD.toString(), webAdmin.CHATGPT_API_KEY.toString(), parseInt(webAdmin.PORT.toString()))
+    start(
+        webAdmin.BASE_URL.toString(),
+        webAdmin.ELASTIC_URL.toString(),
+        webAdmin.AUTHCRED.toString(),
+        webAdmin.DISCORD_TOKEN.toString(),
+        webAdmin.LOG_CHANNEL_ID.toString(),
+        webAdmin.DASHBOARD_CHANNEL_ID.toString(),
+        webAdmin.CHATLOG_CHANNEL_ID.toString(),
+        webAdmin.SCOREBOARD_ID.toString(),
+        webAdmin.CHATLOG_ID.toString(),
+        webAdmin.STEAM_TOKEN.toString(),
+        webAdmin.STEAM_ACCOUNT_NAME.toString(),
+        webAdmin.STEAM_ACCOUNT_PASSWORD.toString(),
+        webAdmin.CHATGPT_API_KEY.toString(),
+        parseInt(webAdmin.PORT.toString())
+    )
 }
 
 boot();

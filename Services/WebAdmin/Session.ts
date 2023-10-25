@@ -35,7 +35,7 @@ export class WebAdminSession {
 
     public BaseUrl: string;
 
-    private CookieJar: CookieJar;
+    public CookieJar: CookieJar;
 
 
     public static get Instance(): WebAdminSession {
@@ -81,9 +81,6 @@ export class WebAdminSession {
         if (this.DOMs) {
             const DOM = this.DOMs[url]
 
-            if (!global.cookie && DOM.window && DOM.window.document && DOM.window.document.cookie) {
-                global.cookie = DOM.window.document.cookie;
-            }
             if (DOM.window) {
                 await DOM.window.close()
             }
@@ -96,10 +93,14 @@ export class WebAdminSession {
 
 
 
-    public static set(url: string, authcred: string) : WebAdminSession {
+    public static async set(url: string, authcred: string) : Promise<WebAdminSession> {
         if (!this._instance) {
             this._instance = new WebAdminSession(url, authcred)
-            this._instance.navigate(url);
+            const DOM = await this._instance.navigate(url);
+            if (DOM.window && DOM.window.document && DOM.window.document.cookie) {
+                const cookie = Cookie.parse(DOM.window.document.cookie);
+                this._instance.CookieJar.setCookie(cookie, url)
+            }
         }
 
         return this._instance

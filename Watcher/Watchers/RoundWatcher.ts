@@ -108,6 +108,7 @@ export class RoundWatcher extends Watcher {
 
                 if (round) {
                     global.roundInfo = { roundId: round.Id, date: round.Date }
+                    global.round = round;
                 }
 
 
@@ -369,6 +370,8 @@ export class RoundWatcher extends Watcher {
         const scores = `${axisIcon}${axisPlayers.Territories}${axisIcon} ${axisScore}/${alliesScore} ${alliesIcon}${alliesPlayers.Territories}${alliesIcon}`
         return `${description} ${scores}`
     }
+
+   
 
     public secToMin(sec: number) {
         if (sec === undefined || sec === null) {

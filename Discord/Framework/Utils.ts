@@ -1,6 +1,7 @@
 import { PlayerSearchReport } from "../../Reports/Entities/player"
 import { PolicySearchReport} from "../../Reports/Entities/policy"
 import { Role, Team, RoleBan } from "../../SMERSH/ValueObjects"
+import { Message } from "../../SMERSH/ValueObjects/round"
 
 export class Utils {
 
@@ -29,10 +30,10 @@ export class Utils {
         })].flat().reverse().reduce((line, table) => `${table}\n${line}`, '')
     }
 
-    public static generateChatLine(line: Record<string, string>) {
+    public static generateChatLine(line: Message) {
         const date = new Date(new Date(line.timestamp).setHours(new Date(line.timestamp).getHours() + 1))
         const timestamp = line.timestamp ? `${date.toLocaleString('EN-en', {"day": "2-digit", "month": "2-digit", "year": "2-digit"})} ${date.toTimeString().slice(0, 8)}\u2502` : ''
-        const teamMessage = line.team_message ? '(Team)' : ''
+        const teamMessage = line.visibility ? '(Team)' : ''
         const team = line.team === 'Allies' ? '-' : '+'
 
         const newLine = `${team} ${timestamp} ${teamMessage} ${line.username}: ${line.message}`
@@ -161,5 +162,18 @@ export class Utils {
         timeLeft = `${minutesLeft}:${secondsLeft}`
 
         return timeLeft
+    }
+
+    public static chunk(array, size) {
+        const chunked_arr = [];
+        for (let i = 0; i < array.length; i++) {
+            const last = chunked_arr[chunked_arr.length - 1];
+            if (!last || last.length === size) {
+                chunked_arr.push([array[i]]);
+            } else {
+                last.push(array[i]);
+            }
+        }
+        return chunked_arr;
     }
 }
