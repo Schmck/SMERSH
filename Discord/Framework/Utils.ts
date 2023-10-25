@@ -5,7 +5,7 @@ import { Message } from "../../SMERSH/ValueObjects/round"
 
 export class Utils {
 
-    public static async generatePlayerTable(players : Array<PlayerSearchReport>, showIpAddress = true) {
+    public static async generatePlayerTable(players: Array<PlayerSearchReport>, showIpAddress = true) {
         const longestPlayerName = players.reduce((longestName, player) => longestName >= player.Name.length ? longestName : player.Name.length, 0)
         const longestPlayerIp = players.reduce((longestIp, player) => !player.Ip || longestIp >= player.Ip.length ? longestIp : player.Ip.length, 0)
         let playerNames = `\nPlayer`
@@ -30,10 +30,10 @@ export class Utils {
         })].flat().reverse().reduce((line, table) => `${table}\n${line}`, '')
     }
 
-    public static generateChatLine(line: Message) {
+    public static generateChatLine(line: Message|Record<string, string>) {
         const date = new Date(new Date(line.timestamp).setHours(new Date(line.timestamp).getHours() + 1))
         const timestamp = line.timestamp ? `${date.toLocaleString('EN-en', {"day": "2-digit", "month": "2-digit", "year": "2-digit"})} ${date.toTimeString().slice(0, 8)}\u2502` : ''
-        const teamMessage = line.visibility ? '(Team)' : ''
+        const teamMessage = line.visibility || line['team_message'] ? '(Team)' : ''
         const team = line.team === 'Allies' ? '-' : '+'
 
         const newLine = `${team} ${timestamp} ${teamMessage} ${line.username}: ${line.message}`
