@@ -80,13 +80,13 @@ export class Logger {
         return;
     }
 
-    public async publishDashboard(timeout : number = 1000) {
+    public async publishDashboard(timeout : number = 5000) {
         this.publishChatLog();
         this.publishScoreboard();
 
         setTimeout(() => {
             this.publishDashboard(timeout)
-        }, 1000)
+        }, timeout)
         return;
     }
 
@@ -102,9 +102,8 @@ export class Logger {
 
             if (this.LastChatLog && this.LastChatLog.content.length > 1800) {
                 this.LastChatLog.edit(chatLog)
-            }
-            else if (this.ChatLogChannel) {
-                this.ChatLogChannel.send(chatLog)
+            } else if (this.ChatLogChannel) {
+                this.LastChatLog = await this.ChatLogChannel.send(chatLog)
             }
         }
         return;
