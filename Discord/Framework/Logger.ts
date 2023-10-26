@@ -94,14 +94,14 @@ export class Logger {
         if (this.ChatLines.flat().length) {
             const chatLog = this.generateChatLog()
 
-            if (!this.ChatLog) {
-                this.ChatLog = await this.DashboardChannel.send(chatLog)
-            } else {
+            if (this.ChatLog) {
                 this.ChatLog = await this.ChatLog.edit(chatLog);
+            } else {
+                this.ChatLog = await this.DashboardChannel.send(chatLog)
             }
 
             if (this.LastChatLog && this.LastChatLog.content.length > 1800) {
-                this.LastChatLog.edit(chatLog)
+                this.LastChatLog = await this.LastChatLog.edit(chatLog)
             } else if (this.ChatLogChannel) {
                 this.LastChatLog = await this.ChatLogChannel.send(chatLog)
             }
@@ -113,10 +113,10 @@ export class Logger {
     public async publishScoreboard() {
         const scoreboard = this.generateScoreboard(global.round)
 
-        if (!this.Scoreboard) {
-            this.Scoreboard = await this.DashboardChannel.send(scoreboard);
-        } else {
+        if (this.Scoreboard) {
             this.Scoreboard = await this.Scoreboard.edit(scoreboard);
+        } else {
+            this.Scoreboard = await this.DashboardChannel.send(scoreboard);
         }
         return;
 
