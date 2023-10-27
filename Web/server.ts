@@ -15,7 +15,7 @@ import { SteamBot } from '../SMERSH/Utilities/steam';
 import { ChatGPT } from '../SMERSH/Utilities/openai';
 import { Policy } from './Utils'
 import { Client, Logger } from '../Discord/Framework';
-import { TextChannel } from 'discord.js';
+import { TextChannel, Message } from 'discord.js';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 const config = process.env;
@@ -49,8 +49,8 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     const logChannel = await client.channels.fetch(logChannelId) as TextChannel;
     const dashboardchannel = await client.channels.fetch(dashboardChannelId) as TextChannel;
     const chatlogchannel = await client.channels.fetch(chatlogChannelId) as TextChannel;
-    const scoreboard = await dashboardchannel.messages.fetch(scoreboardId);
-    const chatlog = await dashboardchannel.messages.fetch(chatLogId);
+    const scoreboard = scoreboardId !== '' ? await dashboardchannel.messages.fetch(scoreboardId) : null;
+    const chatlog = chatLogId !== '' ? await dashboardchannel.messages.fetch(chatLogId) : null;
 
         const logger = await Logger.set(discord.client, logChannel, dashboardchannel, chatlogchannel, chatlog, scoreboard);
 
