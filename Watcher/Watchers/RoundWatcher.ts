@@ -108,7 +108,7 @@ export class RoundWatcher extends Watcher {
 
                 if (round) {
                     global.roundInfo = { roundId: round.Id, date: round.Date }
-                    global.round = round;
+                    global.round = status;
                 }
 
 

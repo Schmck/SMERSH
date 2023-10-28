@@ -113,10 +113,12 @@ export class Logger {
     public async publishScoreboard() {
         const scoreboard = this.generateScoreboard(global.round)
 
-        if (this.Scoreboard) {
-            this.Scoreboard = await this.Scoreboard.edit(scoreboard);
-        } else {
-            this.Scoreboard = await this.DashboardChannel.send(scoreboard);
+        if (scoreboard) {
+            if (this.Scoreboard) {
+                this.Scoreboard = await this.Scoreboard.edit(scoreboard);
+            } else {
+                this.Scoreboard = await this.DashboardChannel.send(scoreboard);
+            }
         }
         return;
 
