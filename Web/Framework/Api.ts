@@ -14,27 +14,31 @@ export class Api {
 
     public client: AxiosInstance;
 
-    public constructor(authCookie?: Cookie) {
-        const env = JSON.parse(process.argv[process.argv.length - 1]);
-        const authcred = env['AUTHCRED'];
-        const url = env["BASE_URL"];
+    public constructor(cookieJar?: CookieJar) {
+        const jar = !cookieJar && new CookieJar();
 
-        const parsed = Api.parse(url);
-        const authCookiePart = `authcred=${authcred}`
-        const cookie = authCookie || Cookie.parse(authCookiePart);
-        cookie.path = parsed.pathName;
-        cookie.domain = parsed.hostname;
+        if (cookieJar) {
+            const env = JSON.parse(process.argv[process.argv.length - 1]);
+            const authcred = env['AUTHCRED'];
+            const url = env["BASE_URL"];
 
-        const jar = new CookieJar();
-        jar.setCookie(cookie, url)
-        const client = wrapper(axios.create({ jar }));
+            const parsed = Api.parse(url);
+            const authCookiePart = `authcred=${authcred}`
+            let cookie = Cookie.parse(authCookiePart);
+            cookie.path = parsed.pathName;
+            cookie.domain = parsed.hostname;
+
+            jar.setCookie(cookie, url)
+        }
+
+        const client = wrapper(axios.create({ jar: cookieJar || jar }));
 
         this.client = client;
     }
 
-    public static axios(authCookie?: Cookie) {
+    public static axios(cookieJar?: CookieJar) {
         if (!this._instance) {
-            this._instance = new Api(authCookie);
+            this._instance = new Api(cookieJar);
         }
 
         return this._instance.client;
