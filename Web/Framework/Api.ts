@@ -17,7 +17,7 @@ export class Api {
     public constructor(cookieJar?: CookieJar) {
         const jar = !cookieJar && new CookieJar();
 
-        if (cookieJar) {
+        if (jar) {
             const env = JSON.parse(process.argv[process.argv.length - 1]);
             const authcred = env['AUTHCRED'];
             const url = env["BASE_URL"];
