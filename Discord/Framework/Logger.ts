@@ -100,7 +100,11 @@ export class Logger {
                 this.ChatLog = await this.DashboardChannel.send(chatLog)
             }
 
-            if (this.LastChatLog && this.LastChatLog.content.length > 1800) {
+            if (this.ChatLogChannel && !this.LastChatLog) {
+                this.LastChatLog = this.ChatLogChannel.lastMessage;
+            }
+
+            if (this.LastChatLog && this.LastChatLog.content.length < 1800) {
                 this.LastChatLog = await this.LastChatLog.edit(chatLog)
             } else if (this.ChatLogChannel) {
                 this.LastChatLog = await this.ChatLogChannel.send(chatLog)
@@ -127,8 +131,8 @@ export class Logger {
 
     public generateChatLog() {
         const lines = this.ChatLines.shift().map(line => Utils.generateChatLine(line));
-        let content = `${this.ChatLog.content.slice(0, this.ChatLog.content.length - 3).slice(this.ChatLog.content.match(/\+|\-/).index, this.ChatLog.content.length)}`
-        let contentLines = content.split('\n')
+        let content = this.ChatLog && this.ChatLog.content.length < 1800 ? `${this.ChatLog.content.slice(0, this.ChatLog.content.length - 3).slice(this.ChatLog.content.match(/\+|\-/).index, this.ChatLog.content.length)}` : '';
+        let contentLines = content ? content.split('\n') : [];
 
         contentLines.push(...lines)
         contentLines.reduce((total, line) => {
@@ -157,7 +161,7 @@ export class Logger {
 
                 let axisHeader = `${round.Teams[0].Name} - ${round.Teams[0].Attacking ? 'attacking' : 'defending'} - ${axis.length <= 9 ? axis.length + ' ' : axis.length}`
                 let alliesHeader = `${round.Teams[1].Name} - ${round.Teams[1].Attacking ? 'attacking' : 'defending'}  - ${allies.length <= 9 ? allies.length + ' ' : allies.length}`
-                let map = round.Game.Map.slice(round.Game.Map.indexOf('|') + 2).replace('\'', '')
+                let map = this.findDuplicateWords(round.Game.Map)
                 let minutesLeft,
                     secondsLeft,
                     timeLeft
@@ -241,8 +245,27 @@ export class Logger {
                 })
             }
         }
-        return scoreboard
+        return `\`\`\`md\n${scoreboard}\`\`\``
     }
+
+    public findDuplicateWords(input: string) {
+        const str = input.replaceAll('\'', '').replaceAll('_', ' ').replace(/(^\w{1})|(\s{1}\w{1})|(?:- |\d\. ).*/g, match => match.toUpperCase()).match(/[A-Z][a-z]+/g).join(' ')
+        const months = [...Array(11).keys()].map(key => new Date(0, key).toLocaleString('en', { month: 'long' }))
+        const strArr = str.split(" ");
+        let res = [];
+        for (let i = 0; i < strArr.length; i++) {
+            if (strArr.indexOf(strArr[i]) !== strArr.lastIndexOf(strArr[i]) || strArr.lastIndexOf(strArr[i])) {
+                if (!res.includes(strArr[i])) {
+                    res.push(strArr[i]);
+                } else if (strArr.includes('The') || strArr.includes('Red')) {
+                    res = res.filter(str => str !== strArr[i]);
+                    res.push(strArr[i]);
+                };
+            };
+        };
+        res = res.filter(w => !months.includes(w))
+        return res.join(" ");
+    };
 
     private Client: Client;
 

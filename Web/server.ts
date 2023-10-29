@@ -50,10 +50,9 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     const scoreboard = scoreboardId !== '' ? await dashboardchannel.messages.fetch(scoreboardId) : null;
     const chatlog = chatLogId !== '' ? await dashboardchannel.messages.fetch(chatLogId) : null;
 
-        const logger = await Logger.set(discord.client, logChannel, dashboardchannel, chatlogchannel, chatlog, scoreboard);
+     const logger = await Logger.set(discord.client, logChannel, dashboardchannel, chatlogchannel, chatlog, scoreboard);
 
         logger.publish();
-        logger.publishChatLog();
         logger.publishDashboard();
         chat.Watch();
         round.Watch();
