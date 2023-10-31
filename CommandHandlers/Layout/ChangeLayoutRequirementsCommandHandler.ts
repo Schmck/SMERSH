@@ -15,11 +15,11 @@ export class ChangeLayoutRequirementsCommandHandler implements ICommandHandler<C
     }
 
     async execute(command: ChangeLayoutRequirementsCommand) {
-        const { Id, MinimumPlayerCount, MaximumPlayerCount, StartTime, EndTime } = command
+        const { Id, MinimumPlayerCount, MaximumPlayerCount, StartTime, EndTime, Ping } = command
         const props = await this.repository.Get<LayoutSearchReport, LayoutDomain>(Id, LayoutSearchReport, LayoutDomain)
         const domain = this.publisher.mergeObjectContext(props)
 
-        await domain.changeLayoutRequirements(MinimumPlayerCount, MaximumPlayerCount, StartTime, EndTime);
+        await domain.changeLayoutRequirements(MinimumPlayerCount, MaximumPlayerCount, StartTime, EndTime, Ping);
         await domain.commit()
         return;
 
