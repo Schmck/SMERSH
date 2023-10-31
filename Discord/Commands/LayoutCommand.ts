@@ -91,11 +91,11 @@ export const LayoutCommand: Command = {
     },
     run: async (client: Client, interaction: CommandInteraction) => {
         const name = interaction.options.get('name');
-        let minimumPlayerCount = interaction.options.get('minimum_player_count').value;
-        let maximumPlayerCount = interaction.options.get('maximum_player_count').value;
-        let startTime = interaction.options.get('start_time').value;
-        let endTime = interaction.options.get('end_time').value;
-        let maxPing = interaction.options.get('max_ping').value;
+        let minimumPlayerCount = interaction.options.get('minimum_player_count')?.value;
+        let maximumPlayerCount = interaction.options.get('maximum_player_count')?.value;
+        let startTime = interaction.options.get('start_time')?.value;
+        let endTime = interaction.options.get('end_time')?.value;
+        let maxPing = interaction.options.get('max_ping')?.value;
         const layout = (await SearchClient.Search<LayoutSearchReport>(LayoutSearchReport, {
             "query": {
                 match: {
@@ -132,7 +132,7 @@ export const LayoutCommand: Command = {
             }
 
             if (maxPing === undefined || maxPing === null) {
-                maxPing = 0;
+                maxPing = layout.Ping || 0;
             } else {
                 maxPing = parseInt(maxPing.toString())
             }
