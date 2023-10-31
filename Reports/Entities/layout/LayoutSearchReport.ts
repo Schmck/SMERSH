@@ -28,6 +28,9 @@ export class LayoutSearchReport extends SearchReport {
     @Field('integer')
     public EndTime: number;
 
+    @Field('integer')
+    public Ping: number;
+
     @Field({ nested: Object})
     public Maps: Record<string, string[]>;
 

@@ -14,6 +14,7 @@ export class Layout extends Domain {
 
     public EndTime: number;
 
+    public Ping: number;
 
     public Layout: Record<string, string[]>;
 
@@ -27,13 +28,13 @@ export class Layout extends Domain {
         this.apply(new LayoutSavedEvent(this.Id, name, layout, this.IsActive))
     }
 
-    public changeLayoutRequirements(minimumPlayerCount: number, maximumPlayerCount: number, startTime: number, endTime: number) {
+    public changeLayoutRequirements(minimumPlayerCount: number, maximumPlayerCount: number, startTime: number, endTime: number, ping: number) {
 
-        if (this.MinimumPlayerCount == minimumPlayerCount && this.MaximumPlayerCount == maximumPlayerCount && this.StartTime === startTime && this.EndTime === endTime) {
+        if (this.MinimumPlayerCount == minimumPlayerCount && this.MaximumPlayerCount == maximumPlayerCount && this.StartTime === startTime && this.EndTime === endTime && this.Ping === ping) {
             return;
         }
 
-        this.apply(new LayoutRequirementsChangedEvent(this.Id, minimumPlayerCount, maximumPlayerCount, startTime, endTime))
+        this.apply(new LayoutRequirementsChangedEvent(this.Id, minimumPlayerCount, maximumPlayerCount, startTime, endTime, ping))
     }
 
 }

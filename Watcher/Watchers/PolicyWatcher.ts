@@ -1,5 +1,5 @@
 import { Watcher } from '../Watcher'
-import { LiftBanCommand, LiftMuteCommand } from '../../Commands/Player'
+import { ApplyPolicyCommand, LiftBanCommand, LiftMuteCommand } from '../../Commands/Player'
 import { Guid } from 'guid-typescript'
 import { SearchClient } from '../../Elastic'
 import { PolicySearchReport } from '../../Reports/Entities/policy';
@@ -9,13 +9,15 @@ import { AxiosRequestConfig } from 'axios';
 import qs from 'qs'
 import { PolicyQuery, StatusQuery } from '../../Services/WebAdmin/Queries';
 import { Team, Role, Action } from '../../SMERSH/ValueObjects';
+import { LayoutSearchReport } from '../../Reports/Entities/layout';
 
 export class PolicyWatcher extends Watcher {
 
     public override async Watch(timeout = 5000, ...args: any[]) {
         const count = await SearchClient.Count<PolicySearchReport>(PolicySearchReport)
         const status = await StatusQuery.Get();
-        const players = status && status.Players ? status.Players: [];
+        const players = status && status.Players ? status.Players : [];
+        const layout = global.layout && global.layout as LayoutSearchReport
         const policies = await SearchClient.Search(PolicySearchReport, {
             "query": {
                 "bool": {
@@ -54,7 +56,27 @@ export class PolicyWatcher extends Watcher {
             })
 
         const argv = JSON.parse(process.argv[process.argv.length - 1]);
+        const config: AxiosRequestConfig =
+        {
+            headers: {
+                "Content-type": "application/x-www-form-urlencoded"
+            },
+        }
+
         const axios = Api.axios();
+
+        if (layout && layout.Ping && players && players.length && players.length > (layout.MinimumPlayerCount * 1.2)) {
+            const highPingPlayers = players.filter(player => player.Ping > layout.Ping).sort((pA, pB) => pB.Ping - pA.Ping).slice(0, players.length * 0.1);
+            const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
+
+
+            for (let player of highPingPlayers) {
+                const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
+
+                await this.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, argv["COMMAND_CHANNEL_ID"], Action.Kick, player.Playername, `Max ping is ${layout.Ping} while we are running the ${layout.Name} layout, our apologies!`, "Admin", new Date()))
+                await axios.post(url, urlencoded, config);
+           }
+        }
 
         for (let policy of policies) {
             if (policy.Action === Action.RoleBan.DisplayName) {

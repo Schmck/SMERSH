@@ -81,8 +81,8 @@ export class Logger {
     }
 
     public async publishDashboard(timeout : number = 5000) {
-        this.publishChatLog();
-        this.publishScoreboard();
+        await this.publishChatLog();
+        await this.publishScoreboard();
 
         setTimeout(() => {
             this.publishDashboard(timeout)
@@ -92,7 +92,10 @@ export class Logger {
 
     public async publishChatLog() {
         if (this.ChatLines.flat().length) {
-            const chatLog = this.generateChatLog()
+            const lines = this.ChatLines.shift().map(line => Utils.generateChatLine(line));
+
+            const chatLog = this.generateChatLog(lines, this.ChatLog, true)
+            const chatArchive = this.generateChatLog(lines, this.LastChatLog)
 
             if (this.ChatLog) {
                 this.ChatLog = await this.ChatLog.edit(chatLog);
@@ -104,10 +107,10 @@ export class Logger {
                 this.LastChatLog = this.ChatLogChannel.lastMessage;
             }
 
-            if (this.LastChatLog && this.LastChatLog.content.length < 1800) {
-                this.LastChatLog = await this.LastChatLog.edit(chatLog)
-            } else if (this.ChatLogChannel) {
-                this.LastChatLog = await this.ChatLogChannel.send(chatLog)
+            if ((this.LastChatLog && this.LastChatLog.content.length > 1800) || (!this.LastChatLog && this.ChatLogChannel)) {
+                this.LastChatLog = await this.ChatLogChannel.send(chatArchive)
+            } else if (this.LastChatLog) {
+                this.LastChatLog = await this.LastChatLog.edit(chatArchive)
             }
         }
         return;
@@ -128,15 +131,13 @@ export class Logger {
 
     }
 
-
-    public generateChatLog() {
-        const lines = this.ChatLines.shift().map(line => Utils.generateChatLine(line));
-        let content = this.ChatLog && this.ChatLog.content.length < 1800 ? `${this.ChatLog.content.slice(0, this.ChatLog.content.length - 3).slice(this.ChatLog.content.match(/\+|\-/).index, this.ChatLog.content.length)}` : '';
+    public generateChatLog(lines : string[], message: Message, dashboard: Boolean = false) {
+        let content = message && message.content.length < 1800 ? `${message.content.slice(0, message.content.length - 3).slice(message.content.match(/\+|\-/).index, message.content.length)}` : '';
         let contentLines = content ? content.split('\n') : [];
 
         contentLines.push(...lines)
         contentLines.reduce((total, line) => {
-            if (total > 1600) {
+            if (dashboard && total > 1600) {
                 let newTotal = total - line.length
                 contentLines.shift()
                 return newTotal

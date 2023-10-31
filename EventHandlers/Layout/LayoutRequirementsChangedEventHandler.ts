@@ -24,6 +24,7 @@ export class LayoutRequirementsChangedEventHandler implements IEventHandler<Layo
         layout.MaximumPlayerCount = event.MaximumPlayerCount;
         layout.StartTime = event.StartTime;
         layout.EndTime = event.EndTime;
+        layout.Ping = event.Ping;
 
         await SearchClient.Update(layout);
         return;

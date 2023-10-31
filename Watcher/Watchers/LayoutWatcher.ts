@@ -144,6 +144,7 @@ export class LayoutWatcher extends Watcher {
                             }
 
 
+                            global.layout = layout;
                             Logger.append(`switching to ${layout.Name} layout`)
                             urlencoded.append('save', 'save')
                             await client.post(url, urlencoded, config);
