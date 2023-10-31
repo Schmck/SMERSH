@@ -38,6 +38,8 @@ export class RoundWatcher extends Watcher {
         if (status) { 
             let oldMap = prevStatus && prevStatus.Game && prevStatus.Game.Map;
             let newMap = status && status.Game && status.Game.Map
+            global.round = status;
+
 
             const map = newMap && (await SearchClient.Search(MapSearchReport, {
                 "query": {
@@ -108,7 +110,6 @@ export class RoundWatcher extends Watcher {
 
                 if (round) {
                     global.roundInfo = { roundId: round.Id, date: round.Date }
-                    global.round = status;
                 }
 
 
