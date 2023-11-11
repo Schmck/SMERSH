@@ -42,10 +42,14 @@ before you can start the bot you will need to do a few things:
 5. create a discord bot and copy the token (https://discord.com/developers/applications)
 6. create a command channel to use the bot in and copy the id.
 7. create a log channel and copy the id.
+8. create a chatlog channel and copy the id.
+9. create a dashboard channel and copy the id.
 
 to start the bot you will need to supply it with arguments, if you followed the previous steps you should have everything you need.
 
-{\"GAME\":\"RO2\",\"BASE_URL\":\"WEBADMIN_URL:8080/ServerAdmin\",\"ELASTIC_URL\":\"http://localhost:9200/\",\"AUTHCRED\":\"AUTHCRED\",\"DISCORD_TOKEN\":\"TOKEN\",\"LOG_CHANNEL_ID\":\"LOG_CHANNEL_ID\",\"STEAM_TOKEN\":\"STEAM_TOKEN\",\"STEAM_ACCOUNT_NAME\":\"STEAM_ACCOUNT_NAME\",\"STEAM_ACCOUNT_PASSWORD\":\"STEAM_ACCOUNT_PASSWORD\",\"CHATGPT_API_KEY\":\"CHAT_GPT_API_KEY\",\"COMMAND_CHANNEL_ID\":\"COMMAND_CHANNEL_ID\",\"PORT\":CAN_BE_ANY_NUMBER}
+{\"GAME\":\"RO2\",\"BASE_URL\":\"WEBADMIN_URL:8080/ServerAdmin\",\"ELASTIC_URL\":\"http://localhost:9200/\",\"AUTHCRED\":\"AUTHCRED\",\"DISCORD_TOKEN\":\"TOKEN\",\"LOG_CHANNEL_ID\":\"LOG_CHANNEL_ID\",\"CHATLOG_CHANNEL_ID\":\"CHATLOG_CHANNEL_ID\",\"DASHBOARD_CHANNEL_ID\":\"DASHBOARD_CHANNEL_ID\",\"SCOREBOARD_ID\":\"EMPTY\",\"CHATLOG_ID\":\"EMPTY\",\"STEAM_TOKEN\":\"STEAM_TOKEN\",\"STEAM_ACCOUNT_NAME\":\"STEAM_ACCOUNT_NAME\",\"STEAM_ACCOUNT_PASSWORD\":\"STEAM_ACCOUNT_PASSWORD\",\"CHATGPT_API_KEY\":\"CHAT_GPT_API_KEY\",\"COMMAND_CHANNEL_ID\":\"COMMAND_CHANNEL_ID\",\"PORT\":CAN_BE_ANY_NUMBER}
+
+both SCOREBOARD_ID and CHATLOG_ID should be empty on the first run, after the first run copy the id of the scoreboard and chatlog in the chatlog channel.
 
 GAME can be set to either RO2 or RS1
 
