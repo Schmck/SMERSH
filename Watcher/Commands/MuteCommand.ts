@@ -21,8 +21,7 @@ export const MuteCommand: Command = {
         const config: AxiosRequestConfig =
         {
             headers: {
-                "Content-type": "application/x-www-form-urlencoded",
-                "Cookie": `authcred="${env["AUTHCRED"]}"`
+                "Content-Type": 'application/x-www-form-urlencoded',
             },
         }
         let unbanDate: Date;

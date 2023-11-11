@@ -22,8 +22,7 @@ export const MemesCommand: Command = {
         const config: AxiosRequestConfig =
         {
             headers: {
-                "Content-type": "application/x-www-form-urlencoded",
-                "Cookie": `authcred="${env["AUTHCRED"]}"`
+                "Content-Type": 'application/x-www-form-urlencoded',
             },
         }
         const message = `TL call rockets on the enemy team!`

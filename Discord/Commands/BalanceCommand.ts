@@ -22,8 +22,7 @@ export const BalanceCommand: Command = {
         const config: AxiosRequestConfig =
         {
             headers: {
-                "Content-type": "application/x-www-form-urlencoded",
-                "Cookie": `authcred="${env["AUTHCRED"]}"`
+                "Content-Type": 'application/x-www-form-urlencoded',
             },
         }
         const message = ` Virtus Princeps: need to balance`

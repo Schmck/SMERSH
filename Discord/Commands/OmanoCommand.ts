@@ -22,8 +22,7 @@ export const OmanoCommand: Command = {
         const config: AxiosRequestConfig =
         {
             headers: {
-                "Content-type": "application/x-www-form-urlencoded",
-                "Cookie": `authcred="${env["AUTHCRED"]}"`
+                "Content-Type": 'application/x-www-form-urlencoded',
             },
         }
         const message = ` ${interaction.user.username} wants to play omano, join them!`

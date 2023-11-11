@@ -210,6 +210,11 @@ export class RoundWatcher extends Watcher {
         let shield = `\u26CA`
         let axisIcon = `\u2720`
         let alliesIcon = '\u262D'
+        const balanced = 'idle'
+        const staxis = 'online'
+        const stallies = 'dnd'
+        let stat = balanced;
+
 
         if (env["GAME"] === "RS1") {
             axisIcon = `\u6698`
@@ -286,8 +291,13 @@ export class RoundWatcher extends Watcher {
             discordStatus += ` ${scores}`
         }
 
+        if (stats.scores.allies > (stats.scores.axis * 1.3)) {
+            stat = stallies;
+        }
 
-
+        if (stats.scores.axis > (stats.scores.allies * 1.3)) {
+            stat = staxis;
+        }
 
         this.client.user.setPresence({
             activities: [{

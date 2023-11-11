@@ -21,8 +21,7 @@ export const ShipItCommand: Command = {
         const config: AxiosRequestConfig =
         {
             headers: {
-                "Content-type": "application/x-www-form-urlencoded",
-                "Cookie": `authcred="${env["AUTHCRED"]}"`
+                "Content-Type": 'application/x-www-form-urlencoded',
             },
         }
         const messages = [`remember_meOW (RM): SNIPER BALLAS ON LEFT`, `Ship it holla ballas: TL pls call naval barrage#G:`, `Ship it holla ballas: i am new player let me play`]

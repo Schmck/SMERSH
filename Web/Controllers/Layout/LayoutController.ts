@@ -61,7 +61,7 @@ export class LayoutController extends SmershController {
         const config: AxiosRequestConfig =
         {
             headers: {
-                "Content-type": "application/x-www-form-urlencoded"
+                "Content-Type": 'application/x-www-form-urlencoded',
             },
         }
 

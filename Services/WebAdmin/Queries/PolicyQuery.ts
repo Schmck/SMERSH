@@ -31,7 +31,7 @@ export class PolicyQuery extends Query {
         const config: AxiosRequestConfig =
         {
             headers: {
-                "Content-type": "application/x-www-form-urlencoded"
+                "Content-Type": 'application/x-www-form-urlencoded',
             },
         }
 
@@ -77,8 +77,7 @@ export class PolicyQuery extends Query {
             const config: AxiosRequestConfig =
             {
                 headers: {
-                    "Content-type": "application/x-www-form-urlencoded",
-                    "Cookie": `authcred="${env["AUTHCRED"]}"`
+                    "Content-Type": 'application/x-www-form-urlencoded',
                 },
             }
 

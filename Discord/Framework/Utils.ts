@@ -31,7 +31,7 @@ export class Utils {
     }
 
     public static generateChatLine(line: Message|Record<string, string>) {
-        const date = new Date(new Date(line.timestamp).setHours(new Date(line.timestamp).getHours() + 1))
+        const date = new Date(new Date(line.timestamp).setHours(new Date(line.timestamp).getHours()))
         const timestamp = line.timestamp ? `${date.toLocaleString('EN-en', {"day": "2-digit", "month": "2-digit", "year": "2-digit"})} ${date.toTimeString().slice(0, 8)}\u2502` : ''
         const teamMessage = line.visibility || line['team_message'] ? '(Team)' : ''
         const team = line.team === 'Allies' ? '-' : '+'

@@ -4,12 +4,12 @@ import { Guid } from 'guid-typescript'
 import { SearchClient } from '../../Elastic'
 import { PolicySearchReport } from '../../Reports/Entities/policy';
 import { Api } from '../../Web/Framework'
-import { PlayersRoute, PolicyRoute } from '../../Services/WebAdmin/Routes';
+import { PlayersRoute } from '../../Services/WebAdmin/Routes';
 import { AxiosRequestConfig } from 'axios';
-import qs from 'qs'
 import { PolicyQuery, StatusQuery } from '../../Services/WebAdmin/Queries';
 import { Team, Role, Action } from '../../SMERSH/ValueObjects';
 import { LayoutSearchReport } from '../../Reports/Entities/layout';
+import { UnBanCommand } from '../Commands/UnBanCommand';
 
 export class PolicyWatcher extends Watcher {
 
@@ -59,13 +59,13 @@ export class PolicyWatcher extends Watcher {
         const config: AxiosRequestConfig =
         {
             headers: {
-                "Content-type": "application/x-www-form-urlencoded"
+                "Content-Type": 'application/x-www-form-urlencoded',
             },
         }
 
         const axios = Api.axios();
 
-        if (layout && layout.Ping && players && players.length && players.length > (layout.MinimumPlayerCount * 1.2)) {
+        if (layout && layout.Ping && layout.Ping !== 0 && players && players.length && players.length > (layout.MinimumPlayerCount * 1.2)) {
             const highPingPlayers = players.filter(player => player.Ping > layout.Ping).sort((pA, pB) => pB.Ping - pA.Ping).slice(0, players.length * 0.1);
             const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
 
@@ -96,13 +96,6 @@ export class PolicyWatcher extends Watcher {
                                 if ((roleBan.Sides && roleBan.Sides.includes(side)) || (!roleBan.Sides || !roleBan.Sides.length)) {
                                     if (player.Kills || player.Deaths) {
                                         const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
-                                        const config: AxiosRequestConfig =
-                                        {
-                                            headers: {
-                                                "Content-type": "application/x-www-form-urlencoded"
-                                            },
-                                        }
-
                                         const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
 
                                         axios.post(url, urlencoded, config).then(result => {
@@ -121,13 +114,6 @@ export class PolicyWatcher extends Watcher {
                 const player = players.find(player => player.Id && player.Id.toString() === policy.PlayerId.toString())
                 if (player) {
                     const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
-                    const config: AxiosRequestConfig =
-                    {
-                        headers: {
-                            "Content-type": "application/x-www-form-urlencoded"
-                        },
-                    }
-
                     const urlencoded = `ajax=1&action=mutevoice&playerkey=${player.PlayerKey}`
                     this.log.info(player, urlencoded)
                     axios.post(url, urlencoded, config).then(result => {
@@ -140,13 +126,6 @@ export class PolicyWatcher extends Watcher {
                 const player = players.find(player => player.Id && player.Id.toString() === policy.PlayerId.toString())
                 if (player) {
                     const url = argv["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
-                    const config: AxiosRequestConfig =
-                    {
-                        headers: {
-                            "Content-type": "application/x-www-form-urlencoded"
-                        },
-                    }
-
                     const urlencoded = `ajax=1&action=unmutevoice&playerkey=${player.PlayerKey}`
                     const response = await axios.post(url, urlencoded, config);
                     this.log.info(JSON.stringify(response.data));
@@ -158,6 +137,8 @@ export class PolicyWatcher extends Watcher {
             if (policy.Action === Action.Ban.DisplayName && policy.UnbanDate && new Date(policy.UnbanDate) <= new Date()) {
 
                 await PolicyQuery.Delete(policy.PlayerId);
+
+                await this.commandBus.execute(new LiftBanCommand(Guid.parse(policy.Id)))
 
                 this.log.info(`${policy.PlayerId} was unbanned`)
             }  

@@ -104,10 +104,14 @@ export class Logger {
             }
 
             if (this.ChatLogChannel && !this.LastChatLog) {
-                this.LastChatLog = this.ChatLogChannel.lastMessage;
+                if (this.ChatLogChannel.lastMessage) {
+                    this.LastChatLog = this.ChatLogChannel.lastMessage;
+                } else {
+                    this.LastChatLog = await this.ChatLogChannel.send(chatArchive)
+                }
             }
 
-            if ((this.LastChatLog && this.LastChatLog.content.length > 1800) || (!this.LastChatLog && this.ChatLogChannel)) {
+            if ((this.LastChatLog && this.LastChatLog.content.length > 1600)) {
                 this.LastChatLog = await this.ChatLogChannel.send(chatArchive)
             } else if (this.LastChatLog) {
                 this.LastChatLog = await this.LastChatLog.edit(chatArchive)
@@ -163,14 +167,7 @@ export class Logger {
                 let axisHeader = `${round.Teams[0].Name} - ${round.Teams[0].Attacking ? 'attacking' : 'defending'} - ${axis.length <= 9 ? axis.length + ' ' : axis.length}`
                 let alliesHeader = `${round.Teams[1].Name} - ${round.Teams[1].Attacking ? 'attacking' : 'defending'}  - ${allies.length <= 9 ? allies.length + ' ' : allies.length}`
                 let map = this.findDuplicateWords(round.Game.Map)
-                let minutesLeft,
-                    secondsLeft,
-                    timeLeft
-
-                secondsLeft = round.Rules.TimeLeft % 60 <= 9 ? '0'.concat((round.Rules.TimeLeft % 60).toString()) : round.Rules.TimeLeft % 60
-                minutesLeft = `${secondsLeft.toString().includes('-') ? '-' : ''}${(round.Rules.TimeLeft - round.Rules.TimeLeft % 60) / 60 <= 9 ? '0'.concat(((round.Rules.TimeLeft - round.Rules.TimeLeft % 60) / 60).toString()) : (round.Rules.TimeLeft - round.Rules.TimeLeft % 60) / 60}`
-                secondsLeft = secondsLeft.toString().replace('-', '')
-                timeLeft = `${minutesLeft}:${secondsLeft}`
+                let timeLeft = this.secToMin(round.Rules.TimeLeft)
 
                 let mapHeader = ' '.repeat(42 - Math.ceil(map.length / 2)) + `- ${map} ${timeLeft} -`
                 let teams = `\n[              ${axisHeader}           ][           ${alliesHeader}           ]`
@@ -267,6 +264,30 @@ export class Logger {
         res = res.filter(w => !months.includes(w))
         return res.join(" ");
     };
+
+    public secToMin(sec: number) {
+        if (sec === undefined || sec === null) {
+            return '00:00';
+        }
+
+        let minutesLeft,
+            secondsLeft,
+            timeLeft
+
+        secondsLeft = sec % 60 <= 9 ? '0'.concat((sec % 60).toString()) : sec % 60
+        minutesLeft = `${secondsLeft.toString().includes('-') ? '-' : ''}${(sec - sec % 60) / 60 <= 9 ? '0'.concat(((sec - sec % 60) / 60).toString()) : (sec - sec % 60) / 60}`
+        secondsLeft = secondsLeft.toString().replace('-', '')
+        timeLeft = `${minutesLeft}:${secondsLeft}`
+
+        if (!minutesLeft) {
+            return `00:${secondsLeft}`
+        }
+
+        if (!secondsLeft) {
+            return `${minutesLeft}:00`
+        }
+        return timeLeft
+    }
 
     private Client: Client;
 
