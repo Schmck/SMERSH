@@ -20,7 +20,7 @@ import { ActivityType } from 'discord.js';
 
 export class RoundWatcher extends Watcher {
 
-    public override async Watch(timeout = 100, ...args: Array<{status: Status, mapTime: number, lastLogTime:Date, lastStatusTime:Date}>) {
+    public override async Watch(timeout = 500, ...args: Array<{status: Status, mapTime: number, lastLogTime:Date, lastStatusTime:Date}>) {
         let status : Status;
         try {
             status = await StatusQuery.Get();
@@ -57,7 +57,7 @@ export class RoundWatcher extends Watcher {
                 const allies = status.Teams.find(team => team.Name === Team.Allies.DisplayName).Attacking ? 'attacking' : 'defending'
               
                 await this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
-                Logger.append(`${this.findDuplicateWords(newMap.replaceAll('\'', '').replaceAll('_', ' ').replace(/(^\w{1})|(\s{1}\w{1})|(?:- |\d\. ).*/g, match => match.toUpperCase()).match(/[A-Z][a-z]+/g).join(' ')) } started with Axis ${axis} and Allies ${allies}`)
+                Logger.append(`${this.findDuplicateWords(newMap)} started with Axis ${axis} and Allies ${allies}`)
 
             }
 
