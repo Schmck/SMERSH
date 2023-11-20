@@ -18,7 +18,6 @@ import { Client, Logger } from '../Discord/Framework';
 import { TextChannel, Message } from 'discord.js';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
-const config = process.env;
 const args = process.argv;
 
 
