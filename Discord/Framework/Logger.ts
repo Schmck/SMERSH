@@ -10,11 +10,11 @@ export class Logger {
 
     private static Instance: Logger;
 
-    public static async set(client: Client, logChannel: TextChannel, dashboardChannel: TextChannel, chatLogChannel: TextChannel, chatLog?: Message, scoreboard?: Message) {
+    public static async set(client: Client, logChannel: TextChannel, dashboardChannel: TextChannel, chatLogChannel: TextChannel, chatLog?: Message, scoreboard?: Message, scoreboardChannel?: TextChannel) {
         if (!this.Instance) {
             const log = logChannel.lastMessage;
             const lastChatLog = chatLogChannel.lastMessage;
-            this.Instance = new Logger(client, logChannel, log, dashboardChannel, chatLog, scoreboard, chatLogChannel, lastChatLog)
+            this.Instance = new Logger(client, logChannel, log, dashboardChannel, chatLog, scoreboard, chatLogChannel, lastChatLog, scoreboardChannel)
 
             return this.Instance;
         }
@@ -26,10 +26,11 @@ export class Logger {
         }
         return this.Instance;
     }
-    public constructor(client: Client, logChannel: TextChannel, logMessage: Message, dashboardChannel: TextChannel, chatLog?: Message, scoreboard?: Message, chatLogChannel?: TextChannel, lastChatLog?: Message) {
+    public constructor(client: Client, logChannel: TextChannel, logMessage: Message, dashboardChannel: TextChannel, chatLog?: Message, scoreboard?: Message, chatLogChannel?: TextChannel, lastChatLog?: Message, scoreboardChannel?: TextChannel) {
 
         this.Client = client;
         this.LogChannel = logChannel;
+        this.ScoreboardChannel = scoreboardChannel;
         this.DashboardChannel = dashboardChannel;
         this.ChatLogChannel = chatLogChannel;
         this.LastChatLog = lastChatLog;
@@ -80,9 +81,18 @@ export class Logger {
         return;
     }
 
-    public async publishDashboard(timeout : number = 5000) {
-        await this.publishChatLog();
-        await this.publishScoreboard();
+    public async publishDashboard(timeout: number = 5000) {
+        try {
+            await this.publishChatLog();
+        } catch (error: any) {
+            console.log(error)
+        }
+
+        try {
+            await this.publishScoreboard();
+        } catch (error: any) {
+            console.log(error)
+        }
 
         setTimeout(() => {
             this.publishDashboard(timeout)
@@ -100,8 +110,9 @@ export class Logger {
             if (this.ChatLog) {
                 this.ChatLog = await this.ChatLog.edit(chatLog);
             } else {
-                this.ChatLog = await this.DashboardChannel.send(chatLog)
+                this.ChatLog = await this.DashboardChannel.send(chatLog);
             }
+
 
             if (this.ChatLogChannel && !this.LastChatLog) {
                 if (this.ChatLogChannel.lastMessage) {
@@ -133,6 +144,14 @@ export class Logger {
         }
         return;
 
+    }
+
+    public async archiveScoreboard() {
+        const scoreboard = this.generateScoreboard(global.round);
+
+        if (scoreboard) {
+
+        }
     }
 
     public generateChatLog(lines : string[], message: Message, dashboard: Boolean = false) {
@@ -296,6 +315,8 @@ export class Logger {
     private ChatLines: Array<Array<Msg>>;
 
     private DashboardChannel: TextChannel;
+
+    private ScoreboardChannel: TextChannel;
 
     private ChatLogChannel: TextChannel;
 

@@ -67,7 +67,6 @@ export const UnBanCommand: Command = {
     },
     run: async (client: Client, interaction: CommandInteraction) => {
         const input = interaction.options.get('input');
-        const role = interaction.options.get('role');
         const policyId = Guid.parse(input.value.toString())
         if (!policyId) {
             await interaction.followUp({
@@ -84,7 +83,7 @@ export const UnBanCommand: Command = {
 
         await interaction.followUp({
             ephemeral: true,
-            content: `removed ${policy.Name} from the role ban list`
+            content: `${policy.Name}'s ban has been lifted`
         });
 
     }

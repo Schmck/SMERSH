@@ -19,7 +19,7 @@ export class SteamBot {
 
     public static get() {
         if (!this.bot) {
-            return null
+            return null;
         }
         return this.bot;
     }
