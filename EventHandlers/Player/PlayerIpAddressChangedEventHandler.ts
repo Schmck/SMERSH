@@ -26,13 +26,15 @@ export class PlayerIpAddressChangedEventHandler implements IEventHandler<PlayerI
     async handle(event: PlayerIpAddressChangedEvent) {
         let player = new cls(event.Id);
         player.Ip = event.IpAddress;
-        await SearchClient.Update(player)
+        player = await SearchClient.Update(player)
 
-        if (event.PrevIpAddress) {
-            Logger.append(`[${(event.Id as any as string).slice(9)}] Ip Address change detected: ${event.PrevIpAddress} -> ${event.IpAddress}`)
+        if (typeof (player.Role) === 'number') {
+            if (event.PrevIpAddress) {
+                Logger.append(`[${(event.Id as any as string).slice(9)}] Ip Address change detected: ${event.PrevIpAddress} -> ${event.IpAddress}`)
 
-        } else {
-            Logger.append(`[${(event.Id as any as string).slice(9)}] Ip Address registered: ${event.IpAddress}`)
+            } else {
+                Logger.append(`[${(event.Id as any as string).slice(9)}] Ip Address registered: ${event.IpAddress}`)
+            }
         }
 
         return;

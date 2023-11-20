@@ -65,9 +65,8 @@ export class SearchClient {
 		return document;
 	}
 
-	public static async Update<T>(document: T) : Promise<void> {
-		await this.client.update(document)
-		return
+	public static async Update<T>(document: T) : Promise<T> {
+		return this.client.update(document);
 	}
 
 	public static async Count<T>(index: IndexedClass<T>) {
