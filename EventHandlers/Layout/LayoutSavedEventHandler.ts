@@ -23,7 +23,6 @@ export class LayoutSavedEventHandler implements IEventHandler<LayoutSavedEvent>
         layout.Maps = event.Layout;
         layout.IsActive = event.IsActive;
 
-        console.log(layout)
         await SearchClient.Update(layout);
         return;
     }

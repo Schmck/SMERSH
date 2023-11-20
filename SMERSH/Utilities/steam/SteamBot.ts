@@ -19,7 +19,11 @@ export class SteamBot {
 
     public static get() {
         if (!this.bot) {
-            return null;
+            const env = JSON.parse(process.argv[process.argv.length - 1]);
+            this.bot = new SteamBot(new SteamUser());
+
+            this.bot.login(env["STEAM_ACCOUNT_NAME"], env["STEAM_ACCOUNT_PASSWORD"])
+            this.bot.setStatus(9800);
         }
         return this.bot;
     }

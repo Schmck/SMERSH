@@ -42,21 +42,21 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     const layout = new LayoutWatcher(bus, discord.client, steamToken);
 
 
-    discord.client.once('ready', async (client: Client) => {
-    const logChannel = await client.channels.fetch(logChannelId) as TextChannel;
-    const dashboardchannel = await client.channels.fetch(dashboardChannelId) as TextChannel;
-    const chatlogchannel = await client.channels.fetch(chatlogChannelId) as TextChannel;
-    const scoreboard = scoreboardId !== '' ? await dashboardchannel.messages.fetch(scoreboardId) : null;
-    const chatlog = chatLogId !== '' ? await dashboardchannel.messages.fetch(chatLogId) : null;
+    discord.client.once('ready', async (client: Client) => { 
+        const logChannel = await client.channels.fetch(logChannelId) as TextChannel;
+        const dashboardchannel = await client.channels.fetch(dashboardChannelId) as TextChannel;
+        const chatlogchannel = await client.channels.fetch(chatlogChannelId) as TextChannel;
+        const scoreboard = scoreboardId !== '' ? await dashboardchannel.messages.fetch(scoreboardId) : null;
+        const chatlog = chatLogId !== '' ? await dashboardchannel.messages.fetch(chatLogId) : null;
 
-     const logger = await Logger.set(discord.client, logChannel, dashboardchannel, chatlogchannel, chatlog, scoreboard);
+         const logger = await Logger.set(discord.client, logChannel, dashboardchannel, chatlogchannel, chatlog, scoreboard);
 
-        logger.publish();
-        logger.publishDashboard();
-        chat.Watch();
-        round.Watch();
-        policy.Watch();
-        layout.Watch();
+            logger.publish();
+            logger.publishDashboard();
+            chat.Watch();
+            round.Watch();
+            policy.Watch();
+            layout.Watch();
     })
     
     
