@@ -60,6 +60,9 @@ export class PolicyWatcher extends Watcher {
         {
             headers: {
                 "Content-Type": 'application/x-www-form-urlencoded',
+                "Dnt": 1,
+                "Host": argv["BASE_URL"].slice(0, argv["BASE_URL"].indexOf("/ServerAdmin")),
+                "Origin": argv["BASE_URL"].slice(7, argv["BASE_URL"].indexOf("/ServerAdmin")),
             },
         }
 
@@ -73,7 +76,7 @@ export class PolicyWatcher extends Watcher {
             for (let player of highPingPlayers) {
                 const urlencoded = `ajax=1&action=kick&playerkey=${player.PlayerKey}`
 
-                await this.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, argv["COMMAND_CHANNEL_ID"], Action.Kick, player.Playername, `Max ping is ${layout.Ping} while we are running the ${layout.Name} layout, our apologies!`, "Admin", new Date()))
+                this.commandBus.execute(new ApplyPolicyCommand(Guid.create(), player.Id, argv["COMMAND_CHANNEL_ID"], Action.Kick, player.Playername, `Max ping is ${layout.Ping} while we are running the ${layout.Name} layout, our apologies!`, "Admin", new Date()))
                 await axios.post(url, urlencoded, config);
            }
         }
@@ -131,14 +134,14 @@ export class PolicyWatcher extends Watcher {
                     this.log.info(JSON.stringify(response.data));
                 }
 
-                await this.commandBus.execute(new LiftMuteCommand(Guid.parse(policy.Id)))
+                this.commandBus.execute(new LiftMuteCommand(Guid.parse(policy.Id)))
             }
 
             if (policy.Action === Action.Ban.DisplayName && policy.UnbanDate && new Date(policy.UnbanDate) <= new Date()) {
 
                 await PolicyQuery.Delete(policy.PlayerId);
 
-                await this.commandBus.execute(new LiftBanCommand(Guid.parse(policy.Id)))
+                this.commandBus.execute(new LiftBanCommand(Guid.parse(policy.Id)))
 
                 this.log.info(`${policy.PlayerId} was unbanned`)
             }  

@@ -5,6 +5,7 @@ import { PlayerInfo, Status } from '../../Services/WebAdmin/Models';
 import { StartRoundCommand, EndRoundCommand, ChangeMapCommand  } from '../../Commands/Round'
 import { UpdatePlayerRoundCommand  } from '../../Commands/Round/PlayerRound'
 import { RegisterPlayerCommand, ChangePlayerNameCommand, ChangePlayerIpAddressCommand  } from '../../Commands/Player'
+import { RegisterMapCommand  } from '../../Commands/Map'
 import { StatusQuery } from '../../Services/WebAdmin/Queries'
 import { Guid } from 'guid-typescript'
 import { SearchClient } from '../../Elastic'
@@ -38,10 +39,11 @@ export class RoundWatcher extends Watcher {
         if (status) { 
             let oldMap = prevStatus && prevStatus.Game && prevStatus.Game.Map;
             let newMap = status && status.Game && status.Game.Map
+            let timeLimit = status && status.Rules && status.Rules.TimeLimit || 0;
             global.round = status;
 
 
-            const map = newMap && (await SearchClient.Search(MapSearchReport, {
+            let map = newMap && (await SearchClient.Search(MapSearchReport, {
                 "query": {
                     "match": {
                         "MapName": newMap,
@@ -56,9 +58,16 @@ export class RoundWatcher extends Watcher {
                 const axis = status.Teams.find(team => team.Name === Team.Axis.DisplayName).Attacking ? 'attacking' : 'defending'
                 const allies = status.Teams.find(team => team.Name === Team.Allies.DisplayName).Attacking ? 'attacking' : 'defending'
               
-                await this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
+                this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
                 Logger.append(`${this.findDuplicateWords(newMap)} started with Axis ${axis} and Allies ${allies}`)
 
+            }
+
+            if (!map) {
+
+                map = new MapSearchReport(Guid.create(), newMap);
+
+                this.commandBus.execute(new RegisterMapCommand(Guid.parse(map.Id), newMap, timeLimit))
             }
 
             if (map) {
@@ -98,11 +107,11 @@ export class RoundWatcher extends Watcher {
 
 
                 if (round && mapTime && timeLimit && timeLimit === mapTime) {
-                    await this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
+                    this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
                 }
 
                 if (prevStatus && round && newMapTime === mapTime && mapTime !== prevMapTime && timeLimit) {
-                    await this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds));
+                    this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds));
                     const battleDesc = this.battleDesc(prevStatus, status)
                     Logger.append(battleDesc)
 
@@ -133,20 +142,20 @@ export class RoundWatcher extends Watcher {
                                   
                                 if (playa && player.Playername !== playa.nickname) {
                                     this.log.info(player.Id, player.Playername, playa.nickname, playa.steamID)
-                                    await this.commandBus.execute(new RegisterPlayerCommand(player.Id, `(${player.Playername})${playa.nickname}`, player.IpAddress))
+                                    this.commandBus.execute(new RegisterPlayerCommand(player.Id, `(${player.Playername})${playa.nickname}`, player.IpAddress))
 
                                 } else {
-                                    await this.commandBus.execute(new RegisterPlayerCommand(player.Id, player.Playername, player.IpAddress))
+                                    this.commandBus.execute(new RegisterPlayerCommand(player.Id, player.Playername, player.IpAddress))
 
                                 }
 
 
                             }
                         } else if (player && !exists.Name ||  !exists.Name.includes(player.Playername)) {
-                            await this.commandBus.execute(new ChangePlayerNameCommand(player.Id, player.Playername))
+                            this.commandBus.execute(new ChangePlayerNameCommand(player.Id, player.Playername))
 
                         } else if (player && !exists.Ip || exists.Ip !== player.IpAddress) {
-                            await this.commandBus.execute(new ChangePlayerIpAddressCommand(player.Id, player.IpAddress))
+                            this.commandBus.execute(new ChangePlayerIpAddressCommand(player.Id, player.IpAddress))
                         }
 
                         if (exists && status && status.Teams && status.Teams.length && round && BotsBeGone && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
@@ -157,7 +166,7 @@ export class RoundWatcher extends Watcher {
                             if (team && role && (player.Kills || player.Score > 5) ) {
                                 const attacking = status.Teams[player.Team].Attacking
 
-                                await this.commandBus.execute(new UpdatePlayerRoundCommand(id, player.Id, Guid.parse(round.Id), team.Value, role.Value, attacking, player.Score, player.Kills, player.Deaths))
+                                this.commandBus.execute(new UpdatePlayerRoundCommand(id, player.Id, Guid.parse(round.Id), team.Value, role.Value, attacking, player.Score, player.Kills, player.Deaths))
                             }
                         }
                     }
@@ -189,12 +198,7 @@ export class RoundWatcher extends Watcher {
                     this.handleDiscordStatus(status);
                     lastStatusTime = this.nearestFiveSec();
                 }
-            } else {
-                const mapId = map && map.Id ? Guid.parse(map.Id) : Guid.create();
-                const roundId = Guid.create();
-
-                await this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
-            }
+            } 
         }
 
        

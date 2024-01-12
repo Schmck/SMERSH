@@ -46,11 +46,11 @@ export class RoleBanAppliedEventHandler implements IEventHandler<RoleBanAppliedE
 
         const roleBan = event.RoleBans[event.Role];
         const role = Role.fromValue<Role>(event.Role);
-        const teams = roleBan.Teams.map(team => Team.fromValue<Team>(team).DisplayName).join('and ')
-        const sides = roleBan.Sides.join('and ')
+        const teams = roleBan.Teams.map(team => Team.fromValue<Team>(team).DisplayName).join(' and ')
+        const sides = roleBan.Sides.join(' and ')
         const message = `you have been rolebanned from ${role.DisplayName} on ${teams} while ${sides} for ${event.Reason}`
 
-        Logger.append(`${event.Name} has been rolebanned from ${role.DisplayName} on ${teams} while ${sides} ${event.Executioner ? ` by ${event.Executioner}` : ''} for ${event.Reason}`)
+        Logger.append(`${event.Name} has been rolebanned from ${role.DisplayName} on ${teams} while ${sides} ${event.Executioner ? `by ${event.Executioner}` : ''} for ${event.Reason}`)
 
         await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message integrated with ChatGPT`)
         await this.steam.sendMessageToFriend(event.PlayerId, message)

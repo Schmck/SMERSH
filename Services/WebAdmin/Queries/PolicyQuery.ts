@@ -32,6 +32,10 @@ export class PolicyQuery extends Query {
         {
             headers: {
                 "Content-Type": 'application/x-www-form-urlencoded',
+                "Dnt": 1,
+                "Host": env["BASE_URL"].slice(0, env["BASE_URL"].indexOf("/ServerAdmin")),
+                "Origin": env["BASE_URL"].slice(7, env["BASE_URL"].indexOf("/ServerAdmin")),
+
             },
         }
 

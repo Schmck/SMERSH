@@ -1,6 +1,6 @@
 import { Guid } from "guid-typescript";
 import { Domain } from './Domain'
-import { MapChangedEvent } from '../Events/Map'
+import { MapRegisteredEvent } from '../Events/Map'
 
 export class Map extends Domain {
 
@@ -13,9 +13,11 @@ export class Map extends Domain {
     }
 
 
-    public changeMap(mapName: string, timeLimit: number) {
+    public registerMap(mapName: string, timeLimit: number) {
         this.MapName = mapName;
         this.TimeLimit = timeLimit;
+
+        this.apply(new MapRegisteredEvent(this.Id, mapName, timeLimit));
         return;
     }
     

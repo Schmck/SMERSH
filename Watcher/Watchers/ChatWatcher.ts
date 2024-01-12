@@ -154,7 +154,7 @@ export class ChatWatcher extends Watcher {
 
             })
 
-            await this.commandBus.execute(new ReceiveChatLinesCommand(Guid.parse(roundId), new Date(), messages));
+            this.commandBus.execute(new ReceiveChatLinesCommand(Guid.parse(roundId), new Date(), messages));
         }
 
         setTimeout(async () => {

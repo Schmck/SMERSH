@@ -55,63 +55,75 @@ export class LayoutWatcher extends Watcher {
                         startTime.setHours(layout.StartTime)
                         endTime.setHours(layout.EndTime)
 
+
+                        console.log(date.getHours(),'1', layout.Name, higherThanMin, lowerThanMax, mapUnchanged)
                         if (higherThanMin && lowerThanMax && mapUnchanged) {
-                            changeLayout = true
+                            changeLayout = true;
                             activeLayout = layout.Name;
                         }
 
-                        if (!changeLayout && startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
-                            changeLayout = true
+                        if (!changeLayout && date.getHours() >= startTime.getHours() && date.getHours() <= endTime.getHours()) {
+                            changeLayout = true;
                             activeLayout = layout.Name;
                         }
-
                         if (layout.Name === Layout.Stock.DisplayName) {
-                            const startTimeNight = this.addHours(startTime, 12)
-                            const endTimeNight = this.addHours(startTime, 12)
-
-                            if (startTimeNight.getHours() <= date.getHours() && endTimeNight.getHours() >= date.getHours()) {
-                                changeLayout = true
+                            const startTimeNight = this.addHours(startTime, 12);
+                            const endTimeNight = this.addHours(endTime, 12);
+                            if (date.getHours() >= startTimeNight.getHours() && date.getHours() <= endTimeNight.getHours()) {
+                                changeLayout = true;
                                 activeLayout = layout.Name;
-                            } else {
-                                changeLayout = false;
-                                activeLayout = lastLayout;
                             }
+                            console.log('stock at nighttime', date.getHours())
 
+                            // else {
+                            //     changeLayout = false;
+                            //     activeLayout = lastLayout;
+                            // }
                         }
-
                         if (changeLayout) {
-                            const otherLayouts = layouts.filter(lt => lt.Id !== layout.Id)
-                            //conflicts with schedules of other layouts
+                            const otherLayouts = layouts.filter(lt => lt.Id !== layout.Id);
+                            //conflicts with schedules and playercount of other layouts
                             otherLayouts.every(lt => {
-                                startTime.setHours(lt.StartTime)
-                                endTime.setHours(lt.EndTime)
-
-                                if (startTime.getHours() <= date.getHours() && endTime.getHours() >= date.getHours()) {
-                                    changeLayout = false
+                                startTime.setHours(lt.StartTime);
+                                endTime.setHours(lt.EndTime);
+                                if (date.getHours() >= startTime.getHours() && date.getHours() <= endTime.getHours()) {
+                                    changeLayout = false;
                                     if (lastLayout) {
                                         activeLayout = lastLayout;
                                     }
                                 }
-
                                 if (lt.Name === Layout.Stock.DisplayName) {
-                                    const startTimeNight = this.addHours(startTime, 12)
-                                    const endTimeNight = this.addHours(startTime, 12)
-
-                                    if (startTimeNight.getHours() <= date.getHours() && endTimeNight.getHours() >= date.getHours()) {
-                                        changeLayout = false
+                                    const startTimeNight = this.addHours(startTime, 12);
+                                    const endTimeNight = this.addHours(startTime, 12);
+                                    if (date.getHours() >= startTimeNight.getHours() && date.getHours() <= endTimeNight.getHours()) {
+                                        changeLayout = false;
+                                        console.log('stock at nighttime check', date.getHours())
                                         if (lastLayout) {
                                             activeLayout = lastLayout;
                                         }
                                     }
+                                }
+                                if (!changeLayout) {
+                                    const higherThanMin = this.atLeastTwo(playerCountTrend[0] >= lt.MinimumPlayerCount, playerCountTrend[1] >= lt.MinimumPlayerCount, playerCountTrend[2] >= lt.MinimumPlayerCount)
+                                    const lowerThanMax = this.atLeastTwo(playerCountTrend[0] <= lt.MaximumPlayerCount, playerCountTrend[1] <= lt.MaximumPlayerCount, playerCountTrend[2] <= lt.MaximumPlayerCount)
+                                    const mapUnchanged = this.atLeastTwo(playerCountTrend[0] !== 0, playerCountTrend[1] !== 0, playerCountTrend[2] !== 0)
 
+                                    if (higherThanMin && lowerThanMax && mapUnchanged) {
+                                        changeLayout = true;
+                                        activeLayout = lt.Name;
+                                    }
                                 }
                                 return changeLayout;
-                            })
+                            });
                         }
 
+                        console.log(activeLayout, lastLayout)
                         if (changeLayout && activeLayout !== lastLayout) {
                             const env = JSON.parse(process.argv[process.argv.length - 1]);
-                            const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action
+                            const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action;
+                            const territoryIndex = env["GAME"] && env["GAME"] === 'RO2'
+                                ? { "Steppe": 0, "Machetka": 1, "Traktorniy": 2, "Mamaev": 3, "Barrikady": 4, "Krasnyi": 5, "North": 6, "West": 7, "Central": 8, "South": 9 }
+                                : { "Burma": 0, "Ryukyus": 1, "Volcanoes": 2, "Phillipines": 3, "Palau": 4, "Marianas": 5, "Marshalls": 6, "Gilberts": 7, "New Guinea": 8, "Solomons": 9 };
                             const theater = env["GAME"] && env["GAME"] === 'RO2' ? '0' : '1'
                             const gametype = env["GAME"] && env["GAME"] === 'RO2' ? 'ROGame.ROGameInfoTerritories' : 'RSGame.RSGameInfoTerritories'
                             const altKey = env["GAME"] && env["GAME"] === 'RO2' ? `pt_territory_` : `sg_territory_`
@@ -133,7 +145,7 @@ export class LayoutWatcher extends Watcher {
 
                             const client = Api.axios();
 
-                            Object.values(layout.Maps).forEach((territory: string[], index) => {
+                            Object.entries(layout.Maps).sort((a, b) => territoryIndex[a[0]] - territoryIndex[b[0]]).map(item => item[1]).forEach((territory: string[], index) => {
                                 const key = env["GAME"] && env["GAME"] === 'RO2' ? `sg_territory_` : `pt_territory_`
 
                                 urlencoded.append(key + index, `${territory.join('\n')}\n`)
@@ -164,6 +176,7 @@ export class LayoutWatcher extends Watcher {
             this.Watch(timeout, { status: status ?? prevStatus, playerCountTrend, activeLayout })
         }, timeout)
     }
+
 
     public addHours(date, hours) {
         const newDate = new Date(date)

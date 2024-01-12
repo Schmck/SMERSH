@@ -1,0 +1,1 @@
+export { RegisterMapCommand } from './RegisterMapCommand'

@@ -63,4 +63,5 @@ export class Round extends Domain {
         await this.apply(new MapChangedEvent(this.Id, this.MapId, mapName));
         return;
     }
+
 }
