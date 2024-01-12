@@ -89,7 +89,7 @@ export class LayoutWatcher extends Watcher {
                                 if (date.getHours() >= startTime.getHours() && date.getHours() <= endTime.getHours()) {
                                     changeLayout = false;
                                     if (lastLayout) {
-                                        activeLayout = lastLayout;
+                                        activeLayout = lt.Name;
                                     }
                                 }
                                 if (lt.Name === Layout.Stock.DisplayName) {
@@ -99,7 +99,7 @@ export class LayoutWatcher extends Watcher {
                                         changeLayout = false;
                                         console.log('stock at nighttime check', date.getHours())
                                         if (lastLayout) {
-                                            activeLayout = lastLayout;
+                                            activeLayout = lt.Name;
                                         }
                                     }
                                 }
