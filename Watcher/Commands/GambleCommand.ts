@@ -27,15 +27,16 @@ export const GambleCommand: Command = {
 
 
         if (player || typeof parseInt(name, 10) !== 'number') {
-            const message = `please use a valid amount!`
+            const message = `please use a valid amount or just use !gamble`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)
+            return;
         }
 
         if (caller && caller.Riksdaler) {
             const riksdaler = name ? parseInt(name) : caller.Riksdaler
-            const gamble = Math.floor(Math.random() * 32) > 28 ? riksdaler * 2 : 0
+            const gamble = Math.floor(Math.random() * 32) > 28 ? riksdaler * 2 : caller.Riksdaler - riksdaler;
 
             if (reason) {
                 caller.Riksdaler += gamble;
