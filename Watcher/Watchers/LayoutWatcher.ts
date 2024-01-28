@@ -102,7 +102,7 @@ export class LayoutWatcher extends Watcher {
                         endTime.setHours(layout.EndTime)
 
 
-                        console.log(date.getHours(),'1', layout.Name, higherThanMin, lowerThanMax, mapUnchanged)
+                        //console.log(date.getHours(),'1', layout.Name, higherThanMin, lowerThanMax, mapUnchanged)
                         if (higherThanMin && lowerThanMax && mapUnchanged) {
                             changeLayout = true;
                             activeLayout = layout.Name;
@@ -119,7 +119,7 @@ export class LayoutWatcher extends Watcher {
                                 changeLayout = true;
                                 activeLayout = layout.Name;
                             }
-                            console.log('stock at nighttime', date.getHours())
+                           // console.log('stock at nighttime', date.getHours())
 
                             // else {
                             //     changeLayout = false;
@@ -143,7 +143,7 @@ export class LayoutWatcher extends Watcher {
                                     const endTimeNight = this.addHours(startTime, 12);
                                     if (date.getHours() >= startTimeNight.getHours() && date.getHours() <= endTimeNight.getHours()) {
                                         changeLayout = false;
-                                        console.log('stock at nighttime check', date.getHours())
+                                       // console.log('stock at nighttime check', date.getHours())
                                         if (lastLayout) {
                                             activeLayout = lt.Name;
                                         }
@@ -163,7 +163,7 @@ export class LayoutWatcher extends Watcher {
                             });
                         }
 
-                        console.log(activeLayout, lastLayout)
+                        //console.log(activeLayout, lastLayout)
                         if (changeLayout && activeLayout !== lastLayout) {
                             const env = JSON.parse(process.argv[process.argv.length - 1]);
                             const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action;
