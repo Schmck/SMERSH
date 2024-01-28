@@ -12,6 +12,7 @@ export class PlayerSearchReport extends SearchReport {
 
         this.Invisible = true;
         this.Role = DiscordRole.Regular.Value;
+        this.Riksdaler = 0;
     }
 
     @Field('text')
@@ -25,6 +26,9 @@ export class PlayerSearchReport extends SearchReport {
 
     @Field('boolean')
     public Invisible: boolean;
+
+    @Field('integer')
+    public Riksdaler: number;
 
     public GetType(): IndexedClass<this> {
         return this as unknown as IndexedClass<this>;

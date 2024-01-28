@@ -19,6 +19,8 @@ import { PimPamPumCommand } from './PimPamPumCommand'
 import { GulagCommand } from './GulagCommand'
 import { FrownCommand } from './FrownCommand'
 import { RoastCommand } from './RoastCommand'
+import { CookieCommand } from './CookieCommand'
+import { GambleCommand } from './GambleCommand'
 
 
 export const Commands: Command[] = [
@@ -41,5 +43,7 @@ export const Commands: Command[] = [
     PimPamPumCommand,
     GulagCommand,
     FrownCommand,
-    RoastCommand
+    RoastCommand,
+    CookieCommand,
+    GambleCommand
 ];

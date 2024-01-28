@@ -6,6 +6,7 @@ import { SearchClient } from '../../../Elastic'
 import { PlayerRoundSearchReport } from '../../../Reports/Entities/round/playerRound';
 import { Guid } from 'guid-typescript';
 import { CommandBus } from '@nestjs/cqrs';
+import { PlayerSearchReport } from '../../../Reports/Entities/player';
 let cls: { new(id?: Guid, mapId?: Guid): PlayerRoundSearchReport } = PlayerRoundSearchReport;
 
 @EventsHandler(PlayerRoundUpdatedEvent)
@@ -17,6 +18,15 @@ export class PlayerRoundUpdatedEventHandler implements IEventHandler<PlayerRound
     async handle(event: PlayerRoundUpdatedEvent) {
 
         let partial: Partial<PlayerRoundSearchReport> = new cls(event.Id);
+        let player = await SearchClient.Get(event.Id as any as Guid, PlayerSearchReport);
+
+
+        if (player.Riksdaler) {
+            player.Riksdaler += event.Score;
+
+        } else {
+            player.Riksdaler = event.Score;
+        }
 
         partial.Date = event.Date;
         partial.PlayerId = event.PlayerId;
@@ -29,6 +39,7 @@ export class PlayerRoundUpdatedEventHandler implements IEventHandler<PlayerRound
         partial.Deaths = event.Deaths;
 
         await SearchClient.Update(partial);
+        await SearchClient.Update(player);
         return;
     }
 }
