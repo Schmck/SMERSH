@@ -18,7 +18,7 @@ export class PlayerRoundUpdatedEventHandler implements IEventHandler<PlayerRound
     async handle(event: PlayerRoundUpdatedEvent) {
 
         let partial: Partial<PlayerRoundSearchReport> = new cls(event.Id);
-        let player = await SearchClient.Get(event.Id as any as Guid, PlayerSearchReport);
+        let player = await SearchClient.Get(event.PlayerId as any as Guid, PlayerSearchReport);
 
 
         if (player.Riksdaler) {

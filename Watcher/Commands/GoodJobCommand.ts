@@ -38,7 +38,7 @@ export const GoodJobCommand: Command = {
 
         if (player) {
             const forReason = reason ? ` for ${reason}!` : '!'
-            const message = `${caller.Name} says great job ${player.Playername}, you deserve a medal${forReason}!`
+            const message = `${caller.Name} says great job ${player.Playername}, you deserve a medal${forReason}`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
             await axios.post(chatUrl, chatUrlencoded, config)

@@ -132,8 +132,8 @@ export class ChatWatcher extends Watcher {
 
                                 if (typeof (caller.Role) === 'number' && command.permissions.find(perm => perm.Value === caller.Role)) {
                                     const input = msg.message.match(/\#[A-Z0-9]{0,4}\:/) ? msg.message.slice(0, msg.message.match(/\#[A-Z0-9]{0,4}\:/).index) : msg.message
-                                    const { name, id, reason, duration } = this.parseCommand(input.split(' ').slice(1))
-                                    command.run(this.commandBus, msg.username, name, id, reason, duration)
+                                    const { player, name, id, reason, duration } = this.parseCommand(input.split(' ').slice(1))
+                                    command.run(this.commandBus, caller, player, name, id, reason, duration)
                                 } else if (typeof (caller.Role) === 'number') {
                                     const frown = Math.floor(Math.random() * 32) >= 16 ? '. :/ ' : ''
                                     const message = `you do not have permission to use this command ${msg.username}[${msg.id.slice(9)}]${frown}`
@@ -231,7 +231,7 @@ export class ChatWatcher extends Watcher {
             return char
         }).join('')
         const selection = Object.values(currentPlayers).filter(player => player.Playername.toLowerCase().match(regex))
-        return selection
+        return selection[0]
     }
 }
 
