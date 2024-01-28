@@ -82,11 +82,8 @@ export class LayoutWatcher extends Watcher {
                 Logger.append(`switching to ${global.override.layout.Name} layout until ${global.override.date.toTimeString().slice(0, 8) }`)
                 urlencoded.append('save', 'save')
                 await client.post(url, urlencoded, config);
-                Logger.append(`changed to ${global.override.layout.Name} layout`)
-                return;
-            }
-
-            if (playerCountTrend.length > 2) {
+                Logger.append(`changed to ${global.override.layout.Name} layout`);
+            }else if (playerCountTrend.length > 2) {
                 dormantLayouts.every(async layout => {
                     let changeLayout = false;
 
