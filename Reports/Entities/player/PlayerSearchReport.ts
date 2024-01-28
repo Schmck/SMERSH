@@ -2,6 +2,8 @@ import { Guid } from "guid-typescript";
 import { SearchReport } from '../../Framework'
 import { Index, Field } from '@../../../SMERSH/Utilities'
 import { IndexedClass } from "../../../SMERSH/Utilities/types";
+import { Role } from "../../../SMERSH/ValueObjects";
+import { DiscordRole } from "../../../SMERSH/ValueObjects/player";
 
 @Index()
 export class PlayerSearchReport extends SearchReport {
@@ -9,6 +11,7 @@ export class PlayerSearchReport extends SearchReport {
         super(id)
 
         this.Invisible = true;
+        this.Role = DiscordRole.Regular.Value;
     }
 
     @Field('text')

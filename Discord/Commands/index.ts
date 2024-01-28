@@ -29,6 +29,7 @@ import { PimPamPumCommand } from './PimPamPumCommand'
 import { GulagCommand } from './GulagCommand'
 import { LayoutCommand } from './LayoutCommand'
 import { InvisibleCommand } from './InvisibleCommand'
+import { OverrideLayoutCommand } from './OverrideLayoutCommand'
 export const Commands: Command[] = [
     LookupCommand,
     KickCommand,
@@ -42,6 +43,7 @@ export const Commands: Command[] = [
     ChatLogCommand,
     SaveCommand,
     LayoutCommand,
+    OverrideLayoutCommand,
     InvisibleCommand,
     StatsCommand,
     RankingsCommand,

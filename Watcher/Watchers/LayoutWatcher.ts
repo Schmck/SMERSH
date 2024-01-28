@@ -40,6 +40,52 @@ export class LayoutWatcher extends Watcher {
             }
             
 
+            if (global.override && global.override.date && global.override.date.valueOf() > new Date().valueOf()) {
+                const env = JSON.parse(process.argv[process.argv.length - 1]);
+                const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action;
+                const territoryIndex = env["GAME"] && env["GAME"] === 'RO2'
+                    ? { "Steppe": 0, "Machetka": 1, "Traktorniy": 2, "Mamaev": 3, "Barrikady": 4, "Krasnyi": 5, "North": 6, "West": 7, "Central": 8, "South": 9 }
+                    : { "Burma": 0, "Ryukyus": 1, "Volcanoes": 2, "Phillipines": 3, "Palau": 4, "Marianas": 5, "Marshalls": 6, "Gilberts": 7, "New Guinea": 8, "Solomons": 9 };
+                const theater = env["GAME"] && env["GAME"] === 'RO2' ? '0' : '1'
+                const gametype = env["GAME"] && env["GAME"] === 'RO2' ? 'ROGame.ROGameInfoTerritories' : 'RSGame.RSGameInfoTerritories'
+                const altKey = env["GAME"] && env["GAME"] === 'RO2' ? `pt_territory_` : `sg_territory_`
+                const altMaps = env["GAME"] && env["GAME"] === 'RO2' ? ['RSTE-Hanto', 'RSTE-Kwajalein', 'RSTE-Kobura_MCP'] : ['TE-Coldsteel_MCP', 'TE-CommissarsHouse', 'TE-Station']
+
+                const config: AxiosRequestConfig =
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                }
+
+                const urlencoded = new URLSearchParams();
+                urlencoded.append('campaignname', '')
+                urlencoded.append('territoryCount', '20')
+                urlencoded.append('currentTheater', theater)
+                urlencoded.append('viewingTheater', theater)
+                urlencoded.append('gametype', gametype)
+
+                const client = Api.axios();
+
+                Object.entries(global.override.layout.Maps).sort((a, b) => territoryIndex[a[0]] - territoryIndex[b[0]]).map(item => item[1]).forEach((territory: string[], index) => {
+                    const key = env["GAME"] && env["GAME"] === 'RO2' ? `sg_territory_` : `pt_territory_`
+
+                    urlencoded.append(key + index, `${territory.join('\n')}\n`)
+                })
+
+                for (let i = 10; i < 20; i++) {
+                    urlencoded.append(`${altKey}${i}`, `${altMaps.join('\n')}\n`)
+                }
+
+
+                global.layout = global.override.layout;
+                Logger.append(`switching to ${global.override.layout.Name} layout until ${global.override.date.toTimeString().slice(0, 8) }`)
+                urlencoded.append('save', 'save')
+                await client.post(url, urlencoded, config);
+                Logger.append(`changed to ${global.override.layout.Name} layout`)
+                return;
+            }
+
             if (playerCountTrend.length > 2) {
                 dormantLayouts.every(async layout => {
                     let changeLayout = false;
