@@ -36,7 +36,7 @@ export const GambleCommand: Command = {
 
         if (caller && caller.Riksdaler) {
             const parsed = parseInt(name);
-            const riksdaler = name && typeof parsed === 'number' && Maths.abs(parsed) < caller.Riksdaler ? Math.abs(parsed) : caller.Riksdaler
+            const riksdaler = name && typeof parsed === 'number' && Math.abs(parsed) < caller.Riksdaler ? Math.abs(parsed) : caller.Riksdaler
             const gamble = Math.floor(Math.random() * 32) > 20 ? riksdaler * 2 : riksdaler;
 
 
