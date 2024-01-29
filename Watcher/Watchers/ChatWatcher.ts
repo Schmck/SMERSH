@@ -20,11 +20,10 @@ import { PlayerInfo } from '../../Services/WebAdmin/Models';
 
 export class ChatWatcher extends Watcher {
 
-    public override async Watch(timeout: number = 50, ...args: Array<{ messages: Array<Message>, players: Record<string, PlayerSearchReport> }>) {
+    public override async Watch(timeout: number = 50, ...args: Array<{ messages: Array<Message> }>) {
         const commandNames = Commands.map(command => [command.name, ...command.aliases]).flat()
         const commands = Commands.map(command => command.name).flat()
         const messages = await ChatQuery.Get();
-        const lastMessage = messages[messages.length - 1];
         const roundInfo = global && global.roundInfo;
         const round = !roundInfo && await (await SearchClient.Search(RoundSearchReport, {
             "query": {
@@ -49,7 +48,7 @@ export class ChatWatcher extends Watcher {
                 "Content-type": "application/x-www-form-urlencoded"
             },
         }
-        let players = (args[0] && args[0].players) || {}
+        let players = global.players || {}
 
         if (!Object.values(players).length) {
             players = (await SearchClient.Search(PlayerSearchReport, {
@@ -59,7 +58,6 @@ export class ChatWatcher extends Watcher {
                     }
                 }
             })).reduce((list, player) => { return { ...list, [player.Id]: player } }, {})
-
         }
 
 
@@ -158,7 +156,7 @@ export class ChatWatcher extends Watcher {
         }
 
         setTimeout(async () => {
-            await this.Watch(timeout, { ...args[0], messages, players })
+            await this.Watch(timeout, { ...args[0], messages })
             return;
         }, timeout)
 

@@ -124,6 +124,7 @@ export class RoundWatcher extends Watcher {
 
                 if (playerIds.length) {
                     global.currentPlayers = players;
+                    const globalPlayers = {};
                     for (let playerId of playerIds) {
                         const exists = await SearchClient.Get(playerId as any as Guid, PlayerSearchReport)
                         const player = players[playerId];
@@ -158,6 +159,10 @@ export class RoundWatcher extends Watcher {
                             this.commandBus.execute(new ChangePlayerIpAddressCommand(player.Id, player.IpAddress))
                         }
 
+                        if (exists) {
+                            globalPlayers[exists.Id] = exists;
+                        }
+
                         if (exists && status && status.Teams && status.Teams.length && round && BotsBeGone && player && player.Id && newMapTime && newMapTime === mapTime && mapTime !== prevMapTime) {
                             const team = Team.fromValue<Team>(player.Team);
                             const role = Role.fromDisplayName<Role>(player.Role);
@@ -170,6 +175,7 @@ export class RoundWatcher extends Watcher {
                             }
                         }
                     }
+                    global.players = globalPlayers;
                 }
 
                 const nextLogTime = lastLogTime.getMinutes() === 55 ? 0 : lastLogTime.getMinutes() + 5

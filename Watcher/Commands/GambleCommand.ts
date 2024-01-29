@@ -35,26 +35,33 @@ export const GambleCommand: Command = {
         }
 
         if (caller && caller.Riksdaler) {
-            const riksdaler = name ? parseInt(name) : caller.Riksdaler
-            const gamble = Math.floor(Math.random() * 32) > 28 ? riksdaler * 2 : caller.Riksdaler - riksdaler;
+            const parsed = parseInt(name);
+            const riksdaler = name && typeof parsed === 'number' && Maths.abs(parsed) < caller.Riksdaler ? Math.abs(parsed) : caller.Riksdaler
+            const gamble = Math.floor(Math.random() * 32) > 20 ? riksdaler * 2 : riksdaler;
 
-            if (reason) {
+
+            console.log(caller.Name, riksdaler, gamble)
+            if (gamble > riksdaler) {
                 caller.Riksdaler += gamble;
             } else {
-                caller.Riksdaler = gamble;
+                caller.Riksdaler -= gamble;
             }
 
 
-            const message = gamble ? `you have won ${gamble}, you now have ${caller.Riksdaler} Riksdaler!` : 'you lost all your Riksdaler :/'
+            const message = gamble ? `Congratulations ${caller.Name} you have won ${gamble} Riksdaler, you now have ${caller.Riksdaler} Riksdaler!` : `${caller.Name} just lost all their Riksdaler :/`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
 
+            if (Object.values(global.players).length) {
+                global.players[caller.Id].Riksdaler = caller.Riksdaler;
+            }
 
             await SearchClient.Update(caller);
             await axios.post(chatUrl, chatUrlencoded, config)
 
 
         } else {
+            console.log(caller.Name, caller.Riksdaler)
             const message = `${caller.Name} has no Riksdaler :/`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
