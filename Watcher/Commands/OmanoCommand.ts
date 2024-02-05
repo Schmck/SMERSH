@@ -24,7 +24,7 @@ export const OmanoCommand: Command = {
                 "Content-Type": 'application/x-www-form-urlencoded',
             },
         }
-        const message = ` ${caller} wants to play omano, join them!`
+        const message = ` ${caller.Name} wants to play omano, join them!`
         const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
         const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
         await axios.post(chatUrl, chatUrlencoded, config)

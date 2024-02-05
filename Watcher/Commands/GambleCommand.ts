@@ -37,18 +37,23 @@ export const GambleCommand: Command = {
         if (caller && caller.Riksdaler) {
             const parsed = parseInt(name);
             const riksdaler = name && typeof parsed === 'number' && Math.abs(parsed) < caller.Riksdaler ? Math.abs(parsed) : caller.Riksdaler
-            const gamble = Math.floor(Math.random() * 32) > 20 ? riksdaler * 2 : riksdaler;
+            const odds = Math.round((((100 / caller.Riksdaler * riksdaler * 0.9)) / 100) * 10) / 10 ;
+            const gamble = Math.random() > odds ? riksdaler * (2 + odds) : riksdaler;
+            let message = ``;
 
+            caller.Riksdaler -= riksdaler;
 
-            console.log(caller.Name, riksdaler, gamble)
             if (gamble > riksdaler) {
                 caller.Riksdaler += gamble;
+                message = `Congratulations ${caller.Name} you have won ${gamble} Riksdaler, you now have ${caller.Riksdaler} Riksdaler!`;
             } else {
-                caller.Riksdaler -= gamble;
+                if (!caller.Riksdaler) {
+                    message = `${caller.Name} just lost all their Riksdaler :/`;
+                } else {
+                    message = `${caller.Name} just lost ${gamble} Riksdaler, you now have ${caller.Riksdaler} Riksdaler!`;
+                }
             }
 
-
-            const message = gamble ? `Congratulations ${caller.Name} you have won ${gamble} Riksdaler, you now have ${caller.Riksdaler} Riksdaler!` : `${caller.Name} just lost all their Riksdaler :/`
             const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
             const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
 

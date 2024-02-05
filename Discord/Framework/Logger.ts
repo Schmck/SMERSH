@@ -120,13 +120,13 @@ export class Logger {
                 } else {
                     this.LastChatLog = await this.ChatLogChannel.send(chatArchive)
                 }
-            }
-
-            if ((this.LastChatLog && this.LastChatLog.content.length > 1600)) {
+            } else if ((this.LastChatLog && this.LastChatLog.content.length > 1600)) {
                 this.LastChatLog = await this.ChatLogChannel.send(chatArchive)
             } else if (this.LastChatLog) {
                 this.LastChatLog = await this.LastChatLog.edit(chatArchive)
             }
+
+           
         }
         return;
     }

@@ -189,14 +189,14 @@ export class LayoutWatcher extends Watcher {
                             const client = Api.axios();
 
                             Object.entries(layout.Maps).sort((a, b) => territoryIndex[a[0]] - territoryIndex[b[0]]).map(item => item[1]).forEach((territory: string[], index) => {
-                                const key = env["GAME"] && env["GAME"] === 'RO2' ? `sg_territory_` : `pt_territory_`
+                                const keyPart = env["GAME"] && env["GAME"] === 'RO2' ? `sg_territory_` : `pt_territory_`
+                                const key = (env["GAME"] && env["GAME"] === 'RO2') ? `${keyPart}${index}` : `${keyPart}1${index}`
+                                const altKey = (env["GAME"] && env["GAME"] === 'RO2') ? `${keyPart}1${index}` : `${keyPart}${index}`
 
-                                urlencoded.append(key + index, `${territory.join('\n')}\n`)
+                                urlencoded.append(key, `${territory.join('\n')}\n`)
+                                urlencoded.append(altKey, `${altMaps.join('\n')}\n`)
+
                             })
-
-                            for (let i = 10; i < 20; i++) {
-                                urlencoded.append(`${altKey}${i}`, `${altMaps.join('\n')}\n`)
-                            }
 
 
                             global.layout = layout;
