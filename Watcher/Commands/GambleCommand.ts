@@ -38,7 +38,7 @@ export const GambleCommand: Command = {
             const parsed = parseInt(name);
             const riksdaler = name && typeof parsed === 'number' && Math.abs(parsed) < caller.Riksdaler ? Math.abs(parsed) : caller.Riksdaler
             const odds = Math.round((((100 / caller.Riksdaler * riksdaler * 0.9)) / 100) * 10) / 10 ;
-            const gamble = Math.random() > odds ? riksdaler * (2 + odds) : riksdaler;
+            const gamble = Math.random() > odds ? Math.round(riksdaler * (2 + odds)) : riksdaler;
             let message = ``;
 
             caller.Riksdaler -= riksdaler;
