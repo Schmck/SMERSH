@@ -58,8 +58,24 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
             policy.Watch();
             layout.Watch();
     })
-    
-    
+
+    if (Object.keys(steam.steam.myFriends).length > 100) {
+        console.log(steam.steam.myFriends);
+        const reduced = Object.entries(steam.steam.myFriends).reduce((friends, item) => {
+            const id = item[0]
+            const friend = item[1]
+
+            if (friends.total < 100) {
+                return { ...friends, friends: { ...friends.friends, [id]:friend }, total: friends.total + 1 }
+            }
+            return friends;
+
+        }, { total: 0, friends: {} })
+        steam.steam.myFriends = reduced.friends;
+        console.log(steam.steam.myFriends);
+    }
+
+
 
     steam.steam.on('friendMessage', async (steamID, message) => {
         const policies = (await Policy.getPolicies(steamID.getSteamID64())).map(policy => {
