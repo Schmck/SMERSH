@@ -40,7 +40,7 @@ export class LayoutWatcher extends Watcher {
             }
             
 
-            if (global.override && global.override.date && global.override.date.valueOf() > new Date().valueOf()) {
+            if (global.override && global.override.date && global.override.date.valueOf() > new Date().valueOf() && (!activeLayout || activeLayout !== global.override.Name)) {
                 const env = JSON.parse(process.argv[process.argv.length - 1]);
                 const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action;
                 const territoryIndex = env["GAME"] && env["GAME"] === 'RO2'

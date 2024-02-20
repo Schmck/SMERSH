@@ -123,6 +123,10 @@ export const MuteCommand: Command = {
             unbanDate = new Date();
 
             switch (format) {
+                case 'mm':
+                    unbanDate = addMinutes(unbanDate, untilInt);
+                    untilString += ` ${untilInt === 1 ? 'Minute' : 'Minutes'}`
+                    break;
                 case 'h':
                     unbanDate = addHours(unbanDate, untilInt);
                     untilString += ` ${untilInt === 1 ? 'Hour' : 'Hours'}`
@@ -173,5 +177,10 @@ const addDays = (date, days) => {
 
 const addHours = (date, hours) => {
     date.setHours(date.getHours() + hours);
+    return date;
+}
+
+const addMinutes = (date, minutes) => {
+    date.setMinutes(date.getMinutes() + minutes);
     return date;
 }
