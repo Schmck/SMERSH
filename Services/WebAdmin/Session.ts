@@ -3,6 +3,11 @@ import { Cookie } from "tough-cookie";
 import { Logger, dummyLogger } from "ts-log";
 import { FileLogger } from '../../SMERSH/Utilities'
 
+class JSDOMDATE extends JSDOM {
+
+    public date?: Date;
+}
+
 export class WebAdminSession {
     private static _instance: WebAdminSession;
     private authCred = "";
@@ -27,11 +32,12 @@ export class WebAdminSession {
         this.BaseUrl = JSON.parse(process.argv[process.argv.length - 1])["BASE_URL"]
 
         this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
-        this.DOMs[url] = new JSDOM(url)
+        this.DOMs[url] = new JSDOM(url);
+        this.DOMs[url].date = new Date();
         this.DOMs[url].window.document.cookie += authCookiePart
     }
 
-    public DOMs: Record<string, JSDOM> = {};
+    public DOMs: Record<string, JSDOMDATE> = {};
 
     public BaseUrl: string;
 
@@ -49,22 +55,28 @@ export class WebAdminSession {
             navUrl = this.BaseUrl + url
             //this.log.info(url, navUrl)
         }
-        this.log.info(`navigating to: `, navUrl)
 
         if (this.DOMs) {
             let DOM = this.DOMs[navUrl]
 
             if (!DOM) {
-                this.DOMs[navUrl] = new JSDOM(navUrl)
+                this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
+                this.DOMs[navUrl].date = new Date();
             }
 
-            try {
-                await this.close(navUrl)
-                this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
+            if (navUrl.includes('chat') || (Date.now() - this.DOMs[navUrl].date.valueOf()) > 3000) {
+                this.log.info(`navigating to: `, navUrl)
+                try {
+                    await this.close(navUrl)
+                    this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
+                    this.DOMs[navUrl].date = new Date();
+                }
+                catch (error) {
+                    this.log.info(error)
+                }
             }
-            catch (error) {
-              this.log.info(error)
-            }
+
+            
 
             //this.log.info('after fromurl', new Date().toISOString(), Object.entries(this.DOMs));
 
