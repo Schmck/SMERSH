@@ -64,7 +64,7 @@ export const MessageCommand: Command = {
                 "size": 24,
             })
             if (policies) {
-                const choices = policies.map(policy => { return { name: policy.Name, value: policy.Id } })
+                const choices = policies.map(policy => { return { name: policy.Name, value: policy.PlayerId } }).filter((value, index, array) => array.indexOf(value) === index);
                 const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))
                 interaction.respond(filtered.slice(0, 24));
             }
