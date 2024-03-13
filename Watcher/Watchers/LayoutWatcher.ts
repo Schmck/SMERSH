@@ -77,7 +77,7 @@ export class LayoutWatcher extends Watcher {
                     urlencoded.append(`${altKey}${i}`, `${altMaps.join('\n')}\n`)
                 }
 
-
+                activeLayout = global.override.layout.Name;
                 global.layout = global.override.layout;
                 Logger.append(`switching to ${global.override.layout.Name} layout until ${global.override.date.toTimeString().slice(0, 8) }`)
                 urlencoded.append('save', 'save')
