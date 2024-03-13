@@ -30,6 +30,7 @@ import { GulagCommand } from './GulagCommand'
 import { LayoutCommand } from './LayoutCommand'
 import { InvisibleCommand } from './InvisibleCommand'
 import { OverrideLayoutCommand } from './OverrideLayoutCommand'
+import { MessageCommand } from './MessageCommand'
 export const Commands: Command[] = [
     LookupCommand,
     KickCommand,
@@ -44,6 +45,7 @@ export const Commands: Command[] = [
     SaveCommand,
     LayoutCommand,
     OverrideLayoutCommand,
+    MessageCommand,
     InvisibleCommand,
     StatsCommand,
     RankingsCommand,
