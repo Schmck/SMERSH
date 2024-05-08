@@ -110,7 +110,7 @@ export class RoundWatcher extends Watcher {
                     this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
                 }
 
-                if (prevStatus && round && newMapTime === mapTime && mapTime !== prevMapTime && timeLimit) {
+                if (prevStatus && round && newMapTime === mapTime && mapTime !== prevMapTime && timeLimit && (timeLimit - mapTime) > (timeLimit / 10)) {
                     this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds));
                     const battleDesc = this.battleDesc(prevStatus, status)
                     Logger.append(battleDesc)

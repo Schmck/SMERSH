@@ -20,10 +20,8 @@ export class SteamBot {
     public static get() {
         if (!this.bot) {
             const env = JSON.parse(process.argv[process.argv.length - 1]);
-            this.bot = new SteamBot(new SteamUser());
 
-            this.bot.login(env["STEAM_ACCOUNT_NAME"], env["STEAM_ACCOUNT_PASSWORD"])
-            this.bot.setStatus(9800);
+            this.set(env["STEAM_ACCOUNT_NAME"], env["STEAM_ACCOUNT_PASSWORD"])
         }
         return this.bot;
     }
@@ -49,8 +47,12 @@ export class SteamBot {
 
     public async setStatus(gameId: number) {
         const { blocked, appid } = this.steam.playingState
-        if (!blocked && appid.toString() !== gameId.toString()) {
+
+        if (!appid) {
             this.steam.setPersona(SteamUser.EPersonaState.Online);
+        }
+
+        if (!blocked && appid && appid.toString() !== gameId.toString()) {
             this.steam.gamesPlayed(gameId);
         }
     }
