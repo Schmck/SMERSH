@@ -16,6 +16,7 @@ import { ChatGPT } from '../SMERSH/Utilities/openai';
 import { Policy } from './Utils'
 import { Client, Logger } from '../Discord/Framework';
 import { TextChannel, Message } from 'discord.js';
+import * as CryptoJS from 'crypto-js';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 const args = process.argv;
@@ -91,11 +92,13 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 }
 
 function boot() {
-    const webAdmin = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
+    const webAdmin = ; JSON.parse(process.env.NODE_ENV) as Record<string, string | number>
+    const argv = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
+    const authcred = Buffer.from(`${webAdmin.webadminUsername + ':' + CryptoJS.SHA1(webAdmin.webadminPassword).toString(CryptoJS.enc.Hex)}`).toString('base64') ;
     start(
         webAdmin.BASE_URL.toString(),
         webAdmin.ELASTIC_URL.toString(),
-        webAdmin.AUTHCRED.toString(),
+        authcred.toString(),
         webAdmin.DISCORD_TOKEN.toString(),
         webAdmin.LOG_CHANNEL_ID.toString(),
         webAdmin.DASHBOARD_CHANNEL_ID.toString(),
