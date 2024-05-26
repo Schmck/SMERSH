@@ -1,4 +1,4 @@
-import { Component } from '../../Template/ValueObjects';
+import { Component } from '../../SMERSH/ValueObjects';
 import { ComponentBuilder } from './ComponentBuilder'; 
 
 const args = process.argv;

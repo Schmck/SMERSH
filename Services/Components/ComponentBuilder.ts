@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import { Component } from '../../Template/ValueObjects'
+import { Component } from '../../SMERSH/ValueObjects'
 
 
 export class ComponentBuilder {
