@@ -15,7 +15,7 @@ export class RoundEndedEventHandler implements IEventHandler<RoundEndedEvent>
 {
     public client: Client;
     public constructor(protected readonly commandBus: CommandBus) {
-        const token = JSON.parse(process.argv[process.argv.length - 1])["DISCORD_TOKEN"]
+        const token = JSON.parse(process.env.NODE_ENV['PARAMS'])["DISCORD_TOKEN"]
         this.client = new Client(token, {
             intents: []
         }, commandBus)

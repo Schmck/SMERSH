@@ -5,7 +5,7 @@
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "target": "esnext",
+    "target": "es2020",
     "lib": [ "esnext", "es2017.object" ],
     //"sourceMap": true,
     "inlineSourceMap": true,

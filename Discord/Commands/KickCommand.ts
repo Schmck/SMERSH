@@ -105,7 +105,7 @@ export const KickCommand: Command = {
         }
         await client.commandBus.execute(new ApplyPolicyCommand(Guid.create(), id, interaction.channelId, Action.Kick, name, reason.value.toString(), (interaction.member as GuildMember).displayName, new Date()))
 
-        const env = JSON.parse(process.argv[process.argv.length - 1]);
+        const env = JSON.parse(process.env.NODE_ENV['PARAMS']);
         const axios = Api.axios();
         const url = env["BASE_URL"] + PlayersRoute.CondemnPlayer.Action
         const config: AxiosRequestConfig =

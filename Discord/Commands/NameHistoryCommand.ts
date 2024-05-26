@@ -12,9 +12,9 @@ import { PlayerQuery } from '../../Services/WebAdmin/Queries'
 import { CommandBus } from "@nestjs/cqrs";
 import { Client, Utils } from "../Framework";
 
-export const GulagCommand: Command = {
-    name: "gulag",
-    description: "in game command to send a player to gulag",
+export const NameHistoryCommand: Command = {
+    name: "names",
+    description: "return a list of all previous names that a player has used",
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
     run: async (client: Client, interaction: CommandInteraction) => {
         const axios = Api.axios();

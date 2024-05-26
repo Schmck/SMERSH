@@ -18,7 +18,7 @@ export const PimPamPumCommand: Command = {
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
     run: async (client: Client, interaction: CommandInteraction) => {
         const axios = Api.axios();
-        const env = JSON.parse(process.argv[process.argv.length - 1]);
+        const env = JSON.parse(process.env.NODE_ENV['PARAMS']);
         const config: AxiosRequestConfig =
         {
             headers: {

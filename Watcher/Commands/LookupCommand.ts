@@ -17,7 +17,7 @@ export const LookupCommand: Command = {
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent],
     run: async (commandBus: CommandBus, caller: PlayerSearchReport, player: PlayerInfo, name: string, id: string, reason: string, duration: string) => {
         const axios = Api.axios();
-        const env = JSON.parse(process.argv[process.argv.length - 1]);
+        const env = JSON.parse(process.env.NODE_ENV['PARAMS']);
         const url = env["BASE_URL"] + ChatRoute.PostChat.Action
         const config: AxiosRequestConfig =
         {

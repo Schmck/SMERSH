@@ -18,7 +18,7 @@ export class Api {
         const jar = !cookieJar && new CookieJar();
 
         if (jar) {
-            const env = JSON.parse(process.argv[process.argv.length - 1]);
+            const env = JSON.parse(process.env.NODE_ENV['PARAMS']);
             const authcred = env['AUTHCRED'];
             const url = env["BASE_URL"];
 
