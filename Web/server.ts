@@ -16,7 +16,7 @@ import { Policy } from './Utils'
 import { Logger } from '../Discord/Framework';
 import { TextChannel, Message } from 'discord.js';
 import * as CryptoJS from 'crypto-js';
-
+import { evt } from '../Services/evt';
 interface EnvVar {
     [key: string]: string;
 }
@@ -134,7 +134,8 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 function boot() {
     const envFilePath = path.join(__dirname, '.env');
     const webAdmin = parseEnvFile(envFilePath);
-    const evt = evt.set(webAdmin);
+    const env = evt.set(webAdmin);
+    console.log(env)
 
     //const webAdmin = JSON.parse(process.env.NODE_ENV) as Record<string, string | number>
     const argv = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
