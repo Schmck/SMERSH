@@ -27,7 +27,7 @@ export const MeowCommand: Command = {
     ],
     run: async (client: Client, interaction: CommandInteraction) => {
         const axios = Api.axios();
-        const env = JSON.parse(process.env.NODE_ENV['PARAMS']);
+        const env = JSON.parse(process.env.NODE_ENV);
         const config: AxiosRequestConfig =
         {
             headers: {

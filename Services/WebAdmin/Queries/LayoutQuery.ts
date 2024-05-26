@@ -8,7 +8,7 @@ export class LayoutQuery extends Query {
     public static async Get() {
         const session = WebAdminSession.get();
         const dom = await session.navigate(LayoutRoute.GetLayout.Action)
-        const env = JSON.parse(process.env.NODE_ENV['PARAMS']);
+        const env = JSON.parse(process.env.NODE_ENV);
 
         const suffix = env['GAME'] && env['GAME'] === 'RS1' ? 'pt' : 'sg'
         const campaign = Object.values(dom.window.document.querySelectorAll(`[id^='tcontainer_${suffix}']`))

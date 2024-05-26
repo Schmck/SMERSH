@@ -181,7 +181,7 @@ export class RoundWatcher extends Watcher {
                 const nextLogTime = lastLogTime.getMinutes() === 55 ? 0 : lastLogTime.getMinutes() + 5
                 const currentTime = new Date().getMinutes();
                 if (currentTime >= nextLogTime  && currentTime !== lastLogTime.getMinutes() && !(new Date().getMinutes() % 5)) {
-                    const env = JSON.parse(process.env.NODE_ENV['PARAMS']);
+                    const env = JSON.parse(process.env.NODE_ENV);
                     let crossedSwords = `\u2694`
                     let shield = `\u26CA`
                     let axisIcon = `\u2720`
@@ -215,7 +215,7 @@ export class RoundWatcher extends Watcher {
     }
 
     public handleDiscordStatus(status: Status) {
-        const env = JSON.parse(process.env.NODE_ENV['PARAMS']);
+        const env = JSON.parse(process.env.NODE_ENV);
         let crossedSwords = `\u2694`
         let shield = `\u26CA`
         let axisIcon = `\u2720`
@@ -319,7 +319,7 @@ export class RoundWatcher extends Watcher {
     }
 
     public battleDesc(oldStatus: Status, status: Status): string {
-        const env = JSON.parse(process.env.NODE_ENV['PARAMS']);
+        const env = JSON.parse(process.env.NODE_ENV);
         let axisIcon = `\u2720`
         let alliesIcon = '\u262D'
 

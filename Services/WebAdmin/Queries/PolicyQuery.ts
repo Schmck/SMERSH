@@ -22,7 +22,7 @@ export class PolicyQuery extends Query {
     }
 
     public static async Post(playerId: string) {
-        const env = JSON.parse(process.env.NODE_ENV['PARAMS']);
+        const env = JSON.parse(process.env.NODE_ENV);
 
         const axios = Api.axios();
         const url = env["BASE_URL"] + PolicyRoute.AddBan.Action
@@ -71,7 +71,7 @@ export class PolicyQuery extends Query {
         if (ban) {
             banId = ban.querySelector('input[name="banid"]').value
             const axios = Api.axios();
-            const env = JSON.parse(process.env.NODE_ENV['PARAMS']);
+            const env = JSON.parse(process.env.NODE_ENV);
             const url = env["BASE_URL"] + PolicyRoute.DeleteBan.Action
             const urlencoded = qs.stringify({
                 "banid": banId,

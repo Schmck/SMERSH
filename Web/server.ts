@@ -4,21 +4,20 @@ import { WebAdminSession } from '../Services/WebAdmin';
 import "reflect-metadata";
 import { Config, ClientBuilder, Api } from './Framework';
 import * as dotenv from 'dotenv';
-import { NestApplication, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './Framework/app.module';
 import { ChatWatcher, RoundWatcher, PolicyWatcher, LayoutWatcher } from '../Watcher'
 import { CommandBus, } from '@nestjs/cqrs'
 import { Bot } from '../Discord/Bot'
 import * as path from 'path'
-import { NestApplicationOptions } from '@nestjs/common';
 import { SteamBot } from '../SMERSH/Utilities/steam';
 import { ChatGPT } from '../SMERSH/Utilities/openai';
 import { Policy } from './Utils'
-import { Client, Logger } from '../Discord/Framework';
+import { Logger } from '../Discord/Framework';
 import { TextChannel, Message } from 'discord.js';
 import * as CryptoJS from 'crypto-js';
 
-dotenv.config({ path: path.resolve(__dirname, '../.env') })
+dotenv.config()
 const args = process.argv;
 
 
@@ -92,7 +91,7 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 }
 
 function boot() {
-    const webAdmin = JSON.parse(process.env.NODE_ENV['PARAMS']) as Record<string, string | number>
+    const webAdmin = JSON.parse(process.env.NODE_ENV) as Record<string, string | number>
     const argv = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
     const authcred = Buffer.from(`${webAdmin.webadminUsername + ':' + CryptoJS.SHA1(webAdmin.webadminPassword).toString(CryptoJS.enc.Hex)}`).toString('base64') ;
     start(

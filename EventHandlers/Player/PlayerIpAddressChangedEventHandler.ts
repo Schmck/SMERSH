@@ -17,7 +17,7 @@ export class PlayerIpAddressChangedEventHandler implements IEventHandler<PlayerI
 
     public client: Client;
     public constructor(protected readonly commandBus: CommandBus) {
-        const token = JSON.parse(process.env.NODE_ENV['PARAMS'])["DISCORD_TOKEN"]
+        const token = JSON.parse(process.env.NODE_ENV)["DISCORD_TOKEN"]
         this.client = new Client(token, {
             intents: []
         }, commandBus)
