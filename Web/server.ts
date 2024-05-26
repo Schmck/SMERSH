@@ -97,10 +97,6 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 function boot() {
     const envFilePath = path.join(__dirname, '.env');
     const webAdmin = evt.set(evt.parseEnvFile(envFilePath));
-    console.log(webAdmin)
-
-    //const webAdmin = process.env as Record<string, string | number>
-    const argv = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
     const authcred = Buffer.from(`${webAdmin.WEBADMIN_USERNAME + ':' + CryptoJS.SHA1(webAdmin.WEBADMIN_PASSWORD).toString(CryptoJS.enc.Hex)}`).toString('base64') ;
     start(
         webAdmin.BASE_URL.toString(),
