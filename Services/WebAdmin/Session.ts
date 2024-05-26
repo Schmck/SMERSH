@@ -22,6 +22,7 @@ export class WebAdminSession {
         cookie.path = parsed.pathName;
         cookie.domain = parsed.hostname;
 
+        this.authCred = authcred;
         if (!this.authCred) {
             this.authCred = authCookiePart;
         }
@@ -48,7 +49,7 @@ export class WebAdminSession {
         return this._instance
     }
 
-    public async navigate(url: string) : Promise<JSDOM> {
+    public async navigate(url: string): Promise<JSDOM> {
         let navUrl = url;
 
         if (!navUrl.includes(this.BaseUrl)) {
@@ -68,6 +69,8 @@ export class WebAdminSession {
                 this.log.info(`navigating to: `, navUrl)
                 try {
                     await this.close(navUrl)
+                    const nav = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
+                    nav.window.fetch = this.fetch;
                     this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
                     this.DOMs[navUrl].date = new Date();
                 }
@@ -76,19 +79,19 @@ export class WebAdminSession {
                 }
             }
 
-            
+
 
             //this.log.info('after fromurl', new Date().toISOString(), Object.entries(this.DOMs));
 
         } else {
             this.log.error('DOMs were not initialized properly')
         }
-        
+
         return this.DOMs[navUrl];
     }
 
-    public async close(url: string) : Promise<void> {
-       // this.log.info(`closing: `, url)
+    public async close(url: string): Promise<void> {
+        // this.log.info(`closing: `, url)
 
         if (this.DOMs) {
             const DOM = this.DOMs[url]
@@ -105,7 +108,7 @@ export class WebAdminSession {
 
 
 
-    public static async set(url: string, authcred: string) : Promise<WebAdminSession> {
+    public static async set(url: string, authcred: string): Promise<WebAdminSession> {
         if (!this._instance) {
             this._instance = new WebAdminSession(url, authcred)
             const DOM = await this._instance.navigate(url);
@@ -118,7 +121,7 @@ export class WebAdminSession {
         return this._instance
     }
 
-    public static get() : WebAdminSession {
+    public static get(): WebAdminSession {
         if (!this.Instance) {
             return null;
         }
@@ -151,4 +154,14 @@ export class WebAdminSession {
         return parts
     }
 
+    private async fetch(url) {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Basic ${this.authCred}`,
+            }
+        });
+
+        return response;
+    }
 }
