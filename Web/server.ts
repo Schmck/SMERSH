@@ -17,6 +17,8 @@ import { Logger } from '../Discord/Framework';
 import { TextChannel, Message } from 'discord.js';
 import * as CryptoJS from 'crypto-js';
 import { evt } from '../Services/evt';
+import fs from 'fs';
+
 interface EnvVar {
     [key: string]: string;
 }
