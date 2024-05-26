@@ -19,45 +19,6 @@ import * as CryptoJS from 'crypto-js';
 import { evt } from '../Services/evt';
 import fs from 'fs';
 
-interface EnvVar {
-    [key: string]: string;
-}
-
-function parseEnvLine(line: string): EnvVar | null {
-    const trimmedLine = line.trim();
-
-    // Ignore empty lines and comments
-    if (trimmedLine === '' || trimmedLine.startsWith('#')) {
-        return null;
-    }
-
-    const separatorIndex = trimmedLine.indexOf('=');
-    if (separatorIndex === -1) {
-        console.error(`Invalid .env line: ${line}`);
-        return null;
-    }
-
-    const key = trimmedLine.substring(0, separatorIndex).trim();
-    const value = trimmedLine.substring(separatorIndex + 1).trim();
-
-    return { [key]: value };
-}
-
-function parseEnvFile(filePath: string): EnvVar {
-    const envVars: EnvVar = {};
-
-    const fileContents = fs.readFileSync(filePath, 'utf-8');
-    const lines = fileContents.split('\n');
-
-    lines.forEach((line) => {
-        const parsedLine = parseEnvLine(line);
-        if (parsedLine) {
-            Object.assign(envVars, parsedLine);
-        }
-    });
-
-    return envVars;
-}
 
 
 dotenv.config()
@@ -135,13 +96,12 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 
 function boot() {
     const envFilePath = path.join(__dirname, '.env');
-    const webAdmin = parseEnvFile(envFilePath);
-    const env = evt.set(webAdmin);
-    console.log(env)
+    const webAdmin = evt.set(evt.parseEnvFile(envFilePath));
+    console.log(webAdmin)
 
-    //const webAdmin = JSON.parse(process.env) as Record<string, string | number>
+    //const webAdmin = process.env as Record<string, string | number>
     const argv = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
-    const authcred = Buffer.from(`${webAdmin.webadminUsername + ':' + CryptoJS.SHA1(webAdmin.webadminPassword).toString(CryptoJS.enc.Hex)}`).toString('base64') ;
+    const authcred = Buffer.from(`${webAdmin.WEBADMIN_USERNAME + ':' + CryptoJS.SHA1(webAdmin.WEBADMIN_PASSWORD).toString(CryptoJS.enc.Hex)}`).toString('base64') ;
     start(
         webAdmin.BASE_URL.toString(),
         webAdmin.ELASTIC_URL.toString(),

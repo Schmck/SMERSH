@@ -29,7 +29,7 @@ export class WebAdminSession {
         this.CookieJar = cookieJar;
         this.CookieJar.setCookie(cookie, url);
 
-        this.BaseUrl = JSON.parse(process.env)["BASE_URL"]
+        this.BaseUrl = process.env["BASE_URL"]
 
         this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
         this.DOMs[url] = new JSDOM(url);

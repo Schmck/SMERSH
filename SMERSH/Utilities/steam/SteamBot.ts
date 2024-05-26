@@ -19,7 +19,7 @@ export class SteamBot {
 
     public static get() {
         if (!this.bot) {
-            const env = JSON.parse(process.env);
+            const env = process.env;
 
             this.set(env["STEAM_ACCOUNT_NAME"], env["STEAM_ACCOUNT_PASSWORD"])
         }
@@ -58,7 +58,7 @@ export class SteamBot {
     }
 
     public async sendMessageToFriend(id: string, message: string) {
-        const env = JSON.parse(process.env)
+        const env = process.env
         const steamId64 = hexToDec(id);
         const online = this.steam.logOnResult && this.steam.logOnResult.eresult;
         let friends = Object.keys(this.steam.myFriends).filter(steamId => this.steam.myFriends[steamId] == SteamUser.EFriendRelationship.Friend);

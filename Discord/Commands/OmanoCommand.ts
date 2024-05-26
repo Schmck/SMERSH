@@ -18,7 +18,7 @@ export const OmanoCommand: Command = {
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
     run: async (client: Client, interaction: CommandInteraction) => {
         const axios = Api.axios();
-        const env = JSON.parse(process.env);
+        const env = process.env;
         const config: AxiosRequestConfig =
         {
             headers: {

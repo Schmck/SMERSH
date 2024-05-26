@@ -14,7 +14,7 @@ export class SearchClient {
 		return process.env;
 	};
 
-	public static client: Elasticsearch = ClientBuilder.GetClient(JSON.parse(process.env)["ELASTIC_URL"]);
+	public static client: Elasticsearch = ClientBuilder.GetClient(process.env["ELASTIC_URL"]);
 
 	public static async Exists<T>(id: string, cls: { new(): T }) { 
 		try {

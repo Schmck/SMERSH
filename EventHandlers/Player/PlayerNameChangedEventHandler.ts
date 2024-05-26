@@ -17,7 +17,7 @@ export class PlayerNameChangedEventHandler implements IEventHandler<PlayerNameCh
 
     public client: Client;
     public constructor(protected readonly commandBus: CommandBus) {
-        const token = JSON.parse(process.env)["DISCORD_TOKEN"]
+        const token = process.env["DISCORD_TOKEN"]
         this.client = new Client(token, {
             intents: []
         }, commandBus)
