@@ -139,7 +139,7 @@ function boot() {
     const env = evt.set(webAdmin);
     console.log(env)
 
-    //const webAdmin = JSON.parse(process.env.NODE_ENV) as Record<string, string | number>
+    //const webAdmin = JSON.parse(process.env) as Record<string, string | number>
     const argv = JSON.parse(args[args.length - 1]) as Record<string, string | number>;
     const authcred = Buffer.from(`${webAdmin.webadminUsername + ':' + CryptoJS.SHA1(webAdmin.webadminPassword).toString(CryptoJS.enc.Hex)}`).toString('base64') ;
     start(

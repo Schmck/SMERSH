@@ -21,7 +21,7 @@ export const RoastCommand: Command = {
     permissions: [DiscordRole.Admin, DiscordRole.SmershAgent, DiscordRole.Veteran, DiscordRole.Regular],
     run: async (commandBus: CommandBus, caller: PlayerSearchReport, player: PlayerInfo, name: string, id: string, reason: string, duration: string) => {
         const axios = Api.axios();
-        const env = JSON.parse(process.env.NODE_ENV);
+        const env = JSON.parse(process.env);
         const config: AxiosRequestConfig =
         {
             headers: {

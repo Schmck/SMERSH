@@ -10,11 +10,11 @@ export class SearchClient {
 	public static queue: Array<Promise<any>> = []
 
 	public static env = () => {
-		console.log(process.env.NODE_ENV)
-		return process.env.NODE_ENV;
+		console.log(process.env)
+		return process.env;
 	};
 
-	public static client: Elasticsearch = ClientBuilder.GetClient(JSON.parse(process.env.NODE_ENV)["ELASTIC_URL"]);
+	public static client: Elasticsearch = ClientBuilder.GetClient(JSON.parse(process.env)["ELASTIC_URL"]);
 
 	public static async Exists<T>(id: string, cls: { new(): T }) { 
 		try {

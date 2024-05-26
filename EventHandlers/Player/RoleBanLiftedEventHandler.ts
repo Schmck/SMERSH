@@ -17,7 +17,7 @@ export class RoleBanLiftedEventHandler implements IEventHandler<RoleBanLiftedEve
 {
     public client: Client;
     public constructor(protected readonly commandBus: CommandBus) {
-        const token = JSON.parse(process.env.NODE_ENV)["DISCORD_TOKEN"]
+        const token = JSON.parse(process.env)["DISCORD_TOKEN"]
         this.client = new Client(token, {
             intents: []
         }, commandBus)

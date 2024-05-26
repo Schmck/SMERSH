@@ -55,7 +55,7 @@ export class PolicyWatcher extends Watcher {
             "size": count.count
             })
 
-        const argv = JSON.parse(process.env.NODE_ENV);
+        const argv = JSON.parse(process.env);
         const config: AxiosRequestConfig =
         {
             headers: {

@@ -15,7 +15,7 @@ export class SmershController {
     public constructor(commandBus?: CommandBus) {
         this.commandBus = commandBus
         this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`)
-        const url = JSON.parse(process.env.NODE_ENV)["ELASTIC_URL"]
+        const url = JSON.parse(process.env)["ELASTIC_URL"]
         this.client = new Client({
             node: url,
         } as ConfigOptions)

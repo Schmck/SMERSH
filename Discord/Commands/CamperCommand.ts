@@ -25,7 +25,7 @@ export const CamperCommand: Command = {
     }],
     run: async (client: Client, interaction: CommandInteraction) => {
         const axios = Api.axios();
-        const env = JSON.parse(process.env.NODE_ENV);
+        const env = JSON.parse(process.env);
         const config: AxiosRequestConfig =
         {
             headers: {

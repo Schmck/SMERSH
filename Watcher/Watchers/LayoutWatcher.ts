@@ -41,7 +41,7 @@ export class LayoutWatcher extends Watcher {
             
 
             if (global.override && global.override.date && global.override.date.valueOf() > new Date().valueOf() && (!activeLayout || activeLayout !== global.override.Name)) {
-                const env = JSON.parse(process.env.NODE_ENV);
+                const env = JSON.parse(process.env);
                 const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action;
                 const territoryIndex = env["GAME"] && env["GAME"] === 'RO2'
                     ? { "Steppe": 0, "Machetka": 1, "Traktorniy": 2, "Mamaev": 3, "Barrikady": 4, "Krasnyi": 5, "North": 6, "West": 7, "Central": 8, "South": 9 }
@@ -162,7 +162,7 @@ export class LayoutWatcher extends Watcher {
 
                         //console.log(activeLayout, lastLayout)
                         if (changeLayout && activeLayout !== lastLayout) {
-                            const env = JSON.parse(process.env.NODE_ENV);
+                            const env = JSON.parse(process.env);
                             const url = env["BASE_URL"] + LayoutRoute.PostLayout.Action;
                             const territoryIndex = env["GAME"] && env["GAME"] === 'RO2'
                                 ? { "Steppe": 0, "Machetka": 1, "Traktorniy": 2, "Mamaev": 3, "Barrikady": 4, "Krasnyi": 5, "North": 6, "West": 7, "Central": 8, "South": 9 }

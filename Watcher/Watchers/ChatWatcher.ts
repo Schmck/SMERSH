@@ -40,7 +40,7 @@ export class ChatWatcher extends Watcher {
         })).shift()
         const roundId = round ? round.Id : roundInfo && roundInfo.roundId;
         const axios = Api.axios();
-        const env = JSON.parse(process.env.NODE_ENV);
+        const env = JSON.parse(process.env);
         const chatUrl = env["BASE_URL"] + ChatRoute.PostChat.Action
         const config: AxiosRequestConfig =
         {
