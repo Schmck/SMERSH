@@ -43,7 +43,7 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     const layout = new LayoutWatcher(bus, discord.client, steamToken);
 
 
-    discord.client.once('ready', async (client: Client) => { 
+    discord.client.once('ready', async (client: any) => { 
         const logChannel = await client.channels.fetch(logChannelId) as TextChannel;
         const dashboardchannel = await client.channels.fetch(dashboardChannelId) as TextChannel;
         const chatlogchannel = await client.channels.fetch(chatlogChannelId) as TextChannel;
