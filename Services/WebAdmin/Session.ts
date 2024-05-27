@@ -245,7 +245,7 @@ export class OldWebAdminSession {
 
     public static async set(url: string, authcred: string): Promise<OldWebAdminSession> {
         if (!this._instance) {
-            this._instance = new WebAdminSession(url, authcred)
+            this._instance = new OldWebAdminSession(url, authcred)
             const DOM = await this._instance.navigate(url);
             if (DOM.window && DOM.window.document && DOM.window.document.cookie) {
                 const cookie = Cookie.parse(DOM.window.document.cookie);
