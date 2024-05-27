@@ -57,7 +57,7 @@ export class WebAdminSession {
         this.pages[url] = { page, date: new Date() };
     }
 
-    public async navigate(url: string): Promise<Document> {
+    public async navigate(url: string): Promise<JSDOM> {
         let navUrl = url;
 
         if (!navUrl.includes(this.BaseUrl)) {
