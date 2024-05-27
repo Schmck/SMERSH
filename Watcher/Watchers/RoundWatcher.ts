@@ -36,7 +36,7 @@ export class RoundWatcher extends Watcher {
         let mapTime = (prevStatus && prevStatus.Rules && prevStatus.Rules.TimeLeft) || 0
 
 
-        if (status) { 
+        if (status && status.Players.length) { 
             let oldMap = prevStatus && prevStatus.Game && prevStatus.Game.Map;
             let newMap = status && status.Game && status.Game.Map
             let timeLimit = status && status.Rules && status.Rules.TimeLimit || 0;
