@@ -144,14 +144,14 @@ export class WebAdminSession {
 }
 
 export class OldWebAdminSession {
-    private static _instance: WebAdminSession;
+    private static _instance: OldWebAdminSession;
     private authCred = "";
 
     constructor(url: string, authcred: string, cookieJar: CookieJar = new CookieJar(), private readonly log: Logger = dummyLogger) {
         if (!this.DOMs) {
             this.DOMs = {};
         }
-        const parsed = WebAdminSession.parse(url)
+        const parsed = OldWebAdminSession.parse(url)
         const authCookiePart = `authcred=${authcred}`
         const cookie = Cookie.parse(authCookiePart);
         cookie.path = parsed.pathName;
@@ -180,7 +180,7 @@ export class OldWebAdminSession {
     public CookieJar: CookieJar;
 
 
-    public static get Instance(): WebAdminSession {
+    public static get Instance(): OldWebAdminSession {
         return this._instance
     }
 
@@ -243,7 +243,7 @@ export class OldWebAdminSession {
 
 
 
-    public static async set(url: string, authcred: string): Promise<WebAdminSession> {
+    public static async set(url: string, authcred: string): Promise<OldWebAdminSession> {
         if (!this._instance) {
             this._instance = new WebAdminSession(url, authcred)
             const DOM = await this._instance.navigate(url);
@@ -256,7 +256,7 @@ export class OldWebAdminSession {
         return this._instance
     }
 
-    public static get(): WebAdminSession {
+    public static get(): OldWebAdminSession {
         if (!this.Instance) {
             return null;
         }
