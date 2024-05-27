@@ -131,7 +131,7 @@ export class WebAdminSession {
         return parts;
     }
 
-    private async createDOMFromPage(page: Page): Promise<Document> {
+    private async createDOMFromPage(page: Page): Promise<JSDOM> {
         // Extract HTML content from the Puppeteer page
         const htmlContent = await page.content();
 
@@ -139,7 +139,7 @@ export class WebAdminSession {
         const dom = new JSDOM(htmlContent);
 
         // Return the document object from jsdom
-        return dom.window.document;
+        return dom;
     }
 }
 
