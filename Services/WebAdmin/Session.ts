@@ -15,14 +15,16 @@ export class WebAdminSession {
     private authCred = "";
     private browser!: Browser;
     private pages: Record<string, { page: Page; date: Date }> = {};
+    public CookieJar: CookieJar;
 
-    constructor(url: string, authcred: string, private readonly log: Logger = dummyLogger) {
+    constructor(url: string, authcred: string, cookieJar: CookieJar = new CookieJar(), private readonly log: Logger = dummyLogger) {
         this.authCred = authcred;
+        this.CookieJar = cookieJar;
 
         this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`);
         this.BaseUrl = process.env["BASE_URL"] || "";
 
-        this.initialize(url);
+        this.initialize(url).catch(error => this.log.error('Initialization error:', error));
     }
 
     public BaseUrl: string;
@@ -77,12 +79,61 @@ export class WebAdminSession {
 
         if (navUrl.includes('chat') || (Date.now() - pageRecord.date.valueOf()) > 3000) {
             this.log.info(`Re-navigating to: ${navUrl}`);
-            await page.goto(navUrl, { waitUntil: 'networkidle0' });
+            await this.setCookiesFromJar(navUrl, page);
+            await this.retryGoto(page, navUrl);
+            await this.updateCookieJar(page, navUrl);
             this.pages[navUrl].date = new Date();
         }
 
         const document = await this.createDOMFromPage(page);
         return document;
+    }
+
+    private async setCookiesFromJar(url: string, page: Page): Promise<void> {
+        const cookies = await this.CookieJar.getCookies(url);
+        const puppeteerCookies = cookies.map(cookie => ({
+            name: cookie.key,
+            value: cookie.value,
+            domain: cookie.domain || undefined,
+            path: cookie.path,
+            expires: cookie.expires instanceof Date ? cookie.expires.getTime() / 1000 : undefined,
+            httpOnly: cookie.httpOnly,
+            secure: cookie.secure,
+            sameSite: cookie.sameSite ? cookie.sameSite as 'Strict' | 'Lax' | 'None' : undefined
+        }));
+        await page.setCookie(...puppeteerCookies);
+    }
+
+    private async retryGoto(page: Page, url: string): Promise<void> {
+        const maxRetries = 3;
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                await page.goto(url, { waitUntil: 'networkidle0' });
+                return;
+            } catch (error) {
+                this.log.warn(`Navigation attempt ${attempt} to ${url} failed: ${error}`);
+                if (attempt === maxRetries) {
+                    throw error;
+                }
+            }
+        }
+    }
+
+    private async updateCookieJar(page: Page, url: string): Promise<void> {
+        const pageCookies = await page.cookies();
+        for (const cookie of pageCookies) {
+            const toughCookie = new Cookie({
+                key: cookie.name,
+                value: cookie.value,
+                domain: cookie.domain,
+                path: cookie.path,
+                expires: cookie.expires ? new Date(cookie.expires * 1000) : undefined,
+                httpOnly: cookie.httpOnly,
+                secure: cookie.secure,
+                sameSite: cookie.sameSite
+            });
+            await this.CookieJar.setCookie(toughCookie.toString(), url);
+        }
     }
 
     public async close(url?: string): Promise<void> {
@@ -113,7 +164,7 @@ export class WebAdminSession {
         };
 
         if (!url) {
-            return;
+            return parts;
         }
 
         if (url.includes('//')) {
@@ -132,17 +183,11 @@ export class WebAdminSession {
     }
 
     private async createDOMFromPage(page: Page): Promise<JSDOM> {
-        // Extract HTML content from the Puppeteer page
         const htmlContent = await page.content();
-
-        // Use jsdom to parse the HTML content
         const dom = new JSDOM(htmlContent);
-
-        // Return the document object from jsdom
         return dom;
     }
 }
-
 export class OldWebAdminSession {
     private static _instance: OldWebAdminSession;
     private authCred = "";

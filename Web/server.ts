@@ -121,7 +121,7 @@ boot();
 
 
 process.on('uncaughtException', (err : Error) => {
-    console.trace(err);
+    console.log(err);
     if (err.message.includes('ECONNRESET')) {
         setTimeout(() => {
             boot();

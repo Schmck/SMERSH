@@ -17,6 +17,7 @@ export class StatusQuery extends Query {
         let players: Array<PlayerInfo>
         let teams: Array<TeamInfo>
 
+        console.log(status && status.window && status.window.document)
         if (status && status.window && status.window.document) {
              const playerTable = status.window.document.querySelector("#players");
             const teamTable = status.window.document.querySelector("#teams");
