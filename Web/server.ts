@@ -33,7 +33,7 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     await ClientBuilder.Build(elasticUrl)
     await ChatGPT.set(ChatGPTApiKey)
     await SteamBot.set(steamAccountName, steamPassword);
-    Api.axios(session.CookieJar)
+    Api.axios()
 
     const bus = app.get(CommandBus);
     const discord: Bot = new Bot(discordToken, bus);
@@ -97,7 +97,8 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 function boot() {
     const envFilePath = path.join(__dirname, '.env');
     const webAdmin = evt.set(evt.parseEnvFile(envFilePath));
-    const authcred = Buffer.from(`${webAdmin.WEBADMIN_USERNAME + ':' + CryptoJS.SHA1(webAdmin.WEBADMIN_PASSWORD).toString(CryptoJS.enc.Hex)}`).toString('base64') ;
+    const authcred = `${webAdmin.WEBADMIN_USERNAME}:${webAdmin.WEBADMIN_PASSWORD}`
+    // const authcred = Buffer.from(`${webAdmin.WEBADMIN_USERNAME + ':' + CryptoJS.SHA1(webAdmin.WEBADMIN_PASSWORD).toString(CryptoJS.enc.Hex)}`).toString('base64') ;
     start(
         webAdmin.BASE_URL.toString(),
         webAdmin.ELASTIC_URL.toString(),

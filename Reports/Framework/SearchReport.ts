@@ -11,7 +11,8 @@ export abstract class SearchReport extends Report {
 
     @Field('text')
     public TypeName: string
-    
+
+    public abstract GetType(): IndexedClass<this>
 
     public abstract UpdateCalculatedProperties() : void
 }

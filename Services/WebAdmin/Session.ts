@@ -2,13 +2,148 @@
 import { Cookie } from "tough-cookie";
 import { Logger, dummyLogger } from "ts-log";
 import { FileLogger } from '../../SMERSH/Utilities'
+import puppeteer, { Browser, Page } from 'puppeteer';
 
 class JSDOMDATE extends JSDOM {
 
     public date?: Date;
 }
 
+
 export class WebAdminSession {
+    private static _instance: WebAdminSession;
+    private authCred = "";
+    private browser!: Browser;
+    private pages: Record<string, { page: Page; date: Date }> = {};
+
+    constructor(url: string, authcred: string, private readonly log: Logger = dummyLogger) {
+        this.authCred = authcred;
+
+        this.log = new FileLogger(`../logs/info-${new Date().toISOString().split('T')[0]}-${this.constructor.name}.log`);
+        this.BaseUrl = process.env["BASE_URL"] || "";
+
+        this.initialize(url);
+    }
+
+    public BaseUrl: string;
+
+    public static get Instance(): WebAdminSession {
+        return this._instance;
+    }
+
+    private async initialize(url: string): Promise<void> {
+        this.browser = await puppeteer.launch({ headless: true });
+        await this.createPage(url);
+    }
+
+    public static async set(url: string, authcred: string): Promise<WebAdminSession> {
+        if (!this._instance) {
+            this._instance = new WebAdminSession(url, authcred);
+        }
+
+        return this._instance;
+    }
+
+    public static get(): WebAdminSession {
+        if (!this.Instance) {
+            return null;
+        }
+        return this._instance;
+    }
+
+    private async createPage(url: string): Promise<void> {
+        const page = await this.browser.newPage();
+        await page.authenticate({ username: this.authCred.split(':')[0], password: this.authCred.split(':')[1] });
+        this.pages[url] = { page, date: new Date() };
+    }
+
+    public async navigate(url: string): Promise<Document> {
+        let navUrl = url;
+
+        if (!navUrl.includes(this.BaseUrl)) {
+            navUrl = this.BaseUrl + url;
+        }
+
+        this.log.info(`Navigating to: ${navUrl}`);
+
+        let pageRecord = this.pages[navUrl];
+
+        if (!pageRecord) {
+            await this.createPage(navUrl);
+            pageRecord = this.pages[navUrl];
+        }
+
+        const page = pageRecord.page;
+
+        if (navUrl.includes('chat') || (Date.now() - pageRecord.date.valueOf()) > 3000) {
+            this.log.info(`Re-navigating to: ${navUrl}`);
+            await page.goto(navUrl, { waitUntil: 'networkidle0' });
+            this.pages[navUrl].date = new Date();
+        }
+
+        const document = await this.createDOMFromPage(page);
+        return document;
+    }
+
+    public async close(url?: string): Promise<void> {
+        if (url) {
+            this.log.info(`Closing page for: ${url}`);
+            const pageRecord = this.pages[url];
+            if (pageRecord) {
+                await pageRecord.page.close();
+                delete this.pages[url];
+            } else {
+                this.log.error(`Page for URL ${url} not found`);
+            }
+        } else {
+            this.log.info('Closing browser');
+            if (this.browser) {
+                await this.browser.close();
+            } else {
+                this.log.error('Browser was not initialized properly');
+            }
+        }
+    }
+
+    private static parse(url: string) {
+        const parts = {
+            head: '',
+            hostname: '',
+            pathName: ''
+        };
+
+        if (!url) {
+            return;
+        }
+
+        if (url.includes('//')) {
+            parts.head = `${url.split('//')[0]}//`;
+            url = url.split('//')[1];
+        }
+        if (url.includes('/')) {
+            parts.hostname = url.split('/')[0];
+            parts.pathName = `/${url.split('/')[1]}/`;
+        }
+
+        if (parts.hostname.includes(':')) {
+            parts.hostname = parts.hostname.split(':')[0];
+        }
+        return parts;
+    }
+
+    private async createDOMFromPage(page: Page): Promise<Document> {
+        // Extract HTML content from the Puppeteer page
+        const htmlContent = await page.content();
+
+        // Use jsdom to parse the HTML content
+        const dom = new JSDOM(htmlContent);
+
+        // Return the document object from jsdom
+        return dom.window.document;
+    }
+}
+
+export class OldWebAdminSession {
     private static _instance: WebAdminSession;
     private authCred = "";
 
