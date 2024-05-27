@@ -19,7 +19,7 @@ export class LayoutWatcher extends Watcher {
         let lastLayout = (args[0] && args[0].activeLayout) || '' 
         let playerCountTrend = (args[0] && args[0].playerCountTrend) || []
 
-        if (status && status.Players.length) {
+        if (status && status.Players && status.Players.length) {
             let layouts = await SearchClient.Search<LayoutSearchReport>(LayoutSearchReport, {
                 "query": {
                     "match_all": {}
