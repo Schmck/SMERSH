@@ -79,9 +79,9 @@ export class WebAdminSession {
 
         if (navUrl.includes('chat') || (Date.now() - pageRecord.date.valueOf()) > 3000) {
             this.log.info(`Re-navigating to: ${navUrl}`);
-            await this.setCookiesFromJar(navUrl, page);
+            //await this.setCookiesFromJar(navUrl, page);
             await this.retryGoto(page, navUrl);
-            await this.updateCookieJar(page, navUrl);
+            //await this.updateCookieJar(page, navUrl);
             this.pages[navUrl].date = new Date();
         }
 

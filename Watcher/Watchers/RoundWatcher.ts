@@ -22,12 +22,7 @@ import { ActivityType } from 'discord.js';
 export class RoundWatcher extends Watcher {
 
     public override async Watch(timeout = 500, ...args: Array<{status: Status, mapTime: number, lastLogTime:Date, lastStatusTime:Date}>) {
-        let status : Status;
-        try {
-            status = await StatusQuery.Get();
-        } catch (error) {
-            console.log(error);
-        }
+        const status = global.state
 
         const prevStatus = args[0] && args[0].status;
         let lastLogTime = (args[0] && args[0].lastLogTime) || this.nearestFiveMin();

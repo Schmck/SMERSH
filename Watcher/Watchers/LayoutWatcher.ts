@@ -13,7 +13,7 @@ export class LayoutWatcher extends Watcher {
 
 
     public override async Watch(timeout = 60000, ...args: Array<{ status: Status, activeLayout: string, playerCountTrend: Array<number> }>) {
-        const status = await StatusQuery.Get();
+        const status = global.state;
         const prevStatus = args[0] && args[0].status;
         let activeLayout = (args[0] && args[0].activeLayout) || ''
         let lastLayout = (args[0] && args[0].activeLayout) || '' 

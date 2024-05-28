@@ -15,7 +15,7 @@ export class PolicyWatcher extends Watcher {
 
     public override async Watch(timeout = 5000, ...args: any[]) {
         const count = await SearchClient.Count<PolicySearchReport>(PolicySearchReport)
-        const status = await StatusQuery.Get();
+        const status = global.state;
         const players = status && status.Players ? status.Players : [];
         const layout = global.layout && global.layout as LayoutSearchReport
         const policies = await SearchClient.Search(PolicySearchReport, {
