@@ -18,6 +18,7 @@ import { TextChannel, Message } from 'discord.js';
 import * as CryptoJS from 'crypto-js';
 import { evt } from '../Services/evt';
 import fs from 'fs';
+import { StatusWatcher } from '../Watcher/Watchers';
 
 
 
@@ -39,7 +40,7 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     const discord: Bot = new Bot(discordToken, bus);
     const steam: SteamBot = SteamBot.get();
 
-
+    const status = new StatusWatcher(bus, discord.client, steamToken)
     const chat = new ChatWatcher(bus, discord.client, steamToken);
     const round = new RoundWatcher(bus, discord.client, steamToken);
     const policy = new PolicyWatcher(bus, discord.client, steamToken);
@@ -53,10 +54,12 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
         const scoreboard = scoreboardId !== '' ? await dashboardchannel.messages.fetch(scoreboardId) : null;
         const chatlog = chatLogId !== '' ? await dashboardchannel.messages.fetch(chatLogId) : null;
 
-         const logger = await Logger.set(discord.client, logChannel, dashboardchannel, chatlogchannel, chatlog, scoreboard);
+        const logger = await Logger.set(discord.client, logChannel, dashboardchannel, chatlogchannel, chatlog, scoreboard);
 
             logger.publish();
             logger.publishDashboard();
+
+            status.Watch();
             chat.Watch();
             round.Watch();
             policy.Watch();
