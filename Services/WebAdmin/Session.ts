@@ -80,7 +80,7 @@ export class WebAdminSession {
         if (navUrl.includes('chat') || (Date.now() - pageRecord.date.valueOf()) > 3000) {
             this.log.info(`Re-navigating to: ${navUrl}`);
             //await this.setCookiesFromJar(navUrl, page);
-            await this.retryGoto(page, navUrl);
+            await this.goTo(page, navUrl);
             //await this.updateCookieJar(page, navUrl);
             this.pages[navUrl].date = new Date();
         }
@@ -89,52 +89,24 @@ export class WebAdminSession {
         return document;
     }
 
-    private async setCookiesFromJar(url: string, page: Page): Promise<void> {
-        const cookies = await this.CookieJar.getCookies(url);
-        const puppeteerCookies = cookies.map(cookie => ({
-            name: cookie.key,
-            value: cookie.value,
-            domain: cookie.domain || undefined,
-            path: cookie.path,
-            expires: cookie.expires instanceof Date ? cookie.expires.getTime() / 1000 : undefined,
-            httpOnly: cookie.httpOnly,
-            secure: cookie.secure,
-            sameSite: cookie.sameSite ? cookie.sameSite as 'Strict' | 'Lax' | 'None' : undefined
-        }));
-        await page.setCookie(...puppeteerCookies);
-    }
-
-    private async retryGoto(page: Page, url: string): Promise<void> {
+    private async goTo(page: Page, url: string): Promise<void> {
         const maxRetries = 3;
+        const backoff = [1000, 2000, 4000]; // Exponential backoff timings in milliseconds
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
             try {
-                await page.goto(url, { waitUntil: 'domcontentloaded' });
+                await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 }); // 1 seconds timeout
                 return;
             } catch (error) {
                 this.log.warn(`Navigation attempt ${attempt} to ${url} failed: ${error}`);
-                if (attempt === maxRetries) {
+                if (attempt < maxRetries) {
+                    await new Promise(resolve => setTimeout(resolve, backoff[attempt - 1]));
+                } else {
                     throw error;
                 }
             }
         }
     }
 
-    private async updateCookieJar(page: Page, url: string): Promise<void> {
-        const pageCookies = await page.cookies();
-        for (const cookie of pageCookies) {
-            const toughCookie = new Cookie({
-                key: cookie.name,
-                value: cookie.value,
-                domain: cookie.domain,
-                path: cookie.path,
-                expires: cookie.expires ? new Date(cookie.expires * 1000) : undefined,
-                httpOnly: cookie.httpOnly,
-                secure: cookie.secure,
-                sameSite: cookie.sameSite
-            });
-            await this.CookieJar.setCookie(toughCookie.toString(), url);
-        }
-    }
 
     public async close(url?: string): Promise<void> {
         if (url) {
