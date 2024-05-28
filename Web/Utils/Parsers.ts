@@ -54,7 +54,6 @@ export class Parsers {
             }).flat()
         }).map((val: any) => { val.pop(); return val })
         const result: any = { headers, values }
-
         return result.values.map(value => {
             return Object.fromEntries(value.map((val, index) => {
                 let header = result.headers[index].toString()

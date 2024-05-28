@@ -108,7 +108,7 @@ export class WebAdminSession {
         const maxRetries = 3;
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
             try {
-                await page.goto(url, { waitUntil: 'networkidle0' });
+                await page.goto(url, { waitUntil: 'domcontentloaded' });
                 return;
             } catch (error) {
                 this.log.warn(`Navigation attempt ${attempt} to ${url} failed: ${error}`);
