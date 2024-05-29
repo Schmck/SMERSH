@@ -10,8 +10,8 @@ class JSDOMDATE extends JSDOM {
 }
 
 
-export class WebAdminSession {
-    private static _instance: WebAdminSession;
+export class PuppeteerWebAdminSession {
+    private static _instance: PuppeteerWebAdminSession;
     private authCred = "";
     private browser!: Browser;
     private pages: Record<string, { page: Page; date: Date }> = {};
@@ -29,7 +29,7 @@ export class WebAdminSession {
 
     public BaseUrl: string;
 
-    public static get Instance(): WebAdminSession {
+    public static get Instance(): PuppeteerWebAdminSession {
         return this._instance;
     }
 
@@ -38,15 +38,15 @@ export class WebAdminSession {
         await this.createPage(url);
     }
 
-    public static async set(url: string, authcred: string): Promise<WebAdminSession> {
+    public static async set(url: string, authcred: string): Promise<PuppeteerWebAdminSession> {
         if (!this._instance) {
-            this._instance = new WebAdminSession(url, authcred);
+            this._instance = new PuppeteerWebAdminSession(url, authcred);
         }
 
         return this._instance;
     }
 
-    public static get(): WebAdminSession {
+    public static get(): PuppeteerWebAdminSession {
         if (!this.Instance) {
             return null;
         }
@@ -147,15 +147,15 @@ export class WebAdminSession {
         return dom;
     }
 }
-export class OldWebAdminSession {
-    private static _instance: OldWebAdminSession;
+export class WebAdminSession {
+    private static _instance: WebAdminSession;
     private authCred = "";
 
     constructor(url: string, authcred: string, cookieJar: CookieJar = new CookieJar(), private readonly log: Logger = dummyLogger) {
         if (!this.DOMs) {
             this.DOMs = {};
         }
-        const parsed = OldWebAdminSession.parse(url)
+        const parsed = WebAdminSession.parse(url)
         const authCookiePart = `authcred=${authcred}`
         const cookie = Cookie.parse(authCookiePart);
         cookie.path = parsed.pathName;
@@ -184,7 +184,7 @@ export class OldWebAdminSession {
     public CookieJar: CookieJar;
 
 
-    public static get Instance(): OldWebAdminSession {
+    public static get Instance(): WebAdminSession {
         return this._instance
     }
 
@@ -247,9 +247,9 @@ export class OldWebAdminSession {
 
 
 
-    public static async set(url: string, authcred: string): Promise<OldWebAdminSession> {
+    public static async set(url: string, authcred: string): Promise<WebAdminSession> {
         if (!this._instance) {
-            this._instance = new OldWebAdminSession(url, authcred)
+            this._instance = new WebAdminSession(url, authcred)
             const DOM = await this._instance.navigate(url);
             if (DOM.window && DOM.window.document && DOM.window.document.cookie) {
                 const cookie = Cookie.parse(DOM.window.document.cookie);
@@ -260,7 +260,7 @@ export class OldWebAdminSession {
         return this._instance
     }
 
-    public static get(): OldWebAdminSession {
+    public static get(): WebAdminSession {
         if (!this.Instance) {
             return null;
         }
