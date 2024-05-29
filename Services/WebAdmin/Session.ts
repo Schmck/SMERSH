@@ -90,21 +90,8 @@ export class WebAdminSession {
     }
 
     private async goTo(page: Page, url: string): Promise<void> {
-        const maxRetries = 3;
-        const backoff = [1000, 2000, 4000]; // Exponential backoff timings in milliseconds
-        for (let attempt = 1; attempt <= maxRetries; attempt++) {
-            try {
-                await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 }); // 1 seconds timeout
-                return;
-            } catch (error) {
-                this.log.warn(`Navigation attempt ${attempt} to ${url} failed: ${error}`);
-                if (attempt < maxRetries) {
-                    await new Promise(resolve => setTimeout(resolve, backoff[attempt - 1]));
-                } else {
-                    throw error;
-                }
-            }
-        }
+        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 }); // 60 seconds timeout
+        return;
     }
 
 
