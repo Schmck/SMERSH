@@ -3,6 +3,7 @@ import { Cookie } from 'tough-cookie';
 import axios from 'axios';
 import { Logger, dummyLogger } from 'ts-log';
 import { FileLogger } from '../../SMERSH/Utilities';
+import puppeteer, { Browser, Page } from 'puppeteer';
 
 class JSDOMDATE extends JSDOM {
     public date?: Date;
