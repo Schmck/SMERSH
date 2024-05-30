@@ -55,7 +55,7 @@ export class WebAdminSession {
     }
 
     private async preprocessHTML(url: string): Promise<string> {
-        const response = await axios.get(url, { headers: { Cookie: `authcred=${this.authCred}`; } });
+        const response = await axios.get(url, { headers: { Cookie: `authcred=${this.authCred}` } });
         let htmlContent = response.data;
         console.log(htmlContent)
         htmlContent = htmlContent.replace(/&nbsp;/g, '&#160;');
