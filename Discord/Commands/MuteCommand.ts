@@ -43,7 +43,7 @@ export const MuteCommand: Command = {
     ],
     autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
         const focusedValue = interaction.options.getFocused(true);
-        const players = await PlayerQuery.Get();
+        const players = global.state.Players;
         if (players) {
             const choices = players.filter(player => !player.Bot && player.Id).map(player => { return { name: player.Playername, value: player.Id } })
             const filtered = choices.filter(choice => choice.name.toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))

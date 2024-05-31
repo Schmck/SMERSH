@@ -33,7 +33,7 @@ export const KickCommand: Command = {
     ],
     autocomplete: async (client: Client, interaction: AutocompleteInteraction): Promise<void> => {
         const focusedValue = interaction.options.getFocused(true);
-        const players = global.players;
+        const players = global.state.Players;
         if (players) {
             const choices = players.filter(player => !player.Bot && player.Id).map(player => { return { name: player.Playername.toString(), value: player.PlayerKey } })
             const filtered = choices.filter(choice => choice.name && choice.name.toString().toLowerCase().startsWith(focusedValue.value.toLowerCase()) || choice.name.toLowerCase().includes(focusedValue.value.toLowerCase()))

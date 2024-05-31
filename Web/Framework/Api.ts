@@ -19,7 +19,7 @@ export class Api {
 
         if (jar) {
             const env = process.env;
-            const authcred = env['AUTHCRED'];
+            const authcred = env['WEBADMIN_AUTHCRED'];
             const url = env["BASE_URL"];
 
             const parsed = Api.parse(url);
