@@ -23,7 +23,8 @@ export class ChatWatcher extends Watcher {
     public override async Watch(timeout: number = 100, ...args: Array<{ messages: Array<Message> }>) {
         const commandNames = Commands.map(command => [command.name, ...command.aliases]).flat()
         const commands = Commands.map(command => command.name).flat()
-        const messages = await ChatQuery.Get();
+
+        const messages = await ChatQuery.Fetch();
         const roundInfo = global && global.roundInfo;
         const round = !roundInfo && await (await SearchClient.Search(RoundSearchReport, {
             "query": {

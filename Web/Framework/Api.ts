@@ -3,11 +3,14 @@
         jar?: CookieJar;
     }
 }
-import axios, { isCancel, AxiosError, AxiosInstance } from 'axios';
+
+import axios, { isCancel, AxiosError, AxiosInstance, AxiosRequestConfig as RequestConfig } from 'axios';
 import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar, Cookie } from 'tough-cookie';
 import * as dotenv from 'dotenv';
-
+export interface AxiosRequestConfig extends RequestConfig {
+    jar?: CookieJar;
+}
 export class Api {
 
     public static _instance: Api;
