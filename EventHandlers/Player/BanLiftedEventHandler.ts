@@ -30,16 +30,17 @@ export class BanLiftedEventHandler implements IEventHandler<BanLiftedEvent>
         policy.IsActive = false;        
 
         await SearchClient.Update(policy);
+        Logger.append(`${policy.Name}s ban has been lifted, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`)
+
 
         this.client.on('ready', async (client) => {
-            const channel = await client.channels.fetch(policy.ChannelId) as TextChannel;
+            const channel = await this.client.channels.fetch(policy.ChannelId) as unknown as TextChannel;
             if (channel) {
                 await channel.send(`ban lifted from ${policy.Name}, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`)
             }
 
             const message = `your ban has been lifted, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`
 
-            Logger.append(`${policy.Name}s ban has been lifted, originally banned for ${policy.Reason} on ${new Date(policy.BanDate).toString().split(' GMT')[0]}`)
 
 
             await this.steam.sendMessageToFriend(event.PlayerId, `/pre this is an automated message integrated with ChatGPT`)

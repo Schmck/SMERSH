@@ -145,7 +145,7 @@ export class ChatWatcher extends Watcher {
                             return false;
                         })
                     }
-                } else if (msg.message.includes(':/') && msg.username !== 'admin' && Math.floor(Math.random() * 32) >= 28) {
+                } else if (msg.message.includes(':/') && msg.username !== 'SMERSH' && Math.floor(Math.random() * 32) >= 28) {
                     const message = `:/`
                     const chatUrlencoded = `ajax=1&message=${message}&teamsay=-1`
                     await axios.post(chatUrl, chatUrlencoded, config)

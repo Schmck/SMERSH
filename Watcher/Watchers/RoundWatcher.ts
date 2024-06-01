@@ -52,8 +52,11 @@ export class RoundWatcher extends Watcher {
                 const roundId = Guid.create();
                 const axis = status.Teams.find(team => team.Name === Team.Axis.DisplayName).Attacking ? 'attacking' : 'defending'
                 const allies = status.Teams.find(team => team.Name === Team.Allies.DisplayName).Attacking ? 'attacking' : 'defending'
+                const oldAxis = prevStatus.Teams.find(team => team.Name === Team.Axis.DisplayName).Attacking ? 'attacking' : 'defending'
+                const oldAllies = prevStatus.Teams.find(team => team.Name === Team.Allies.DisplayName).Attacking ? 'attacking' : 'defending'
               
                 this.commandBus.execute(new ChangeMapCommand(roundId, mapId, newMap))
+                Logger.append(`${this.findDuplicateWords(newMap)} ended with Axis ${oldAxis} and Allies ${oldAllies}`)
                 Logger.append(`${this.findDuplicateWords(newMap)} started with Axis ${axis} and Allies ${allies}`)
 
             }
@@ -105,6 +108,7 @@ export class RoundWatcher extends Watcher {
                     this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
                 }
 
+                                            //time stopped              //first time it stopped     //timelimit so its not preround
                 if (prevStatus && round && newMapTime === mapTime && mapTime !== prevMapTime && timeLimit && (timeLimit - mapTime) > (timeLimit / 10)) {
                     this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds));
                     const battleDesc = this.battleDesc(prevStatus, status)

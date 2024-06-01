@@ -133,9 +133,9 @@ export class Logger {
    
 
     public async publishScoreboard() {
-        const scoreboard = this.generateScoreboard(global.round)
+        const scoreboard = this.generateScoreboard(global.state)
 
-        if (scoreboard) {
+        if (scoreboard && scoreboard.length > 10) {
             if (this.Scoreboard) {
                 this.Scoreboard = await this.Scoreboard.edit(scoreboard);
             } else {
@@ -150,6 +150,9 @@ export class Logger {
         const scoreboard = this.generateScoreboard(global.round);
 
         if (scoreboard) {
+            if (this.ScoreboardChannel) {
+                await this.ScoreboardChannel.send(scoreboard);
+            }
 
         }
     }
