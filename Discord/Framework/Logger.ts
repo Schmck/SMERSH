@@ -158,7 +158,7 @@ export class Logger {
     }
 
     public generateChatLog(lines : string[], message: Message, dashboard: Boolean = false) {
-        let content = message && message.content.length < 1800 ? `${message.content.slice(0, message.content.length - 3).slice(message.content.match(/\+|\-/).index, message.content.length)}` : '';
+        let content = message && message.content.length < 1600 ? `${message.content.slice(0, message.content.length - 3).slice(message.content.match(/\+|\-/).index, message.content.length)}` : '';
         let contentLines = content ? content.split('\n') : [];
 
         contentLines.push(...lines)
