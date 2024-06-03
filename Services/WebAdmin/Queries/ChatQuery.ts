@@ -34,7 +34,6 @@ export class ChatQuery extends Query {
                 let visibility
                 let team
                 let id
-                console.log(msg)
                 if (msg.querySelector('.username')) {
                     username = msg.querySelector('.username').textContent
                 }
@@ -80,11 +79,11 @@ export class ChatQuery extends Query {
     public static async Get(): Promise<Array<Message>> {
         const session = WebAdminSession.get();
         const dom = await session.navigate(ChatRoute.GetChat.Action)
-        const players = global.state.Players;
+        const players = global.state && global.state.Players;
         const messages = []
         
         //return result.then(dom => {
-            if (dom && dom.window && dom.window.document) {
+            if (players && dom && dom.window && dom.window.document) {
                 dom.window.document.querySelectorAll(".chatmessage").forEach(async msg => {
                     let username
                     let message
