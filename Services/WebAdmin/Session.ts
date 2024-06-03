@@ -78,7 +78,7 @@ export class WebAdminSession {
                 this.DOMs[navUrl].date = new Date();
             }
 
-            if (navUrl.includes('chat') || Date.now() - this.DOMs[navUrl].date.valueOf() > 3000) {
+            if (navUrl.includes('chat') || Date.now() - this.DOMs[navUrl].date.valueOf() > 1000) {
                 this.log.info(`navigating to: `, navUrl);
                 try {
                     await this.close(navUrl);
