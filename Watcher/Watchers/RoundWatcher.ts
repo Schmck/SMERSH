@@ -104,12 +104,15 @@ export class RoundWatcher extends Watcher {
                 const BotsBeGone = status.Players.every(player => !player.Bot)
 
 
-                if (round && mapTime && timeLimit && timeLimit === mapTime) {
+                console.log(mapTime, timeLimit)
+                if (round && mapTime && timeLimit && Math.abs(mapTime - timeLimit) <= 1;) {
                     this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
                 }
 
-                                            //time stopped              //first time it stopped     //timelimit so its not preround
+
+                //time stopped              //first time it stopped     //timelimit so its not preround
                 if (prevStatus && round && newMapTime === mapTime && mapTime !== prevMapTime && timeLimit && (timeLimit - mapTime) > (timeLimit / 10)) {
+                    console.log('new map time:', newMapTime, 'current map time:', mapTime, 'prev map time:', prevMapTime, 'time limit', timeLimit)
                     this.commandBus.execute(new EndRoundCommand(Guid.parse(round.Id), new Date(), playerIds));
                     const battleDesc = this.battleDesc(prevStatus, status)
                     Logger.append(battleDesc)
