@@ -105,7 +105,7 @@ export class RoundWatcher extends Watcher {
 
 
                 console.log(mapTime, timeLimit)
-                if (round && mapTime && timeLimit && Math.abs(mapTime - timeLimit) <= 1;) {
+                if (round && mapTime && timeLimit && Math.abs(mapTime - timeLimit) <= 1) {
                     this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
                 }
 
