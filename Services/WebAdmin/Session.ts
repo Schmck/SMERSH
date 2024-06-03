@@ -76,10 +76,7 @@ export class WebAdminSession {
                 const htmlContent = await this.preprocessHTML(navUrl);
                 this.DOMs[navUrl] = new JSDOM(htmlContent, { url: navUrl, cookieJar: this.CookieJar }) as JSDOMDATE;
                 this.DOMs[navUrl].date = new Date();
-            }
-
-            if (navUrl.includes('chat') || Date.now() - this.DOMs[navUrl].date.valueOf() > 1000) {
-                this.log.info(`navigating to: `, navUrl);
+            } else {
                 try {
                     await this.close(navUrl);
                     const htmlContent = await this.preprocessHTML(navUrl);
@@ -91,6 +88,8 @@ export class WebAdminSession {
                     this.log.info(error);
                 }
             }
+
+          
         } else {
             this.log.error('DOMs were not initialized properly');
         }
