@@ -249,7 +249,7 @@ export class Logger {
                         let killsWhitespace = (3 - player.Kills.toString().length) > 0 ? 3 - player.Kills.toString().length : 0
                         let deathWhitespace = (3 - player.Deaths.toString().length) > 0 ? 3 - player.Deaths.toString().length : 0
 
-                        let name = `[ ${nameWhitespace === 0 ? player.Playername.replace(/\[/g, '|').replace(/\]/g, '|').slice(0, 13) : player.Playername.replace(/\[/g, '|').replace(/\]/g, '|')}${' '.repeat(nameWhitespace)} \u2502`
+                        let name = `[ ${nameWhitespace === 0 ? player.Playername.replace(/\[/g, '|').replace(/\]/g, '|').replace(/\?/g, '?').slice(0, 13) : player.Playername.replace(/\?/g, '?').replace(/\[/g, '|').replace(/\]/g, '|')}${' '.repeat(nameWhitespace)} \u2502`
                         let score = ` ${player.Score}${' '.repeat(scoreWhitespace)} \u2502`
                         let role = ` ${playerRole}${' '.repeat(roleWhitespace)} \u2502`
                         let kills = ` ${player.Kills}${' '.repeat(killsWhitespace)} \u2502`

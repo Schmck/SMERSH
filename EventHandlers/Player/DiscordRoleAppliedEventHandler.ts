@@ -9,6 +9,8 @@ import { IndexedClass } from '../../SMERSH/Utilities/types';
 import { CommandBus } from '@nestjs/cqrs';
 import { Guid } from 'guid-typescript';
 import { Client, Logger } from '../../Discord/Framework';
+import { SteamBot } from '../../SMERSH/Utilities/steam';
+import { DiscordRole } from '../../SMERSH/ValueObjects/player';
 let cls: { new(id: Guid): PlayerSearchReport } = PlayerSearchReport;
 
 @EventsHandler(DiscordRoleAppliedEvent)
@@ -21,13 +23,18 @@ export class DiscordRoleAppliedEventHandler implements IEventHandler<DiscordRole
         this.client = new Client(token, {
             intents: []
         }, commandBus)
+
+     this.steam = SteamBot.get();
     }
+
+    public steam: SteamBot;
 
     async handle(event: DiscordRoleAppliedEvent) {
         let player = new cls(event.Id);
         player.Role = event.Role;
         await SearchClient.Update(player)
 
+        this.steam.sendMessageToFriend(event.Id.toString(), `Congratulations you have been given the ${DiscordRole.fromValue(event.Role).DisplayName} role`)
         return;
     }
 }
