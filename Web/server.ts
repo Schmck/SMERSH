@@ -67,7 +67,6 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
     })
 
     if (Object.keys(steam.steam.myFriends).length > 100) {
-        console.log(steam.steam.myFriends);
         const reduced = Object.entries(steam.steam.myFriends).reduce((friends, item) => {
             const id = item[0]
             const friend = item[1]
@@ -79,7 +78,6 @@ async function start(baseUrl: string, elasticUrl, authcred: string, discordToken
 
         }, { total: 0, friends: {} })
         steam.steam.myFriends = reduced.friends;
-        console.log(steam.steam.myFriends);
     }
 
 

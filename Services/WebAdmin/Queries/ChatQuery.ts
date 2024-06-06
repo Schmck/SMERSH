@@ -12,7 +12,7 @@ export class ChatQuery extends Query {
 
 
     public static async Fetch(): Promise<Array<Message>> {
-        const players = global.state.Players;
+        const players = global.state && global.state.Players || await PlayerQuery.Get();
         const messages = []
         const axios = Api.axios();
         const env = process.env;
