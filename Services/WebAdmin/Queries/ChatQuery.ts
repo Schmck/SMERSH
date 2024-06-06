@@ -25,7 +25,12 @@ export class ChatQuery extends Query {
         }
         let dom : JSDOM
 
-        await axios.get(chatUrl, config).then(response => { dom = new JSDOM(response.data) })
+        try {
+            await axios.get(chatUrl, config).then(response => { dom = new JSDOM(response.data) })
+
+        } catch (error) {
+            console.log(error)
+        }
 
         if (dom && dom.window && dom.window.document) {
             dom.window.document.querySelectorAll(".chatmessage").forEach(async msg => {
