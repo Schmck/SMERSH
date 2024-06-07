@@ -130,7 +130,7 @@ export class ChatQuery extends Query {
                         team,
                         timestamp: new Date().toISOString()
                     }
-                    console.log(usermsg)
+                    //console.log(usermsg)
                     messages.push(usermsg)
                 })
             }

@@ -24,7 +24,7 @@ export class ChatWatcher extends Watcher {
         const commandNames = Commands.map(command => [command.name, ...command.aliases]).flat()
         const commands = Commands.map(command => command.name).flat()
 
-        const messages = await ChatQuery.Fetch();
+        const messages = await ChatQuery.Get();
         const roundInfo = global && global.roundInfo;
         const round = !roundInfo && await (await SearchClient.Search(RoundSearchReport, {
             "query": {

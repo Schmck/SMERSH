@@ -73,8 +73,9 @@ export class WebAdminSession {
             let DOM = this.DOMs[navUrl];
 
             if (!DOM) {
-                const htmlContent = await this.preprocessHTML(navUrl);
-                this.DOMs[navUrl] = new JSDOM(htmlContent, { url: navUrl, cookieJar: this.CookieJar }) as JSDOMDATE;
+                //const htmlContent = await this.preprocessHTML(navUrl);
+                this.DOMs[navUrl] = await JSDOM.fromURL(navUrl, { cookieJar: this.CookieJar })
+                //this.DOMs[navUrl] = new JSDOM(htmlContent, { url: navUrl, cookieJar: this.CookieJar }) as JSDOMDATE;
                 this.DOMs[navUrl].date = new Date();
             } else {
                 try {
