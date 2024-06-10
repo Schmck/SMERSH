@@ -18,6 +18,7 @@ import { HelpCommand } from './HelpCommand'
 import { BalanceCommand } from './BalanceCommand'
 import { CamperCommand } from './CamperCommand'
 import { GoodJobCommand } from './GoodJobCommand'
+import { AnnounceCommand } from './AnnounceCommand'
 import { MeowCommand } from './MeowCommand'
 import { MotherCommand } from './MotherCommand'
 import { RetardCommand } from './RetardCommand'
@@ -54,6 +55,7 @@ export const Commands: Command[] = [
     BalanceCommand,
     CamperCommand,
     GoodJobCommand,
+    AnnounceCommand,
     MeowCommand,
     MotherCommand,
     RetardCommand,
@@ -63,5 +65,6 @@ export const Commands: Command[] = [
     ShipItCommand,
     PimPamPumCommand,
     GulagCommand,
-    HelpCommand
+    HelpCommand,
+
 ];
