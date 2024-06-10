@@ -104,7 +104,8 @@ export class RoundWatcher extends Watcher {
                 const BotsBeGone = status.Players.every(player => !player.Bot)
 
 
-                if (round && mapTime && timeLimit && Math.abs(mapTime - timeLimit) <= 1) {
+                if (round && mapTime && timeLimit && timeLimit && Math.abs(mapTime - timeLimit) <= 1) {
+                    console.log(mapTime, timeLimit)
                     this.commandBus.execute(new StartRoundCommand(Guid.parse(round.Id), timeLimit, new Date(), playerIds))
                 }
 
