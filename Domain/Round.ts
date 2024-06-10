@@ -37,10 +37,14 @@ export class Round extends Domain {
     }
 
     public async startRound(timeLimit: number, date: Date, players: string[]) {
-        this.Date = date;
-        this.Players = players
+       
+        if (!this.Date) {
+            this.Date = date;
+            this.Players = players
 
-        await this.apply(new RoundStartedEvent(this.Id, this.MapId, timeLimit, this.Date, this.Players));
+            await this.apply(new RoundStartedEvent(this.Id, this.MapId, timeLimit, this.Date, this.Players));
+
+        }
         return;
     }
 
